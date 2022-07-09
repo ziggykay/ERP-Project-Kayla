@@ -1,0 +1,97 @@
+// custom.scss
+// Include any default variable overrides here (though functions won't be available)
+// ==================== 變數 =========================
+
+// 整體
+$primary : #558ABA;
+$primary-hover: #2d5b87;
+$danger: #E35942;
+$danger-hover: #962424;
+$background: #E4ECF0;
+$dropdown : #E9F2FF;
+
+// 白色內容方塊
+$box-bgc: #ffffff;
+$radius: 1rem;
+
+// 陰影
+$shadow: 2.5px 4px 3px rgb(179, 175, 175);
+
+// ===================================================================
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import '@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss';
+
+// ==================== 整體 ==========================
+
+*{
+  margin: 0;
+  padding: 0;
+}
+body{
+  background-color: $background;
+}
+.container, .container-fluid{
+  padding: 0;
+}
+.main{
+  padding: 2.2rem;
+}
+
+// ===================== 元件 ===========================
+
+// 按鈕
+.dropdown{
+  button{
+    color: black;
+    background-color: $dropdown;
+    border-style: none;
+    box-shadow: $shadow;
+  }
+}
+.confirm-btn{
+  border-style: none;
+  background-color: $primary;
+  color: #fff;
+  &:hover{
+    background-color: $primary-hover;
+    color: #fff;
+  }
+}
+.cancel-btn{
+  border-style: none;
+  background-color: $danger;
+  color: #fff;
+  &:hover{
+    background-color: $danger-hover;
+    color: #fff;
+  }
+}
+
+// 白色內容方塊
+.content-box{
+  margin: 1rem;
+  background-color: #fff;
+  box-shadow: $shadow;
+  width: 300px;
+  height: 180px;
+  padding: 1rem;
+  border-radius: $radius;
+  background-color: $box-bgc;
+  box-shadow: gray;
+  .title{
+    color: $primary;
+  }
+}
+.content-box-border{
+  @extend .content-box;
+  border-style: solid;
+  border-width: 1px;
+  border-color: $primary;
+  border-radius: $radius;
+}
+.datepicker{
+  // TODO: 研究怎麼改背景顏色
+  width: 400px;
+  // background-color: $dropdown;
+}
