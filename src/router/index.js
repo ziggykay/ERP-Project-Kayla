@@ -9,8 +9,8 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'Home',
-    component: () => import('../views/HomeView.vue')
+    name: 'UserPunch',
+    component: () => import('../views/UserPunchView.vue')
   },
   {
     path: '/learn',
@@ -23,4 +23,5 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
 export default router;

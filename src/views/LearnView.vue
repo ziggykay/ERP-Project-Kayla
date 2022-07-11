@@ -60,10 +60,10 @@
 </template>
 
 <script>
-import NavbarSidebar from "../components/NavbarSidebar.vue";
+// import NavbarSidebar from "../components/NavbarSidebar.vue";
 export default {
   components:{
-    NavbarSidebar
+    // NavbarSidebar
   }
 }
 </script>
