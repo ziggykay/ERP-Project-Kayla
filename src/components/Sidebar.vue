@@ -1,12 +1,4 @@
 <template>
-  <input type="checkbox" id="menu" />
-  <nav>
-    <label>Logo</label>
-    <ul>
-      <li><a href="">登出</a></li>
-    </ul>
-    <label for="menu" class="menu-bar"><i class="fa-solid fa-bars"></i></label>
-  </nav>
   <div class="side-menu">
     <li>
       <a href="#"><i class="fa-solid fa-house"></i><span>首頁</span> </a>
@@ -32,14 +24,14 @@
         aria-expanded="false"
         ><i class="fa-solid fa-book-open"></i><span>日誌</span></a
       >
-      <!-- <button
+      <button
         class="btn btn-toggle align-items-center collapsed"
         data-bs-toggle="collapse"
         data-bs-target="#orders-collapse"
         aria-expanded="false"
       >
         日誌
-      </button> -->
+      </button>
       <div class="collapse" id="orders-collapse">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
           <a
@@ -71,11 +63,22 @@
     <li>
       <a href="#" class="Logout"><span>Logout</span></a>
     </li>
-  </div>
+  </div>	
 </template>
-
-<script>
-export default {};
+<script type="text/javascript">
+	export default {
+	  name:'SideBar',
+	  data(){
+	    return{
+	    }
+	  },
+	  computed:{
+	  },	  
+	  mounted(){
+	  },	  
+	  methods: {
+	  }
+	} 
 </script>
 
 <style scoped>
@@ -94,7 +97,7 @@ a {
 nav {
   background-color: #fff;
   height: 80px;
-  position: fixed;
+  /*position: fixed;*/
   width: 100%;
   border-bottom: #757575 0.5px solid;
 }
@@ -127,11 +130,11 @@ nav ul li a:hover {
   background-color: #22496d;
 }
 .side-menu {
-  position: fixed;
+  /*position: fixed;*/
   background-color: #fff;
   width: 250px;
   height: 100%;
-  margin-top: 80px;
+  /*margin-top: 80px;*/
 }
 /* .side-menu li a.dropdown {
   background-color: rgb(192, 192, 192);
@@ -219,3 +222,5 @@ nav .menu-bar {
   left: 0;
 }
 </style>
+
+	
