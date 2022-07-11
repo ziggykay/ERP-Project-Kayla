@@ -97,7 +97,6 @@ a {
 nav {
   background-color: #fff;
   height: 80px;
-  /*position: fixed;*/
   width: 100%;
   border-bottom: #757575 0.5px solid;
 }
@@ -119,7 +118,7 @@ nav ul li {
 }
 nav ul li a {
   color: white;
-  font-size: 20px;
+  font-size: 14px;
   padding: 6px 15px;
   font-weight: 600;
   background-color: #558aba;
@@ -130,7 +129,6 @@ nav ul li a:hover {
   background-color: #22496d;
 }
 .side-menu {
-  /*position: fixed;*/
   background-color: #fff;
   width: 250px;
   height: 100%;
@@ -155,7 +153,7 @@ nav ul li a:hover {
   color: #fff;
 }
 .side-menu span {
-  font-size: 20px;
+  font-size: 14px;
   margin-left: 10px;
 }
 .side-menu i {
