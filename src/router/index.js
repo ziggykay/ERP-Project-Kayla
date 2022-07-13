@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
-
+  // ========= login-page ===========
   {
     path: '/',
     name: 'Login',
     component: () => import('../views/LoginView.vue')
   },
+  // ============= user-page ==============
   {
     path: '/user/punch',
     name: 'UserPunch',
@@ -15,18 +16,20 @@ const routes = [
   {
     path: '/user/learn',
     name: 'Learn',
-    component: () => import('../views/LearnView.vue')
+    component: () => import('../views/learnView.vue')
   },
   {
     path: '/userpunch',
-    name: 'UserPunch',
+    name: 'Punch',
     component: () => import('../views/PunchView.vue')
   },
+  // ========== manager-page ==============
   {
     path: '/manager/attendanceinfo',
     name: 'ManagerAttendanceInfo',
     component: () => import('../views/ManagerAttendanceInfoView.vue')
-  },   
+  },
+  // ========== corporate-page ===============
 ];
 
 const router = createRouter({

@@ -1,13 +1,13 @@
 <template>
 	<div class="content-box filter-box">
-  	<p class="title"><strong>以學員篩選</strong></p> 	  	
+  	<p class="title"><strong>parent.title</strong></p> 	  	
 		<hr/>
 		<div class="d-flex flex-wrap">
 	  	<select class="selectInfo me-2" v-for="(item, index) of parentSelectArr" v-model="item.selected">
 				<option v-for="(innerItem, index) of item.data" :value="innerItem.item">
 					{{ innerItem.name }}
 				</option>	      	 	
-	  	</select>	  			
+	  	</select>	
 		</div>  	
 
 		<div class="d-flex mt-2 flex-wrap">
@@ -15,7 +15,6 @@
     	<button class="confirm-btn btn btn-height">搜尋</button>
     	<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  		  			
 		</div>
-
 	</div>
 </template>
 
@@ -28,7 +27,7 @@
 	    parentSelectArr: Array
 	  },	   
 	  setup(props){
-	  	//props data
+	  	// props data
 	  	const parentSelectArr  = ref(props.parentSelectArr)
 	  	// date
 	  	const date = ref("");

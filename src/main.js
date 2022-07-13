@@ -1,13 +1,14 @@
 import { createApp} from 'vue'
 import App from './App.vue'
+import router from './router' 
 // import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 import "./styles/custom.scss"
-// datapikcer
+// data-picker
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
-// echart
+// e-chart
 import * as echarts from 'echarts'
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
@@ -34,8 +35,6 @@ use([
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
-
-import router from './router' 
 
 createApp(App).use(router).component('Datepicker', Datepicker).component('v-chart', echarts).use(VXETable)
 .mount('#app')

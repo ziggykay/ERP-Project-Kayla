@@ -1,7 +1,8 @@
 <template>
 <!-- <NavbarSidebar /> -->
 <div class="section">
-  <div class="container-fluid">
+  <overallVue/>
+  <!-- <div class="container-fluid">
     <div class="content-box overall-box">
       <p class="title"><strong>總覽</strong></p>
       <hr/>
@@ -23,7 +24,7 @@
           <p class="number">400</p>
         </div>
     </div>
-  </div>
+  </div> -->
   <div class="container-fluid d-md-flex">
     <!-- 課程區塊 -->
     <div class="content-box class-box col d-flex">
@@ -73,9 +74,35 @@
 </template>
 
 <script>
+import overallVue from '../components/baseComponents/overall.vue'
+import { ref } from "vue"
 export default {
-  components:{
+  components: overallVue,
+  setup(){
+    const classData = ref([
+      {
+        title: "出席率",
+        number: "98%",
+        color: "#558ABA"
+      },
+      {
+        title: "遲到率",
+        number: "5%",
+        color: "#1AAF68"
+      },
+      {
+        title: "遲到次數",
+        number: "2天",
+        color: "#1AAF68"
+      },
+      {
+        title: "遲到時數",
+        number: "2.5天",
+        color: "#1AAF68"
+      }
+    ])
   }
+
 }
 </script>
 

@@ -10,8 +10,8 @@
       </a>
     </li>
     <li>
-      <a href="#"
-        ><i class="fa-solid fa-chalkboard-user"></i><span>學習紀錄</span>
+      <a href="#"><i class="fa-solid fa-chalkboard-user"></i>
+        <span>學習紀錄</span>
       </a>
     </li>
     <!-- <li>

@@ -3,17 +3,16 @@
 // ==================== 變數 =========================
 
 // 整體
-$primary : #558ABA;
-$primary-hover: #2d5b87;
-$danger: #E35942;
-$danger-hover: #962424;
-$background: #E4ECF0;
-$dropdown : #E9F2FF;
+$primary : #558ABA !default;
+$primary-hover: #2d5b87 !default;
+$danger: #E35942 !default;
+$danger-hover: #962424 !default;
+$background: #E4ECF0 !default;
+$dropdown : #E9F2FF !default;
 
 // 白色內容方塊
 $box-bgc: #ffffff;
 $radius: 1rem;
-
 
 // 陰影
 $shadow: 2.5px 4px 3px rgb(179, 175, 175);
@@ -101,7 +100,6 @@ body{
 }
 .datepicker{
   width: 400px;
-  // TODO: 研究怎麼改背景顏色  
   input{
 		background-color: $dropdown;
   }
