@@ -17,6 +17,11 @@ const routes = [
     name: 'Learn',
     component: () => import('../views/LearnView.vue')
   },
+  {
+    path: '/userpunch',
+    name: 'UserPunch',
+    component: () => import('../views/PunchView.vue')
+  },
 ];
 
 const router = createRouter({

@@ -9,7 +9,7 @@ import Sidebar from "./components/Sidebar.vue";
 	<Navbar v-if="$route.path !== '/'"></Navbar>
 	<div class="container-fluid d-flex">
 		<Sidebar v-if="$route.path !== '/'"></Sidebar>
-		<div class="container-fluid">
+		<div class="container-fluid m-3">
   		<router-view/>		
   	</div>
 	</div>
@@ -17,8 +17,5 @@ import Sidebar from "./components/Sidebar.vue";
 </template>
 
 
-<style>
-/*	router-view{
-		float: right ;
-	}*/
+<style scoped>
 </style>
