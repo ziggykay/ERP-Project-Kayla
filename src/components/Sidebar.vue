@@ -68,16 +68,6 @@
 <script type="text/javascript">
 	export default {
 	  name:'SideBar',
-	  data(){
-	    return{
-	    }
-	  },
-	  computed:{
-	  },	  
-	  mounted(){
-	  },	  
-	  methods: {
-	  }
 	} 
 </script>
 
