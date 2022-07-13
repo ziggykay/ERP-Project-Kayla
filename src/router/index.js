@@ -8,15 +8,20 @@ const routes = [
     component: () => import('../views/LoginView.vue')
   },
   {
-    path: '/home',
+    path: '/user/punch',
     name: 'UserPunch',
     component: () => import('../views/UserPunchView.vue')
   },
   {
-    path: '/test',
-    name: 'test',
-    component: () => import('../views/TestView.vue')
-  },  
+    path: '/user/learn',
+    name: 'Learn',
+    component: () => import('../views/LearnView.vue')
+  }, 
+  {
+    path: '/manager/attendanceinfo',
+    name: 'ManagerAttendanceInfo',
+    component: () => import('../views/ManagerAttendanceInfoView.vue')
+  },   
 ];
 
 const router = createRouter({
