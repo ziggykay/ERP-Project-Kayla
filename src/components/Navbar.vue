@@ -30,7 +30,7 @@ a {
 nav {
   background-color: #fff;
   height: 80px;
-  /*position: fixed;*/
+  /* position: fixed; */
   width: 100%;
   border-bottom: #757575 0.5px solid;
 }

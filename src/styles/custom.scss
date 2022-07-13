@@ -3,12 +3,12 @@
 // ==================== 變數 =========================
 
 // 整體
-$primary : #558ABA;
-$primary-hover: #2d5b87;
-$danger: #E35942;
-$danger-hover: #962424;
-$background: #E4ECF0;
-$dropdown : #E9F2FF;
+$primary : #558ABA !default;
+$primary-hover: #2d5b87 !default;
+$danger: #E35942 !default;
+$danger-hover: #962424 !default;
+$background: #E4ECF0 !default;
+$dropdown : #E9F2FF !default;
 
 // 白色內容方塊
 $box-bgc: #ffffff;
@@ -17,16 +17,19 @@ $radius: 1rem;
 // 陰影
 $shadow: 2.5px 4px 3px rgb(179, 175, 175);
 
+
 // ===================================================================
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 @import '@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss';
 
-// ==================== 整體 ==========================
+// ======================== 整體 ==========================
 
 *{
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  list-style: none;
 }
 body{
   background-color: $background;
@@ -68,6 +71,10 @@ body{
   }
 }
 
+@mixin white {
+  background: #fff;
+}
+
 // 白色內容方塊
 .content-box{
   margin: 1rem;
@@ -81,6 +88,7 @@ body{
   box-shadow: gray;
   .title{
     color: $primary;
+    padding-left: 1rem;
   }
 }
 .content-box-border{
@@ -91,7 +99,8 @@ body{
   border-radius: $radius;
 }
 .datepicker{
-  // TODO: 研究怎麼改背景顏色
   width: 400px;
-  // background-color: $dropdown;
+  input{
+		background-color: $dropdown;
+  }
 }
