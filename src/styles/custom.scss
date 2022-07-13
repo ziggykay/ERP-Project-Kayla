@@ -14,8 +14,10 @@ $dropdown : #E9F2FF;
 $box-bgc: #ffffff;
 $radius: 1rem;
 
+
 // 陰影
 $shadow: 2.5px 4px 3px rgb(179, 175, 175);
+
 
 // ===================================================================
 
@@ -99,4 +101,8 @@ body{
 }
 .datepicker{
   width: 400px;
+  // TODO: 研究怎麼改背景顏色  
+  input{
+		background-color: $dropdown;
+  }
 }

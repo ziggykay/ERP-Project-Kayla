@@ -16,6 +16,6 @@ import Sidebar from "./components/Sidebar.vue";
 
 </template>
 
-
 <style scoped>
+
 </style>

@@ -8,12 +8,12 @@ const routes = [
     component: () => import('../views/LoginView.vue')
   },
   {
-    path: '/home',
+    path: '/user/punch',
     name: 'UserPunch',
     component: () => import('../views/UserPunchView.vue')
   },
   {
-    path: '/learn',
+    path: '/user/learn',
     name: 'Learn',
     component: () => import('../views/LearnView.vue')
   },
@@ -22,6 +22,11 @@ const routes = [
     name: 'UserPunch',
     component: () => import('../views/PunchView.vue')
   },
+  {
+    path: '/manager/attendanceinfo',
+    name: 'ManagerAttendanceInfo',
+    component: () => import('../views/ManagerAttendanceInfoView.vue')
+  },   
 ];
 
 const router = createRouter({
