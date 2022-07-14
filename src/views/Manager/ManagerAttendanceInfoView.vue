@@ -1,5 +1,5 @@
 <script setup>
-import ManagerPunch from "../components/ManagerPunch.vue";
+import ManagerPunch from "../../components/Manager/ManagerPunch.vue";
 </script>
 
 <template>

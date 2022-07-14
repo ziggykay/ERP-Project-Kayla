@@ -1,5 +1,5 @@
 <script setup>
-import UserPunch from "../components/UserPunch.vue";
+import UserPunch from "../../components/UserPunch.vue";
 </script>
 
 <template>
