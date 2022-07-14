@@ -11,24 +11,30 @@ const routes = [
   {
     path: '/user/punch',
     name: 'UserPunch',
-    component: () => import('../views/UserPunchView.vue')
+    component: () => import('../views/User/UserPunchView.vue')
   },
   {
     path: '/user/learn',
     name: 'Learn',
-    component: () => import('../views/learnView.vue')
+    component: () => import('../views/User/learnView.vue')
+  },
+  // ========== manager-page ============== 
+  {
+    path: '/manager/punch',
+    name: 'ManagerPunch',
+    component: () => import('../views/Manager/ManagerPunchView.vue')
   },
   {
-    path: '/userpunch',
-    name: 'Punch',
-    component: () => import('../views/PunchView.vue')
+    path: '/manager/learnschedule',
+    name: 'ManagerlearnSchedule',
+    component: () => import('../views/Manager/ManagerLearnScheduleView.vue')
   },
-  // ========== manager-page ==============
   {
-    path: '/manager/attendanceinfo',
-    name: 'ManagerAttendanceInfo',
-    component: () => import('../views/ManagerAttendanceInfoView.vue')
-  },
+    path: '/manager/punchtable',
+    name: 'ManagerPunchTable',
+    component: () => import('../views/Manager/ManagerPunchTableView.vue')
+  },  
+
   // ========== corporate-page ===============
 ];
 
