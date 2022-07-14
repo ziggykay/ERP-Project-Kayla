@@ -14,20 +14,16 @@
   </div>	
 </template>
 
-<script type="text/javascript">
+<script setup>
 	import {ref, onMounted, computed} from "vue"
-	export default {
-	  name:'',
-	  props: {
-	    parentData: Array
-	  },
-	  setup(props){
-	  	//props data
-	  	const data  = ref(props.parentData)
 
-	  	return {data}
-	  }
-	} 
+	// props
+	const props = defineProps({
+		parentData: Array
+	})
+
+	//data
+	const data  = ref(props.parentData)
 </script>
 
 <style lang="scss" scoped>

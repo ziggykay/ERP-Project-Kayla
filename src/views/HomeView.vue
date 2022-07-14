@@ -1,17 +1,11 @@
 <template>
   <NavbarSidebar/>
-  <MainSection/>
+  <!-- <MainSection/> -->
 </template>
 
-<script>
-import NavbarSidebar from "../components/NavbarSidebar.vue";
-import MainSection from "../components/MainSection.vue";
-export default{
-  components:{
-    NavbarSidebar,
-    MainSection
-  }
-}
+<script setup>
+import NavbarSidebar from "../components/baseComponents/NavbarSidebar.vue";
+// import MainSection from "../components/MainSection.vue";
 </script>
 
 <style lang="scss" scoped>
