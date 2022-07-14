@@ -16,14 +16,6 @@ const routes = [
   {
     path: '/user/learn',
     name: 'Learn',
-<<<<<<< HEAD
-    component: () => import('../views/User/LearnView.vue')
-  },
-  {
-    path: '/manager/userpunch',
-    name: 'Punch',
-    component: () => import('../views/Manager/PunchView.vue')
-=======
     component: () => import('../views/User/learnView.vue')
   },
   // ========== manager-page ============== 
@@ -36,21 +28,13 @@ const routes = [
     path: '/manager/learnschedule',
     name: 'ManagerlearnSchedule',
     component: () => import('../views/Manager/ManagerLearnScheduleView.vue')
->>>>>>> ryan
   },
   {
-<<<<<<< HEAD
-    path: '/manager/attendanceinfo',
-    name: 'ManagerAttendanceInfo',
-    component: () => import('../views/Manager/ManagerAttendanceInfoView.vue')
-  },
-=======
     path: '/manager/punchtable',
     name: 'ManagerPunchTable',
     component: () => import('../views/Manager/ManagerPunchTableView.vue')
   },  
 
->>>>>>> ryan
   // ========== corporate-page ===============
 ];
 
