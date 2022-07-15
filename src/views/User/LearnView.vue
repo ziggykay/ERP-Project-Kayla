@@ -1,7 +1,7 @@
 <template>
 <div class="section">
 
-  <overallVue/>
+  <overallVue :parent-data="allClassData"/>
   
   <div class="container-fluid d-md-flex">
     <!-- 課程區塊 -->
@@ -10,7 +10,7 @@
       <hr/>
       <div class="scroll-box" >
         <div v-for="data of classData" :key="data.id">
-          <ClassCard :parentData="data"/>
+          <ClassCard :parentData="data" @show-video="getVideo"/>
         </div>
       </div> 
     </div>
@@ -19,20 +19,12 @@
       <p class="title"><strong>相關影片</strong></p>
       <hr>
       <div class="scroll-box">
-        <div v-for="data of classData" :key="data.id">
-          <!-- <div class="video-card">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/B-hv-N8gMjQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-card">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/ze9ZWoDCI5I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div> -->
-          <div class="video-card">
-            <iframe width="504" height="283.5" :src="`https://www.youtube.com/watch?v=TWyJJjvLiqs`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <!-- <div class="video-card">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/ze9ZWoDCI5I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div> -->
+        <div class="video-card" v-for="data of videoData" :key="data">
+          <iframe width="504" height="283.5" :src="data.src" 
+            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+          </iframe>
         </div>
+        <!-- {{videoData}} -->
       </div>
     </div>
   </div>
@@ -41,67 +33,111 @@
 
 </template>
 
-<script>
-import ClassCard from "../../components/baseComponents/ClassCard.vue";
-import { ref } from "vue";
-export default {
-  components:{
-    ClassCard
-  },
-  setup(){
-    const classData = ref([
-      {
-        id: 1,
-        name: '系統服務與計算機概論',
-        progress: 20,
-        status: '進行中',
-        time: 40,
-        done: 8,
-        video:{
-          videoOne: 'https://www.youtube.com/watch?v=TWyJJjvLiqs',
-          videoTwo: 'https://www.youtube.com/watch?v=ze9ZWoDCI5I'
+<script setup>
+  import overallVue from "../../components/baseComponents/overall.vue";
+  import ClassCard from "../../components/baseComponents/ClassCard.vue";
+  import { ref, watch } from "vue";
+
+  const allClassData = ref([
+    {
+      title: "課程總時數",
+      number: 400,
+      color: "#558ABA"
+    },
+    {
+      title: "課程總堂數",
+      number: "5%",
+      color: "#1AAF68"
+    },
+    {
+      title: "已進行堂數",
+      number: "5堂",
+      color: "#1AAF68"
+    },
+    {
+      title: "完成率",
+      number: 50,
+      color: "#1AAF68"
+    }
+  ]);
+
+  const classData = ref([
+    {
+      id: 1,
+      name: '系統服務與計算機概論',
+      progress: 20,
+      status: '進行中',
+      time: 40,
+      done: 8,
+      video: [
+        {
+          src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
+        },
+        {
+          src: 'https://www.youtube.com/embed/0jeTAEQziv4'
         }
-      },
-      {
-        id: 2,
-        name: 'Jquery&Jquery extensions',
-        progress: 100,
-        status: '已完成',
-        time: 40,
-        done: 40,
-        video:{
-          videoOne: 'https://www.youtube.com/watch?v=TWyJJjvLiqs',
-          videoTwo: 'https://www.youtube.com/watch?v=ze9ZWoDCI5I'
+      ]
+    },
+    {
+      id: 2,
+      name: 'Jquery&Jquery extensions',
+      progress: 100,
+      status: '已完成',
+      time: 40,
+      done: 40,
+      video: [
+        {
+          src: 'https://www.youtube.com/embed/MbjObHmDbZo&t'
+        },
+        {
+          src: 'https://www.youtube.com/embed/rBLuvEwIF5E'
         }
-      },
-      {
-        id: 3,
-        name: 'Linux基礎到架站',
-        progress: 80,
-        status: '進行中',
-        time: 40,
-        done: 32,
-        video:{
-          videoOne: 'https://www.youtube.com/watch?v=TWyJJjvLiqs',
-          videoTwo: 'https://www.youtube.com/watch?v=ze9ZWoDCI5I'
+      ]
+    },
+    {
+      id: 3,
+      name: 'Linux基礎到架站',
+      progress: 80,
+      status: '進行中',
+      time: 40,
+      done: 32,
+      video: [
+        {
+          src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
+        },
+        {
+          src: 'https://www.youtube.com/embed/rBLuvEwIF5E'
         }
-      },
-      {
-        id: 4,
-        name: '響應式網頁專題製作',
-        progress: 80,
-        status: '進行中',
-        time: 40,
-        done: 32,
-        video:{
-          videoOne: 'https://www.youtube.com/watch?v=TWyJJjvLiqs',
-          videoTwo: 'https://www.youtube.com/watch?v=ze9ZWoDCI5I'
+      ]
+    },
+    {
+      id: 4,
+      name: '響應式網頁專題製作',
+      progress: 80,
+      status: '進行中',
+      time: 40,
+      done: 32,
+      video: [
+        {
+          src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
+        },
+        {
+          src: 'https://www.youtube.com/embed/rBLuvEwIF5E'
         }
-      },
-    ])
-    return { classData }
+      ]
+    },
+  ])
+
+  let videoData = ref(
+    classData.value[0].video
+  )
+
+  function getVideo (vid) {
+    videoData.value = '';
+    videoData.value = vid
+    console.log(videoData.value)
   }
-}
+
 </script>
 
 <style lang="scss" scoped>
@@ -124,6 +160,9 @@ export default {
   width: auto;
   height: auto;
   max-height: 100vh;
+  hr{
+    margin: 0;
+  }
 }
 .video-box{
   display: flex;            
@@ -131,10 +170,12 @@ export default {
   width: auto;
   height: auto;
   max-height: 100vh;
+  hr{
+    margin: 0;
+  }
   .video-card{
-    width: 400px;
-    height: 300px;
-    background-color: aqua;
+    // width: 400px;
+    // height: 300px;
     margin: 30px 0 30px 0;
   }
 }
