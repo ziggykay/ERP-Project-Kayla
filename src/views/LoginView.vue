@@ -8,8 +8,7 @@
     <div class="mt-5"><label for="">密碼</label> <input type="password" /></div>
     <br />
     <router-link to="/home"
-      ><div class="btn btn-primary text-light">Login</div></router-link
-    >
+      ><div class="btn btn-primary text-light">Login</div></router-link>
   </div>
 </template>
 
