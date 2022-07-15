@@ -16,19 +16,25 @@ const routes = [
   {
     path: '/user/learn',
     name: 'Learn',
-    component: () => import('../views/User/LearnView.vue')
+    component: () => import('../views/User/learnView.vue')
+  },
+  // ========== manager-page ============== 
+  {
+    path: '/manager/punch',
+    name: 'ManagerPunch',
+    component: () => import('../views/Manager/ManagerPunchView.vue')
   },
   {
-    path: '/manager/userpunch',
-    name: 'Punch',
-    component: () => import('../views/Manager/PunchView.vue')
+    path: '/manager/learnschedule',
+    name: 'ManagerlearnSchedule',
+    component: () => import('../views/Manager/ManagerLearnScheduleView.vue')
   },
-  // ========== manager-page ==============
   {
-    path: '/manager/attendanceinfo',
-    name: 'ManagerAttendanceInfo',
-    component: () => import('../views/Manager/ManagerAttendanceInfoView.vue')
-  },
+    path: '/manager/punchtable',
+    name: 'ManagerPunchTable',
+    component: () => import('../views/Manager/ManagerPunchTableView.vue')
+  },  
+
   // ========== corporate-page ===============
 ];
 

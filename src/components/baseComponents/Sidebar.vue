@@ -1,76 +1,84 @@
 <template>
 <div class="container">
   <div class="side-menu">
-    <li>
-      <a href="#"><i class="fa-solid fa-house"></i><span>首頁</span> </a>
-    </li>
-    <li>
-      <a href="#"
-        ><i class="fa-solid fa-chart-column"></i><span>出勤紀錄</span>
-      </a>
-    </li>
-    <li>
-      <a href="#"><i class="fa-solid fa-chalkboard-user"></i>
-        <span>學習紀錄</span>
-      </a>
-    </li>
-    <!-- <li>
-      <a href="#"><i class="fa-solid fa-book-open"></i><span>日誌</span></a>
-    </li> -->
-    <li class="mb-1">
+    <li v-for="(data, index) of userSideBarData">
+    	<template v-if="!data.subTitleArr">
+    		<router-link :to="data.href"><i class="fa-solid" :class="data.iconCss"></i><span>{{ data.title }}</span></router-link>
+    	</template>
+    	<template v-else>
       <a
         class="collapsed"
         data-bs-toggle="collapse"
         data-bs-target="#orders-collapse"
         aria-expanded="false"
-        ><i class="fa-solid fa-book-open"></i><span>日誌</span></a
-      >
-      <!-- <button
-        class="btn btn-toggle align-items-center collapsed"
-        data-bs-toggle="collapse"
-        data-bs-target="#orders-collapse"
-        aria-expanded="false"
-      >
-        日誌
-      </button> -->
+        ><i class="fa-solid" :class="data.iconCss"></i><span>{{ data.title }}</span></a>
       <div class="collapse" id="orders-collapse">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <a
+          <router-link 
+          	v-for="(subData, index) of data.subTitleArr"
             class="btn align-items-center sub-btn dropdown"
-            data-bs-toggle="collapse"
             data-bs-target="#dashboard-collapse"
             aria-expanded="false"
+            :to="subData.href"
           >
-            查看日誌
-          </a>
-          <a
-            class="btn align-items-center sub-btn dropdown"
-            data-bs-toggle="collapse"
-            data-bs-target="#dashboard-collapse"
-            aria-expanded="false"
-          >
-            日誌登打率
-          </a>
+          {{ subData.subTitle }}
+          </router-link>
         </ul>
       </div>
-    </li>
+    	</template>
 
-    <!-- 111 -->
-    <li>
-      <a href="#"
-        ><i class="fa-solid fa-envelope"></i><span>查看問題回覆</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="Logout"><span>Logout</span></a>
     </li>
   </div>	
 </div>
 </template>
-<script type="text/javascript">
-	export default {
-	  name:'SideBar',
-	} 
+
+<script setup>
+	import { ref } from 'vue'
+	
+	//props 
+	const props = defineProps({
+		parentSideData: Array
+	})
+
+	// data
+	const parentSideData = ref(props.parentSideData);
+	const userSideBarData = ref([
+		{
+			title: '首頁',
+			href: "/home", 
+			iconCss: 'fa-house'
+		},
+		{
+			title: '出勤紀錄',
+			href: "/punch" ,
+			iconCss: 'fa-chart-column'
+		},
+		{
+			title: '學習紀錄',
+			href: "/learn",
+			iconCss: 'fa-chalkboard-user'
+		},	 
+		{
+			title: '日誌',
+			href: "/log",
+			iconCss: 'fa-book-open',
+			subTitleArr: [
+				{
+					subTitle: '查看日誌',
+					href: "/looklog",
+				},
+				{
+					subTitle: '日誌登打率',
+					href: "/lograte"
+				},	  				
+			]
+		},	
+		{
+			title: '查看問題回覆',
+			href: "/qa",
+			iconCss: 'fa-envelope'
+		}	  		 		  		 		
+	])
 </script>
 
 <style scoped>
