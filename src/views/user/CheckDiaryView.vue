@@ -5,5 +5,4 @@
 <script setup>
 import CheckDiary from "../../components/User/CheckDiary.vue";
 </script>
-
 <style></style>
