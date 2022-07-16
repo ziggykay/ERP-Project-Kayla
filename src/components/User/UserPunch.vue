@@ -5,15 +5,8 @@
   	<button class="confirm-btn btn me-3 shadow "  :class="{'bg-white': !isChart, 'text-black': !isChart}" @click="changeShow">圖表顯示 </button>
   	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': isChart, 'text-black': isChart}" @click="changeShow">表格顯示 </button>		
 	</div>
-  
-  <!-- 日期選擇套件 Vue3-Datepicker -->
-  <div class="content-box dateHeight d-md-flex overall-box">
-  	<select class="me-3 selectInfo">
-	    <option>本日</option>
-	    <option>本月</option>  		
-  	</select>
-  	<Datepicker class="w-25 dateInfo datepicker dp__theme_light" v-model="date" range/>	
-  </div>	 	
+	<!-- filter -->
+  <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect>
   
   <!-- overall -->
   <Overall :parent-data="AttendanceData"></Overall>
@@ -40,19 +33,29 @@
 </template>
   
 <script setup>
-	// ecahrt
 	import VChart from "vue-echarts";
 	import Overall from "../baseComponents/overall.vue";
+	import FilterSelect from "../baseComponents/filterSelect.vue";
 	import {ref, onMounted, computed} from "vue"
 
-	// data
-	// date
-	const date = ref("");
-	onMounted(() => {
-    const startDate = new Date();
-    const endDate = new Date(new Date().setDate(startDate.getDate() + 7))
-    date.value = [startDate, endDate]	
-	})
+	// filter-data
+	const selectArr = ref([
+		{
+			selected: "month",
+			data: [
+	  		{
+	  			name: "今日",
+	  			item: "today"
+	  		},
+	  		{
+	  			name: "本月",
+	  			item: "month"
+	  		}				 		
+			]	  			
+		},		  		  		
+	]);	
+	const title = "使用者出勤紀錄資訊"
+
 
 	// AttendanceData
 	const AttendanceData = ref([
