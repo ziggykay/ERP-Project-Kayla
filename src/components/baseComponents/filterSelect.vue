@@ -1,6 +1,6 @@
 <template>
 	<div class="content-box filter-box">
-  	<p class="title"><strong>parent.title</strong></p> 	  	
+  	<p class="title"><strong>{{parentTitle}}</strong></p> 	  	
 		<hr/>
 		<div class="d-flex flex-wrap">
 	  	<select class="selectInfo me-2" v-for="(item, index) of parentSelectArr" v-model="item.selected">
@@ -18,28 +18,27 @@
 	</div>
 </template>
 
-<script type="text/javascript">
+<script setup>
 	import {ref, onMounted, computed} from "vue"
+	//props 
+	const props = defineProps({
+	  parentSelectArr: Array,
+	  parentTitle: String
+	})
+
+	// data
+	const parentSelectArr = ref(props.parentSelectArr)
+	const parentTitle = ref(props.parentTitle)
 	
-	export default {
-	  name:'filterStudnet',
-	  props: {
-	    parentSelectArr: Array
-	  },	   
-	  setup(props){
-	  	// props data
-	  	const parentSelectArr  = ref(props.parentSelectArr)
-	  	// date
-	  	const date = ref("");
-	  	onMounted(() => {
-		    const startDate = new Date();
-		    const endDate = new Date(new Date().setDate(startDate.getDate() + 7))
-		    date.value = [startDate, endDate]	
-	  	})
-	  	return { parentSelectArr, date }
-	  }
-	} 
+	// date
+	const date = ref("");
+	onMounted(() => {
+    const startDate = new Date();
+    const endDate = new Date(new Date().setDate(startDate.getDate() + 7))
+    date.value = [startDate, endDate]	
+	})	
 </script>
+
 
 <style lang="scss" scoped>
 	.filter-box{
@@ -58,5 +57,5 @@
 	  }
 	}
 </style>
-
+	
 	

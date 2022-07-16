@@ -7,14 +7,12 @@
     </ul>
     <label for="menu" class="menu-bar"><i class="fa-solid fa-bars"></i></label>
   </nav>
-
 </template>
 
-<script>
-export default {};
+<script setup>
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 * {
   padding: 0px;
   margin: 0px;
@@ -153,5 +151,7 @@ nav .menu-bar {
 }
 #menu:checked ~ .side-menu {
   left: 0;
-}
+}	
 </style>
+
+	

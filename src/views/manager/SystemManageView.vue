@@ -1,15 +1,23 @@
 <template>
     <!--change button  -->
 	<div class="boxContainer">
-  	<button class="confirm-btn btn me-3 shadow"  type="submit" :class="activeClass == NeedResponse ? 'active':''" @click="tabChange(NeedResponse)">待回覆區 </button>
-  	<button class="confirm-btn btn me-3 shadow"  type="submit"  @click="tabChange(CaseEnd)">已結案區 </button>		
+  	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': !isInfo, 'text-black': !isInfo}" @click="changeShow">待回覆區 </button>
+  	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': isInfo, 'text-black': isInfo}" @click="changeShow">已結案區 </button>		
 	</div>
-  <div v-is="changeView"></div>
+  <NeedResponse v-show="isInfo"></NeedResponse>
+  <CaseEnd v-show="!isInfo"></CaseEnd>
+  <!-- <div v-is="changeView"></div> -->
 </template>
 
-<script>
+<script setup>
 import NeedResponse from "/src/components/NeedResponse.vue"
 import CaseEnd from "/src/components/CaseEnd.vue"
+import {ref} from "vue"
+
+const isInfo = ref(true);
+	const changeShow = () => {
+		isInfo.value = !isInfo.value
+	}
 // const tabChange = (tabItem) =>  {
 // this.changeView = tabItem;
 // this.changeView = NeedResponse
@@ -20,27 +28,27 @@ import CaseEnd from "/src/components/CaseEnd.vue"
 //     }
 // ]
 // )
-export default {
+// export default {
     
-components: {
-  NeedResponse,
-  CaseEnd,
-},
-data(){
-  return{
-    NeedResponse: NeedResponse,
-    CaseEnd: CaseEnd,
-    changeView: NeedResponse,
+// components: {
+//   NeedResponse,
+//   CaseEnd,
+// },
+// data(){
+//   return{
+//     NeedResponse: NeedResponse,
+//     CaseEnd: CaseEnd,
+//     changeView: NeedResponse,
 
-  }
-},
-methods: {
-    tabChange(tabItem) {
-    this.changeView = tabItem;
-    }, 
-},
+//   }
+// },
+// methods: {
+//     tabChange(tabItem) {
+//     this.changeView = tabItem;
+//     }, 
+// },
 
-}
+// }
 
 </script>
 

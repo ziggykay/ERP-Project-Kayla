@@ -1,8 +1,8 @@
 <script setup>
 
 // import LoginView from "./views/LoginView.vue";
-import Navbar from "./components/Navbar.vue";
-import Sidebar from "./components/Sidebar.vue";
+import Navbar from "./components/baseComponents/Navbar.vue";
+import Sidebar from "./components/baseComponents/Sidebar.vue";
 </script>
 
 <template>
