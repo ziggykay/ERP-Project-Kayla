@@ -36,6 +36,36 @@ const routes = [
   },  
 
   // ========== corporate-page ===============
+  {
+    path: '/manager/checkuserdiary',
+    name: 'CheckUserDiary',
+    component: () => import('../views/manager/CheckUserDiaryView.vue')
+  },
+  {
+    path: '/user/checkdiary',
+    name: 'CheckDiary',
+    component: () => import('../views/user/CheckDiaryView.vue')
+  },
+  {
+    path: '/user/systemresponse',
+    name: 'systemresponse',
+    component: () => import('../views/user/SystemResponseView.vue')
+  },
+  {
+    path: '/manager/systemmanage',
+    name: 'systemmanage',
+    component: () => import('../views/manager/SystemManageView.vue')
+  },
+  {
+    path: '/company/UserDiaryFeedback',
+    name: 'UserDiaryFeedback',
+    component: () => import('../views/company/UserDiaryFeedbackView.vue')
+  },
+  {
+    path: '/company/watchuserdiary',
+    name: 'watchuserdiary',
+    component: () => import('../views/company/WatchUserDiaryView.vue')
+  },
 ];
 
 const router = createRouter({
