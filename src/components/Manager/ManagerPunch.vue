@@ -1,13 +1,13 @@
 <template>
 	<!--change button  -->
 	<div class="boxContainer">
-  	<button class="confirm-btn btn me-3 shadow "  :class="{'bg-white': isGrade, 'text-black': isGrade}" @click="changeShow">各別班級</button>
-  	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': !isGrade, 'text-black': !isGrade}" @click="changeShow">個別學員</button>
+  	<button class="confirm-btn btn me-3 shadow "  :class="{'bg-white': !isGrade, 'text-black': !isGrade}" @click="changeShow">各別班級</button>
+  	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': isGrade, 'text-black': isGrade}" @click="changeShow">個別學員</button>
 	</div>
 
-	<template v-if="!isGrade">
+	<template v-if="isGrade">
 		<!--  filter-->
-		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle">
+		<FilterSelect :parent-selectArr="gradeSelectArr" :parent-title="gradeTitle">
 			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
 		</FilterSelect>
 	  
@@ -22,14 +22,28 @@
 		  <div class="content-box overall-box chartContainer pie-width" >
 				<v-chart class="chartHeight" :option="gradeBarchart" autoresize />   		
 		  </div> 		  	
-	  </div>
+	  </div>  
 
-	  <!-- overall -->
-	  <Overall :parent-data="gradeAttendanceData"></Overall>	  
+		<!-- filter -->
+		<FilterSelect :parent-selectArr="gradeCompareSelectArr" :parent-title="gradeCompare">
+			<template v-slot:bar>
+				<input type="checkbox" id="fn" value="fn" v-model="checkedGrades">
+				<label for="fn">前端班</label>
+				<input type="checkbox" id="bd" value="bd" v-model="checkedGrades">
+				<label for="bd">數據班</label>
+				<input type="checkbox" id="cd" value="cd" v-model="checkedGrades">
+				<label for="cd">雲端班</label>					
+			</template>	
+		</FilterSelect>	
 
-		</template>
+	  <!-- chart -->
+	  <div class="content-box overall-box chartContainer" >
+			<v-chart class="chartHeight" :option="gradeCompareBarchart" autoresize />  	
+	  </div>	
 
-	<template v-if="isGrade">
+	</template>
+
+	<template v-if="!isGrade">
 		<!--  filter-->
 		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle">
 			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
@@ -41,21 +55,9 @@
 	  <!-- chart -->
 	  <div class="content-box overall-box chartContainer" >
 			<v-chart class="chartHeight" :option="userBarchart" autoresize />  	
-	  </div> 		
-		</template>
+	  </div>		   		
+	</template>
 
-		<!-- filter -->
-		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle">
-			<template v-slot:bar>
-				<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
-				<label for="jack">前端班</label>
-				<input type="checkbox" id="john" value="John" v-model="checkedNames">
-				<label for="john">數據班</label>
-				<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
-				<label for="mike">雲端班</label>				
-			</template>
-			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
-		</FilterSelect>		
 
 </template>
 
@@ -138,7 +140,7 @@
 	]);
 	const gradeBarchart = ref({
     title: {
-      text: '出席狀況',
+      text: '出勤狀況（人數）',
 			textStyle: {
 			    color: '#558ABA'
 			}
@@ -149,18 +151,19 @@
     },
     xAxis: {
       data: ['1110701', '1110701', '1110701', '1110701', '1110701'],
+    	name: '日期',
+    	nameLocation : 'end',      
       nameTextStyle: {
       	fontWeight: "bolder"
       }
     },
     yAxis: {
-			nameTextStyle: {
-      	fontWeight: "bolder"
-      }
+    	name: '人數',
+    	nameLocation : 'end',
     },
 	  series: [
 	    {
-	    	name: '到班時數',
+	    	name: '正常到班',
 	      data: [5, 2, 7, 5, 5],
 	      type: 'bar',
 	      stack: 'x',
@@ -171,19 +174,28 @@
 				// barCategoryGap: '5%'
 	    },
 	    {
-	    	name: '課程時數',
+	    	name: '遲到數',
 	      data: [0, 5, 0, 2, 0],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
-					color: '#FF6A3C'
+					color: '#9FE080'
+	      },			      
+	    },
+	    {
+	    	name: '缺勤',
+	      data: [0, 5, 0, 2, 0],
+	      type: 'bar',
+	      stack: 'x',
+	      itemStyle: {
+					color: '#FAC858'
 	      },			      
 	    }
 	  ],	  		
 	})
 	const piechart = ref({
 	  title: {
-	    text: "本月整體出勤狀況",
+	    text: "出勤狀況比例",
 			textStyle: {
 			    color: '#558ABA'
 			}
@@ -221,7 +233,147 @@
 	      },      
 	    }
 	  ]
-	});		  			  	
+	});
+	// gradecompare
+	const checkedGrades = ref([])	
+	const gradeCompareSelectArr =ref([
+		{
+			selected: "102",
+			data: [
+	  		{
+	  			name: "101",
+	  			item: "101"
+	  		},
+	  		{
+	  			name: "102",
+	  			item: "102"
+	  		}		 		
+			]
+		},
+		{
+			selected: "month",
+			data: [
+	  		{
+	  			name: "今日",
+	  			item: "today"
+	  		},
+	  		{
+	  			name: "本月",
+	  			item: "month"
+	  		}				 		
+			]	  			
+		},		  		  		
+	]);		
+	const gradeCompare = ref("班級比較")
+	const gradeCompareBarchart = ref({
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  legend: {},
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: [
+    {
+      type: 'category',
+      data: ['7/01~7/06', '7/07~7/14', '7/07~7/14', '7/07~7/14', '7/07~7/14', '7/07~7/14', '7/07~7/14']
+    }
+  ],
+  yAxis: [
+    {
+      type: 'value'
+    }
+  ],
+  series: [
+    {
+      name: '正常到班',
+      type: 'bar',
+      stack: 'fn',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [320, 332, 301, 334, 390, 330, 320]
+    },
+    {
+      name: '遲到',
+      type: 'bar',
+      stack: 'fn',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [120, 132, 101, 134, 90, 230, 210]
+    },
+    {
+      name: '缺勤',
+      type: 'bar',
+      stack: 'fn',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [220, 182, 191, 234, 290, 330, 310]
+    },
+    {
+      name: '正常到班',
+      type: 'bar',
+      stack: 'bd',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [320, 332, 301, 334, 390, 330, 320]
+    },
+    {
+      name: '遲到',
+      type: 'bar',
+      stack: 'bd',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [120, 132, 101, 134, 90, 230, 210]
+    },
+    {
+      name: '缺勤',
+      type: 'bar',
+      stack: 'bd',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [220, 182, 191, 234, 290, 330, 310]
+    },   
+    {
+      name: '正常到班',
+      type: 'bar',
+      stack: 'cd',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [320, 332, 301, 334, 390, 330, 320]
+    },
+    {
+      name: '遲到',
+      type: 'bar',
+      stack: 'cd',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [120, 132, 101, 134, 90, 230, 210]
+    },
+    {
+      name: '缺勤',
+      type: 'bar',
+      stack: 'cd',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [220, 182, 191, 234, 290, 330, 310]
+    },         
+  ]
+})
 
 	// user
 	const userSelectArr = ref([
@@ -305,7 +457,7 @@
 			number: "5%",
 			color: "#1AAF68"
 		}
-	]); 
+	]); 	
 	const userBarchart = ref({
     title: {
       text: '出席狀況',
@@ -369,6 +521,11 @@
 	  width: auto;
 	  height: auto;
 
+	}
+
+	.check-info{
+  	border-radius: 4px;
+  	cursor: pointer;		
 	}		
 	.chartContainer{
 		height: 70vh;
