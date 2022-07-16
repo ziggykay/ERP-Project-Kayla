@@ -34,9 +34,9 @@ const routes = [
     component: () => import('../views/User/SystemResponseView.vue')
   },
   {
-    path: '/user/checkDiary',
-    name: 'CheckDiary',
-    component: () => import('../views/User/CheckDiaryView.vue')
+    path: '/user/checkSelfDiary',
+    name: 'CheckSelfDiary',
+    component: () => import('../views/User/CheckSelfDiaryView.vue')
   },
   // ========== manager-page ============== 
   {
@@ -56,7 +56,7 @@ const routes = [
   },
   {
     path: '/manager/checkDiarySelect',
-    name: 'CheckDiarySelect',
+    name: 'CheckDiarySelectManager',
     component: () => import('../views/Manager/CheckDiarySelectView.vue')
   },
   {

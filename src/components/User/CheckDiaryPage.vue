@@ -24,7 +24,7 @@
             <div>
               <router-link
                 class="checkBtn btn btn-primary confirm-btn"
-                to="/user/checkDiary"
+                to="/user/checkSelfDiary"
                 >查看</router-link
               >
             </div>
