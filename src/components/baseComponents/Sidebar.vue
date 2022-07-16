@@ -15,7 +15,7 @@
       <div class="collapse" id="orders-collapse">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
           <router-link 
-          	v-for="(subData, index) of data.subTitleArr"
+          	v-for="(subData, index) of data.subTitleArr" :key="subData"
             class="btn align-items-center sub-btn dropdown"
             data-bs-target="#dashboard-collapse"
             aria-expanded="false"
@@ -50,12 +50,12 @@
 		},
 		{
 			title: '出勤紀錄',
-			href: "/punch" ,
+			href: "/user/punch" ,
 			iconCss: 'fa-chart-column'
 		},
 		{
 			title: '學習紀錄',
-			href: "/learn",
+			href: "/user/learn",
 			iconCss: 'fa-chalkboard-user'
 		},	 
 		{

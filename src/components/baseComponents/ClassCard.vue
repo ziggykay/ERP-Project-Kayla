@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-  import { ref, defineEmits, onMounted } from "vue"
+  import { ref, onMounted } from "vue"
 
   const props = defineProps({
     parentData: Object

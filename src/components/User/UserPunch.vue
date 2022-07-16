@@ -16,7 +16,9 @@
   </div>	 	
   
   <!-- overall -->
-  <Overall :parent-data="AttendanceData"></Overall>
+  <Overall :parent-data="AttendanceData">
+		<div class="">slot</div>
+	</Overall>
 
   <!-- chart -->
   <div class="content-box overall-box chartContainer" v-show="isChart">
@@ -45,7 +47,6 @@
 	import Overall from "../baseComponents/overall.vue";
 	import {ref, onMounted, computed} from "vue"
 
-	// data
 	// date
 	const date = ref("");
 	onMounted(() => {

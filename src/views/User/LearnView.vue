@@ -3,6 +3,7 @@
 
   <overallVue :parent-data="allClassData"/>
   
+  <button class="btn confirm-btn" @click="logData">test</button>
   <div class="container-fluid d-md-flex">
     <!-- 課程區塊 -->
     <div class="content-box class-box col d-flex">
@@ -36,7 +37,17 @@
 <script setup>
   import overallVue from "../../components/baseComponents/overall.vue";
   import ClassCard from "../../components/baseComponents/ClassCard.vue";
+  import axios from "axios";
   import { ref, watch } from "vue";
+
+  const testData = ref()
+  
+  function logData () {
+    axios.get('https://jsonplaceholder.typicode.com/posts')
+    // .then( res => testData = res.data )
+    .then( res => console.log(res.data))
+  }
+
 
   const allClassData = ref([
     {
@@ -75,6 +86,9 @@
         },
         {
           src: 'https://www.youtube.com/embed/0jeTAEQziv4'
+        },
+        {
+          src: 'https://www.youtube.com/embed/AKqwkjcyRGY'
         }
       ]
     },
