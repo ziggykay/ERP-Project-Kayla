@@ -109,9 +109,11 @@
               <div>王小明</div>
             </div>
             <div class="text">
-              <button type="button" class="btn btn-primary confirm-btn">
-                詳細資訊
-              </button>
+              <router-link
+                class="btn btn-primary confirm-btn"
+                to="/manager/userInfo"
+                >詳細資訊</router-link
+              >
             </div>
           </div>
         </div>

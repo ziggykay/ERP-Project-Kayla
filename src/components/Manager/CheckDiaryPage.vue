@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid px-5 pt-3">
     <div class="inner">
-      <filterSelect :parent-selectArr="selectArr" />
+      <filterSelect :parent-selectArr="selectArr" :parent-title="title" />
       <div class="content-box checkBox mt-3">
         <div class="py-2 checkBoxInner">
           <div
@@ -22,177 +22,11 @@
               </div>
             </div>
             <div>
-              <button type="button" class="btn btn-primary confirm-btn">
-                查看
-              </button>
-            </div>
-          </div>
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
-            <div class="d-flex bigText">
-              <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
-              </div>
-              <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
-              </div>
-              <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
-              </div>
-              <!-- <div>4</div> -->
-            </div>
-            <div>
-              <button type="button" class="btn btn-primary confirm-btn">
-                查看
-              </button>
-            </div>
-          </div>
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
-            <div class="d-flex bigText">
-              <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
-              </div>
-              <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
-              </div>
-              <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
-              </div>
-            </div>
-            <div>
-              <button type="button" class="btn btn-primary confirm-btn">
-                查看
-              </button>
-            </div>
-          </div>
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
-            <div class="d-flex bigText">
-              <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
-              </div>
-              <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
-              </div>
-              <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
-              </div>
-              <!-- <div>4</div> -->
-            </div>
-            <div>
-              <button type="button" class="btn btn-primary confirm-btn">
-                查看
-              </button>
-            </div>
-          </div>
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
-            <div class="d-flex bigText">
-              <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
-              </div>
-              <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
-              </div>
-              <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
-              </div>
-              <!-- <div>4</div> -->
-            </div>
-            <div>
-              <button type="button" class="btn btn-primary confirm-btn">
-                查看
-              </button>
-            </div>
-          </div>
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
-            <div class="d-flex bigText">
-              <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
-              </div>
-              <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
-              </div>
-              <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
-              </div>
-              <!-- <div>4</div> -->
-            </div>
-            <div>
-              <button type="button" class="btn btn-primary confirm-btn">
-                查看
-              </button>
-            </div>
-          </div>
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
-            <div class="d-flex bigText">
-              <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
-              </div>
-              <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
-              </div>
-              <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
-              </div>
-              <!-- <div>4</div> -->
-            </div>
-            <div>
-              <button type="button" class="btn btn-primary confirm-btn">
-                查看
-              </button>
-            </div>
-          </div>
-
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
-            <div class="d-flex bigText">
-              <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
-              </div>
-              <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
-              </div>
-              <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
-              </div>
-              <!-- <div>4</div> -->
-            </div>
-            <div>
-              <button type="button" class="btn btn-primary confirm-btn">
-                查看
-              </button>
+              <router-link
+                class="checkBtn btn btn-primary confirm-btn"
+                to="/manager/checkDiary"
+                >查看</router-link
+              >
             </div>
           </div>
         </div>
@@ -229,6 +63,7 @@ const selectArr = ref([
     ],
   },
 ]);
+const title = ref("查看日誌");
 </script>
 
 <style lang="scss" scoped>
@@ -247,7 +82,7 @@ const selectArr = ref([
   }
   .checkDiv:hover {
     background-color: #558aba;
-    button {
+    .checkBtn {
       background-color: #22496d;
     }
     .text {

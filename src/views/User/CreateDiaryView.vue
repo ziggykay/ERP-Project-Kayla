@@ -4,14 +4,8 @@
   </div>
 </template>
 
-<script>
-import CreateDiaryPage from "../../components/User/CheckDiaryPage";
-export default {
-  name: "HomeView",
-  components: {
-    CreateDiaryPage,
-  },
-};
+<script setup>
+import CreateDiaryPage from "../../components/User/CreateDiaryPage.vue";
 </script>
 
 <style scoped></style>

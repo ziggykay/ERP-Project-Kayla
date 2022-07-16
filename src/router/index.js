@@ -18,6 +18,26 @@ const routes = [
     name: 'Learn',
     component: () => import('../views/User/learnView.vue')
   },
+  {
+    path: '/user/createDiary',
+    name: 'CreateDiary',
+    component: () => import('../views/User/CreateDiaryView.vue')
+  },
+  {
+    path: '/user/checkDiarySelect',
+    name: 'CheckDiarySelect',
+    component: () => import('../views/User/CheckDiarySelectView.vue')
+  },
+  {
+    path: '/user/systemResponse',
+    name: ' SystemResponse',
+    component: () => import('../views/User/SystemResponseView.vue')
+  },
+  {
+    path: '/user/checkDiary',
+    name: 'CheckDiary',
+    component: () => import('../views/User/CheckDiaryView.vue')
+  },
   // ========== manager-page ============== 
   {
     path: '/manager/punch',
@@ -33,38 +53,47 @@ const routes = [
     path: '/manager/punchtable',
     name: 'ManagerPunchTable',
     component: () => import('../views/Manager/ManagerPunchTableView.vue')
-  },  
-
-  // ========== corporate-page ===============
-  {
-    path: '/manager/checkuserdiary',
-    name: 'CheckUserDiary',
-    component: () => import('../views/manager/CheckUserDiaryView.vue')
   },
   {
-    path: '/user/checkdiary',
+    path: '/manager/checkDiarySelect',
+    name: 'CheckDiarySelect',
+    component: () => import('../views/Manager/CheckDiarySelectView.vue')
+  },
+  {
+    path: '/manager/checkDiary',
     name: 'CheckDiary',
-    component: () => import('../views/user/CheckDiaryView.vue')
+    component: () => import('../views/Manager/CheckUserDiaryView.vue')
   },
   {
-    path: '/user/systemresponse',
-    name: 'systemresponse',
-    component: () => import('../views/user/SystemResponseView.vue')
+    path: '/manager/accountCheck',
+    name: 'AccountCheck',
+    component: () => import('../views/Manager/AccountCheckView.vue')
   },
   {
-    path: '/manager/systemmanage',
-    name: 'systemmanage',
-    component: () => import('../views/manager/SystemManageView.vue')
+    path: '/manager/userInfo',
+    name: 'UserInfo',
+    component: () => import('../views/Manager/UserInfoView.vue')
   },
   {
-    path: '/company/UserDiaryFeedback',
+    path: '/manager/systemManage',
+    name: 'SystemManage',
+    component: () => import('../views/Manager/SystemManageView.vue')
+  },
+  // ========== company-page ===============
+  {
+    path: '/company/checkDiary',
+    name: 'CheckDiary',
+    component: () => import('../views/Company/CheckDiaryView.vue')
+  },
+  {
+    path: '/company/userDiaryFeedback',
     name: 'UserDiaryFeedback',
-    component: () => import('../views/company/UserDiaryFeedbackView.vue')
+    component: () => import('../components/Company/UserDiaryFeedback.vue')
   },
   {
-    path: '/company/watchuserdiary',
-    name: 'watchuserdiary',
-    component: () => import('../views/company/WatchUserDiaryView.vue')
+    path: '/company/watchUserDiary',
+    name: 'WatchUserDiary',
+    component: () => import('../components/Company/WatchUserDiary.vue')
   },
 ];
 

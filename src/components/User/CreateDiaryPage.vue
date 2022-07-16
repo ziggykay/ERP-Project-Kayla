@@ -101,14 +101,15 @@
               <div class="work-time col-4">
                 <label for="">上傳圖片</label>
                 <br />
-                <select>
-                  <option>請選擇專案</option>
-                  <option>專案</option>
-                  <option>產品</option>
-                </select>
+                <input
+                  type="file"
+                  id="profile_pic"
+                  name="profile_pic"
+                  accept=".jpg, .jpeg, .png"
+                />
               </div>
               <br />
-              <div class="work-time col-12">
+              <div class="container-fluid work-time col-12">
                 <label for="">內文</label>
                 <br />
                 <textarea
@@ -117,6 +118,11 @@
                 ></textarea>
               </div>
             </div>
+            <div class="text-end">
+              <button type="button" class="btn btn-primary confirm-btn">
+                + 新增專案
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -124,9 +130,7 @@
   </div>
 </template>
 
-<script>
-export default {};
-</script>
+<script setup></script>
 
 <style lang="scss" scoped>
 body {
@@ -153,16 +157,12 @@ body {
     }
   }
   .createDiary {
-    // .note {
-    //   font-size: smaller;
-    //   color: rgb(142, 142, 142);
-    // }
     select {
       width: 80%;
     }
     .textarea {
-      width: 95%;
-      height: 100%;
+      width: 100%;
+      height: 150px;
     }
   }
   .box1 {

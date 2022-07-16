@@ -1,11 +1,11 @@
 <template>
   <div class="inner">
-    <UserInfoPage />
+    <CheckDiaryPage />
   </div>
 </template>
 
 <script setup>
-import UserInfoPage from "../../components/Manager/UserInfoPage.vue";
+import CheckDiaryPage from "../../components/Manager/CheckDiaryPage.vue";
 </script>
 
 <style scoped></style>

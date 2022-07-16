@@ -3,9 +3,7 @@
 </template>
 
 <script setup>
-import CheckUserDiary from "/src/components/CheckUserDiary.vue"
+import CheckUserDiary from "../../components/Manager/CheckUserDiary.vue";
 </script>
 
-<style>
-
-</style>
+<style></style>

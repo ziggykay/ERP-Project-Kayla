@@ -3,10 +3,7 @@
 </template>
 
 <script setup>
-import SystemResponse from "/src/components/SystemResponse.vue"
-
+import SystemResponse from "/src/components/User/SystemResponse.vue";
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -4,14 +4,8 @@
   </div>
 </template>
 
-<script>
-import AccountCheckPage from "../../components/Manager/AccountCheckPage";
-export default {
-  name: "HomeView",
-  components: {
-    AccountCheckPage,
-  },
-};
+<script setup>
+import AccountCheckPage from "../../components/Manager/AccountCheckPage.vue";
 </script>
 
 <style scoped></style>
