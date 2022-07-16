@@ -4,9 +4,12 @@
   	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': !isInfo, 'text-black': !isInfo}" @click="changeShow">待回覆區 </button>
   	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': isInfo, 'text-black': isInfo}" @click="changeShow">已結案區 </button>		
 	</div>
-  <NeedResponse v-show="isInfo"></NeedResponse>
-  <CaseEnd v-show="!isInfo"></CaseEnd>
-  <!-- <div v-is="changeView"></div> -->
+  <div v-show="isInfo">
+    <NeedResponse ></NeedResponse>
+  </div>
+  <div  v-show="!isInfo">
+    <CaseEnd></CaseEnd>
+  </div>
 </template>
 
 <script setup>
@@ -28,28 +31,6 @@ const isInfo = ref(true);
 //     }
 // ]
 // )
-// export default {
-    
-// components: {
-//   NeedResponse,
-//   CaseEnd,
-// },
-// data(){
-//   return{
-//     NeedResponse: NeedResponse,
-//     CaseEnd: CaseEnd,
-//     changeView: NeedResponse,
-
-//   }
-// },
-// methods: {
-//     tabChange(tabItem) {
-//     this.changeView = tabItem;
-//     }, 
-// },
-
-// }
-
 </script>
 
 <style lang="scss" scoped>
