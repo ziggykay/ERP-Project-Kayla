@@ -7,7 +7,9 @@
 
 	<template v-if="!isGrade">
 		<!--  filter-->
-		<FilterSelect :parent-selectArr="gradeSelectArr" :parent-title="gradeTitle"/>
+		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle">
+			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
+		</FilterSelect>
 	  
 	  <!-- overall -->
 	  <Overall :parent-data="gradeAttendanceData"></Overall>
@@ -22,11 +24,16 @@
 		  </div> 		  	
 	  </div>
 
+	  <!-- overall -->
+	  <Overall :parent-data="gradeAttendanceData"></Overall>	  
+
 		</template>
 
 	<template v-if="isGrade">
 		<!--  filter-->
-		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle"/>
+		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle">
+			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
+		</FilterSelect>
 	  
 	  <!-- overall -->
 	  <Overall :parent-data="userAttendanceData"></Overall>
@@ -36,6 +43,19 @@
 			<v-chart class="chartHeight" :option="userBarchart" autoresize />  	
 	  </div> 		
 		</template>
+
+		<!-- filter -->
+		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle">
+			<template v-slot:bar>
+				<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+				<label for="jack">前端班</label>
+				<input type="checkbox" id="john" value="John" v-model="checkedNames">
+				<label for="john">數據班</label>
+				<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+				<label for="mike">雲端班</label>				
+			</template>
+			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
+		</FilterSelect>		
 
 </template>
 
