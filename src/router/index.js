@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/user/learn',
     name: 'Learn',
-    component: () => import('../views/User/learnView.vue')
+    component: () => import('../views/User/UserLearnView.vue')
   },
   // ========== manager-page ============== 
   {

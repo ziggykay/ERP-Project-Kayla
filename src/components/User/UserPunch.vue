@@ -2,8 +2,8 @@
 	
 	<!--change button  -->
 	<div class="boxContainer">
-  	<button class="confirm-btn btn me-3 shadow "  :class="{'bg-white': !isChart, 'text-black': !isChart}" @click="changeShow">圖表顯示 </button>
-  	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': isChart, 'text-black': isChart}" @click="changeShow">表格顯示 </button>		
+  	<button class="confirm-btn btn me-3 shadow" :class="{'bg-white': !isChart, 'text-black': !isChart}" @click="changeShow">圖表顯示 </button>
+  	<button class="confirm-btn btn me-3 shadow" :class="{'bg-white': isChart, 'text-black': isChart}" @click="changeShow">表格顯示 </button>		
 	</div>
 	<!-- filter -->
   <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect>
