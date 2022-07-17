@@ -112,10 +112,7 @@
               <div class="container-fluid work-time col-12">
                 <label for="">內文</label>
                 <br />
-                <textarea
-                  class="textarea"
-                  placeholder="請輸入內文..."
-                ></textarea>
+                <textarea class="textarea" placeholder="請輸入內文..."></textarea>
               </div>
             </div>
             <div class="text-end">
@@ -133,10 +130,6 @@
 <script setup></script>
 
 <style lang="scss" scoped>
-body {
-  margin: auto;
-  padding: auto;
-}
 .inner {
   width: 100%;
   height: 100vh;
@@ -162,7 +155,8 @@ body {
     }
     .textarea {
       width: 100%;
-      height: 150px;
+      min-height: 150px;
+      height: 100%;
     }
   }
   .box1 {

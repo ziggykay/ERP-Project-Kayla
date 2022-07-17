@@ -37,7 +37,6 @@
   const emit = defineEmits(['showVideo'])
 
   function updateVideo () {
-    console.log( classData.value.video)
     emit('showVideo', classData.value.video)
   }
 

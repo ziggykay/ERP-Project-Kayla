@@ -1,11 +1,10 @@
 <template>
-  
+  <UserHome></UserHome>
 </template>
 
-<script>
-export default {
+<script setup>
+import UserHome from '../../components/User/UserHome.vue'
 
-}
 </script>
 
 <style>

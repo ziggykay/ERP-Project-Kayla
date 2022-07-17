@@ -45,6 +45,8 @@
 
 	// data
 	const parentSideData = ref(props.parentSideData);
+
+  // User
 	const userSideBarData = ref([
 		{
 			title: '首頁',
@@ -67,59 +69,101 @@
 			iconCss: 'fa-book-open',
 			subTitleArr: [
 				{
-					subTitle: '查看日誌',
-					href: "/looklog",
+					subTitle: '登打日誌',
+					href: "/user/creatediary",
 				},
 				{
-					subTitle: '日誌登打率',
-					href: "/lograte"
+					subTitle: '查看日誌',
+					href: "/user/checkdiaryselect"
 				},	  				
 			]
 		},	
 		{
 			title: '查看問題回覆',
-			href: "/qa",
+			href: "/user/systemresponse",
 			iconCss: 'fa-envelope'
 		}	  		 		  		 		
 	])
 
-  	const managerSideBarData = ref([
+  // Manager
+  const managerSideBarData = ref([
+    {
+      title: '首頁',
+      href: "/manager/home", 
+      iconCss: 'fa-house'
+    },
+    {
+      title: '學員出勤紀錄',
+      href: "/manager/punch" ,
+      iconCss: 'fa-chart-column',
+      subTitleArr: [
+        {
+          subTitle: '出勤圖表',
+          href: "/manager/punch",
+        },
+        {
+          subTitle: '出勤表格',
+          href: "/manager/punchtable"
+        },	  				
+        {
+          subTitle: '學習進度圖表',
+          href: "/manager/learnschedule"
+        },	  				
+      ]      
+    },
+    {
+      title: '查看學員日誌',
+      href: "/manager/checkdiaryselect",
+      iconCss: 'fa-chalkboard-user'
+    },
+    {
+      title: '學員資訊',
+      href: "/manager/curriculum",
+      iconCss: 'fa-book-open',
+      subTitleArr: [
+        {
+          subTitle: '課表資訊',
+          href: "/manager/curriculum",
+        },
+        {
+          subTitle: '請假資訊',
+          href: "/manager/studentleave"
+        },	  								
+      ]     
+    },
+    {
+      title: '帳號權限管理',
+      href: "/manager/accountcheck",
+      iconCss: 'fa-envelope'
+    },
+    {
+      title: '系統反應管理',
+      href: "/manager/systemmanage",
+      iconCss: 'fa-envelope'
+    }
+  ])
+
+  // Company
+	const companySideBarData = ref([
 		{
-			title: '首頁',
-			href: "/manager/home", 
+			title: '查看學員日誌',
+			href: "/company/checkdiary", 
 			iconCss: 'fa-house'
 		},
 		{
-			title: '出勤紀錄',
-			href: "/manager/punch" ,
+			title: '系統反應管理',
+			href: "/company/userdiaryfeedback",
 			iconCss: 'fa-chart-column'
 		},
 		{
-			title: '學習紀錄',
-			href: "/manager/learn",
-			iconCss: 'fa-chalkboard-user'
-		},	 
-		{
-			title: '日誌',
-			href: "/log",
-			iconCss: 'fa-book-open',
-			subTitleArr: [
-				{
-					subTitle: '查看日誌',
-					href: "/looklog",
-				},
-				{
-					subTitle: '日誌登打率',
-					href: "/lograte"
-				},	  				
-			]
-		},	
-		{
 			title: '查看問題回覆',
-			href: "/qa",
-			iconCss: 'fa-envelope'
-		}	  		 		  		 		
+			href: "/company/userdiaryfeedback",
+			iconCss: 'fa-chalkboard-user'
+		}		 		  		 		
 	])
+
+
+
 </script>
 
 <style lang="scss" scoped>

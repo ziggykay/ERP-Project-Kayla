@@ -3,7 +3,7 @@
 
   <overallVue :parent-data="allClassData"/>
   
-  <button class="btn confirm-btn" @click="logData">test</button>
+  <!-- <button class="btn confirm-btn" @click="logData">test</button> -->
   <div class="container-fluid d-md-flex">
     <!-- 課程區塊 -->
     <div class="content-box class-box col d-flex">
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-  import overallVue from "../../components/baseComponents/overall.vue";
+  import overallVue from "../baseComponents/Overall.vue";
   import ClassCard from "../../components/baseComponents/ClassCard.vue";
   import axios from "axios";
   import { ref, watch } from "vue";

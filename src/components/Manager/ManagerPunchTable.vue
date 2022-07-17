@@ -11,7 +11,7 @@
 
 </template>
 <script setup>
-	import FilterSelect from "../baseComponents/filterSelect.vue";
+	import FilterSelect from "../baseComponents/FilterSelect.vue";
 	import	{ref} from "vue"
 	
 	// data
