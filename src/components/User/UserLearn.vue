@@ -43,9 +43,12 @@
   import { ref, watch } from "vue";
 
   const testData = ref()
-  
+  const input = ref({
+    "group": "fn101",
+  })
+
   function logData () {
-    axios.get('https://jsonplaceholder.typicode.com/posts')
+    axios.get('http://54.186.56.114:8080/course', input)
     // .then( res => testData = res.data )
     .then( res => console.log(res.data))
   }
