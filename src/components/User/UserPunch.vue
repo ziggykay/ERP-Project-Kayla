@@ -28,7 +28,7 @@
   	</select>  	  	
 		<hr/>
 	  <vxe-table :data="tableData">
-	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
+	    <vxe-column v-for="(data, index) of tableTitle"  :field="data.field" :title="data.title"></vxe-column>
 	  </vxe-table>
   </div> 
 

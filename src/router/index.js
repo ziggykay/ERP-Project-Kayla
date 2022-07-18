@@ -85,16 +85,23 @@ const routes = [
     name: 'CheckDiary',
     component: () => import('../views/Manager/CheckUserDiaryView.vue')
   },
+  // TODO:路由調整？
   {
     path: '/manager/accountcheck',
     name: 'AccountCheck',
     component: () => import('../views/Manager/AccountCheckView.vue')
   },
   {
-    path: '/manager/userinfo',
-    name: 'UserInfo',
+    path: '/manager/accountcheck/:id',
+    name: 'AccountCheckId',
     component: () => import('../views/Manager/UserInfoView.vue')
   },
+  // {
+  //   path: '/manager/userinfo',
+  //   name: 'UserInfo',
+  //   component: () => import('../views/Manager/UserInfoView.vue')
+  // },
+  //
   {
     path: '/manager/systemmanage',
     name: 'SystemManage',

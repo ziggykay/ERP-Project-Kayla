@@ -73,7 +73,7 @@ const todayClass = ref({
 <style lang="scss" scoped>
 
 .title{
-  width: 100%;
+  width: auto;
 }
 
 .punch-box{

@@ -1,10 +1,24 @@
 <template>
-	<FilterSelect :parent-selectArr="selectArr" :parent-title="title">
-		<button class="confirm-btn btn btn-height">匯入</button>
-	</FilterSelect>
+
+	<!-- filter -->
+	<div class="content-box filter-box">
+  	<p class="title"><strong>{{title}}</strong></p> 	  	
+		<hr/>
+		<div class="d-flex flex-wrap">
+	  	<select class="selectInfo me-2" v-for="item of selectArr" v-model="item.selected">
+				<option v-for="(innerItem, index) of item.data" :value="innerItem.item">
+					{{ innerItem.name }}
+				</option>	      	 	
+	  	</select>
+		</div>  	
+		<div class="d-flex mt-2 flex-wrap">
+    	<button class="confirm-btn btn btn-height">搜尋</button>
+		</div>
+	</div>
+
    <!--table -->
   <div class="content-box tableContainer">
-  	<p class="title"><strong>課表資訊</strong></p>  	  	
+  	<p class="title"><strong>課程清單</strong></p>  	  	
 		<hr/>
 	  <vxe-table :data="tableData" class="tableHeight">
 	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
@@ -48,47 +62,21 @@
 	  			item: "102"
 	  		}		 		
 			]
-		},
+		},	  		
 		{
-			selected: "test",
+			selected: "2022/01",
 			data: [
 	  		{
-	  			name: "test",
-	  			item: "test"
+	  			name: "2022/01",
+	  			item: "2022/01"
 	  		},
 	  		{
-	  			name: "andy",
-	  			item: "andy"
-	  		}			 		
-			]	  			
-		},	
-		{
-			selected: "late",
-			data: [
-	  		{
-	  			name: "late",
-	  			item: "late"
+	  			name: "2022/02",
+	  			item: "2022/02"
 	  		},
 	  		{
-	  			name: "absent",
-	  			item: "absent"
-	  		},	
-	  		{
-	  			name: "all",
-	  			item: "all"
-	  		}					  				 		
-			]	  			
-		},		  		
-		{
-			selected: "month",
-			data: [
-	  		{
-	  			name: "今日",
-	  			item: "today"
-	  		},
-	  		{
-	  			name: "本月",
-	  			item: "month"
+	  			name: "2022/03",
+	  			item: "2022/03"
 	  		}				 		
 			]	  			
 		},		  		  		
@@ -97,18 +85,21 @@
 	
 	// table
 	const tableTitle = ref([
-		{field:"date", title:"日期"},
-		{field:"grade", title:"班級"},	  		
-		{field:"name", title:"姓名"},
-		{field:"signin", title:"簽到"},
-		{field:"signout", title:"簽退"},
-		{field:"ip", title:"IP"},	  		
+		{field:"name", title:"課程名稱"},
+		{field:"date", title:"課程日期"},	  		
+		{field:"startHour", title:"課程時起"},
+		{field:"startMin", title:"課程分起"},
+		{field:"offHour", title:"課程時訖"},
+		{field:"offMin", title:"課程分訖"},
 	])
 
 	const tableData = ref([
-    { date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
-		{ date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
-		{ date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
+    { name: "Linux基礎到架站", date: "110/12/15", startHour: 9, startMin: 0, offHour: 12, offMin: 0},
+    { name: "Linux基礎到架站", date: "110/12/15", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
+    { name: "Linux基礎到架站", date: "110/12/16", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
+    { name: "Linux基礎到架站", date: "110/12/16", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
+    { name: "Linux基礎到架站", date: "110/12/17", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
+    { name: "Linux基礎到架站", date: "110/12/17", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
 	])
 
 </script>
@@ -120,5 +111,20 @@
 	  .tableHeight{
 	  	// height: 80%
 	  }
-	}		
+	}
+	.filter-box{
+		height: auto;
+		width: auto;
+	  .selectInfo{
+	  	width: 100px;
+	  	height: 38px;
+	  	background-color: #E9F2FF;
+	  	border-radius: 4px;
+	  	border: none;
+	  	cursor: pointer;
+	  };		
+	  .btn-height{
+	  	height: 38px;
+	  }
+	}
 </style>
