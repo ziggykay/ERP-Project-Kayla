@@ -78,21 +78,15 @@ onMounted(() => {
   return Date;
 });
 //data
-  const selectArr = ref([
-		{
-			selected: "本月",
-			data: [
-	  		{
-	  			LeavingTime: "Wed, 13 Jul 2022 02:36:06 GMT",
-	  			Title: "電腦螢幕故障(打不開)"
-	  		},
-	  		{
-	  			name: "雲端班",
-	  			item: "電腦螢幕故障(有殘影)"
-	  		}	  		
-			]
-		},
-	]);	  	
+  const tableTitle = ref([
+		{field:"date", title:"日期"},
+		{field:"grade", title:"班級"},	  		
+		{field:"name", title:"姓名"},
+		{field:"signin", title:"簽到"},
+		{field:"signout", title:"簽退"},
+		{field:"ip", title:"IP"},	  		
+	])
+
 </script>
 
 <style lang="scss" scoped>
