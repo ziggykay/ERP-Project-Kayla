@@ -9,16 +9,16 @@
           >
             <div class="d-flex bigText">
               <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
+                <div><span>日期</span></div>
+                <div><span>2022/07/12</span></div>
               </div>
               <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
+                <div><span>姓名</span></div>
+                <div><span>王小明</span></div>
               </div>
               <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
+                <div><span>內文</span></div>
+                <div><span>XXXXXXXXXXXXX</span></div>
               </div>
             </div>
             <div>
@@ -77,7 +77,7 @@ const title = ref("查看日誌");
 
   .checkDiv {
     width: 90%;
-    height: 10vh;
+    height: 5rem;
     margin-top: 10px;
   }
   .checkDiv:hover {
