@@ -4,17 +4,24 @@
   <div class="content-box tableContainer">
   	<p class="title"><strong>出勤情況總覽</strong></p>  	  	
 		<hr/>
-	  <vxe-table :data="tableData" class="tableHeight">
+	  <vxe-table :data="tableData" class="tableInfo" emptyText="no data">
 	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
 	  </vxe-table>
+	  <nav aria-label="Page navigation example" class="mt-2">
+			<ul class="pagination justify-content-center">
+			  <li class="page-item" v-for="n in tablePage">
+			  	<button class="page-link" @click="changePage(n)">{{ n }}</button>
+			  </li>
+			</ul>
+		</nav>
   </div> 
 
 </template>
 <script setup>
 	import FilterSelect from "../baseComponents/filterSelect.vue";
-	import	{ref} from "vue"
+	import	{ref, watch} from "vue"
 	import axios from 'axios'
-	
+
 	// data
 	// selectOption
 	const selectArr = ref([
@@ -54,16 +61,16 @@
 		],	
 		[
   		{
-  			name: "late",
-  			item: "late"
-  		},
-  		{
-  			name: "absent",
-  			item: "absent"
-  		},	
-  		{
   			name: "all",
   			item: "all"
+  		},
+  		{
+  			name: "present",
+  			item: "present"
+  		},	
+  		{
+  			name: "late",
+  			item: "late"
   		}					  				 		
 		],		  		
 		[
@@ -75,7 +82,7 @@
   			name: "本月",
   			item: "month"
   		}				 		
-		],		  		  		
+		]				  		
 	]);	  	 
 	const title = ref("學員出勤資訊");
 	
@@ -86,60 +93,65 @@
 		{field:"name", title:"姓名"},
 		{field:"signin", title:"簽到"},
 		{field:"signout", title:"簽退"},
-		{field:"ip", title:"IP"},	  		
+		{field:"inip", title:"INIP"},	  		
 	])
-
-	const tableData = ref([
-    { date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
-		{ date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
-		{ date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
-	])
-
-	const totalData = async(val)=>{
-		console.log(val)
-		let startdate = ''
-		let stopdate = ''
-		let group = ''
-		let name = ''
-		let status = ''
-		let row = ''
-		let page = ''
-
-		startdate = val[0][0];
-		stopdate = val[0][1];
-		group = val[1][0]+val[1][1]
-		name = val[1][2]
-
-		// // // get axios data
-		let href = "http://localhost:80/api/punch"
-		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})
-		console.log(data.data)
-		// try{
-		// 	let axiosData = data.data.course
-
-		// 	// 清空舊的資料再更新
-		// 	barchart.value.yAxis.data = [];
-		// 	barchart.value.series[0].data = [];
-		// 	barchart.value.series[1].data = []			
-		// 	for(let i = 0; i <= axiosData.length - 1; i++){
-
-		// 		barchart.value.yAxis.data.push(axiosData[i].course)
-		// 		barchart.value.series[0].data.push(axiosData[i].totalhours)
-		// 		barchart.value.series[1].data.push(axiosData[i].present)
-		// 	}
-		// }
-		// catch{
-		// 	alert("資料錯誤")
-		// }
+	const tablePage = ref()
+	const choseSelect = ref()
+	const chosePage = ref(1)
+	const changePage = (number)=>{
+		chosePage.value = number		
 	}
+	const tableData = ref([])
+	const totalData = (val)=>{
+		choseSelect.value = {}
+		choseSelect.value = {
+			startdate : val[0][0],
+			stopdate : val[0][1],
+			group : val[1][0]+val[1][1],
+			name : val[1][2],
+			status: val[1][3]
+		}
+	}
+
+	const doAxios = async(group, startdate, stopdate, name, status, page)=>{
+		// get axios data
+		let href = "http://localhost:80/api/punch"
+		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name, status, page}})
+		try{
+			tablePage.value = Number(data.data.pagination[0].totalpages)
+			let axiosData = data.data.punch
+			tableData.value = [] 			// 清空舊的資料再更新
+
+			for(let i = 0; i <= axiosData.length - 1; i ++){
+				tableData.value.push({ 
+					date: axiosData[i].classdate, 
+					grade: group, 
+					name: axiosData[i].student, 
+					signin: axiosData[i].intime, 
+					signout: axiosData[i].outtime, 
+					inip: axiosData[i].inip
+				})
+			} 
+		}
+		catch{
+			alert("資料錯誤")
+		}		
+	}
+  watch([chosePage, choseSelect], ([newA, newB], [prevA, prevB]) => {
+  	// console.log(choseSelect)
+		doAxios(newB.group, newB.startdate, newB.stopdate, newB.name, newB.status, newA)
+  },{deep: true});	
+
+	
 </script>
 
 <style lang="scss" scoped>
 	.tableContainer{
 	  width: auto;
 	  height: 100vh;
-	  .tableHeight{
-	  	// height: 80%
+	  .tableInfo{
+	  	height: 80vh;
+	  	overflow-y: auto;
 	  }
 	}		
 </style>
