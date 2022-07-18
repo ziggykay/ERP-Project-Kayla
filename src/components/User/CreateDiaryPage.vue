@@ -26,7 +26,7 @@
             <div class="container-fluid p-2">
               <p class="text-primary InfoTitle"><strong>已編輯日誌</strong></p>
               <hr />
-              <div class="d-flex">
+              <div class="completeDiary">
                 <div class="project content-box-border">
                   <div class="project-name text-center">A專案</div>
                   <div class="text-end">
@@ -41,7 +41,34 @@
                   </div>
                 </div>
                 <div class="project content-box-border">
-                  <div class="project-name text-center">B產品</div>
+                  <div class="project-name text-center">B專案</div>
+                  <div class="text-end">
+                    <span
+                      ><a class="edit-icon" href="#">
+                        <i class="fa-solid fa-pen-to-square mx-1"></i></a
+                    ></span>
+                    <span
+                      ><a class="edit-icon" href="#">
+                        <i class="fa-solid fa-trash-can mx-1"></i></a
+                    ></span>
+                  </div>
+                </div>
+
+                <div class="project content-box-border">
+                  <div class="project-name text-center">C產品</div>
+                  <div class="text-end">
+                    <span
+                      ><a class="edit-icon" href="#">
+                        <i class="fa-solid fa-pen-to-square mx-1"></i></a
+                    ></span>
+                    <span
+                      ><a class="edit-icon" href="#">
+                        <i class="fa-solid fa-trash-can mx-1"></i></a
+                    ></span>
+                  </div>
+                </div>
+                <div class="project content-box-border">
+                  <div class="project-name text-center">D產品</div>
                   <div class="text-end">
                     <span
                       ><a class="edit-icon" href="#">
@@ -153,6 +180,15 @@ body {
 .content-box {
   width: 100%;
   height: 20rem;
+}
+.completeDiary {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: 100%;
+  white-space: nowrap;
+  .project {
+    display: inline-block;
+  }
 }
 .createDiary {
   select {
