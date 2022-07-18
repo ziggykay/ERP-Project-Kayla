@@ -102,6 +102,7 @@
 		chosePage.value = number		
 	}
 	const tableData = ref([])
+	// get emit data to choseSelect
 	const totalData = (val)=>{
 		choseSelect.value = {}
 		choseSelect.value = {
