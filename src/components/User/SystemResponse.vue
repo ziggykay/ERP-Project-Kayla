@@ -23,7 +23,7 @@
         <div class="resbox-outter">
           <div class="content-box resbox ps-2">
             <div class="d-flex date-and-title justify-content-around">
-              <p class="">日期</p>
+              <p>日期</p>
               <p>標題</p>
               <button
                 type="button"
@@ -33,9 +33,8 @@
               </button>
             </div>
             <div
-              class="d-flex justify-content-evenly w-75 date-and-title-content"
-            >
-              <p class="pe-4">2022/07/01</p>
+              class="d-flex justify-content-evenly w-75 date-and-title-content" v-for="data of selectArr">
+              <p class="pe-4">{{data.LeavingTime}}</p>
               <p>XXXXXXXXXXX</p>
             </div>
           </div>
@@ -78,6 +77,22 @@ onMounted(() => {
   date.value = [startDate, endDate];
   return Date;
 });
+//data
+  const selectArr = ref([
+		{
+			selected: "本月",
+			data: [
+	  		{
+	  			LeavingTime: "Wed, 13 Jul 2022 02:36:06 GMT",
+	  			Title: "電腦螢幕故障(打不開)"
+	  		},
+	  		{
+	  			name: "雲端班",
+	  			item: "電腦螢幕故障(有殘影)"
+	  		}	  		
+			]
+		},
+	]);	  	
 </script>
 
 <style lang="scss" scoped>
