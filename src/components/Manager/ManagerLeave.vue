@@ -1,5 +1,5 @@
 <template>
-	<FilterSelect :parent-selectArr="selectArr" :parent-title="title">
+	<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="totalData">
 		<button class="btn confirm-btn">匯入</button>
 	</FilterSelect>
    <!--table -->
@@ -19,83 +19,68 @@
 	// data
 	// selectOption
 	const selectArr = ref([
-		{
-			selected: "fn",
-			data: [
-	  		{
-	  			name: "前端班",
-	  			item: "fn"
-	  		},
-	  		{
-	  			name: "數據班",
-	  			item: "bd"
-	  		},
-	  		{
-	  			name: "雲端班",
-	  			item: "cd"
-	  		}	  		
-			]
-		},
-		{
-			selected: "102",
-			data: [
-	  		{
-	  			name: "101",
-	  			item: "101"
-	  		},
-	  		{
-	  			name: "102",
-	  			item: "102"
-	  		}		 		
-			]
-		},
-		{
-			selected: "test",
-			data: [
-	  		{
-	  			name: "test",
-	  			item: "test"
-	  		},
-	  		{
-	  			name: "andy",
-	  			item: "andy"
-	  		}			 		
-			]	  			
-		},	
-		{
-			selected: "sick",
-			data: [
-	  		{
-	  			name: "病假",
-	  			item: "sick"
-	  		},
-	  		{
-	  			name: "事假",
-	  			item: "personal"
-	  		},	
-	  		{
-	  			name: "喪假",
-	  			item: "bereavement"
-	  		},			  				 		
-	  		{
-	  			name: "特殊原因",
-	  			item: "special"
-	  		},			  				 		
-			]	  			
-		},		  		
-		{
-			selected: "month",
-			data: [
-	  		{
-	  			name: "今日",
-	  			item: "today"
-	  		},
-	  		{
-	  			name: "本月",
-	  			item: "month"
-	  		}				 		
-			]	  			
-		},		  		  		
+		[
+			{
+				name: "前端班",
+				item: "fn"
+			},
+			{
+				name: "數據班",
+				item: "bd"
+			},
+			{
+				name: "雲端班",
+				item: "cd"
+			}	  		
+		],
+		[
+			{
+				name: "101",
+				item: "101"
+			},
+			{
+				name: "102",
+				item: "102"
+			}		 		
+		],
+		[
+			{
+				name: "test",
+				item: "test"
+			},
+			{
+				name: "andy",
+				item: "andy"
+			}			 		
+		],	
+		[
+			{
+				name: "病假",
+				item: "sick"
+			},
+			{
+				name: "事假",
+				item: "personal"
+			},	
+			{
+				name: "喪假",
+				item: "bereavement"
+			},			  				 		
+			{
+				name: "特殊原因",
+				item: "special"
+			},			  				 		
+		],		  		
+		[
+			{
+				name: "今日",
+				item: "today"
+			},
+			{
+				name: "本月",
+				item: "month"
+			}				 		
+		]			  		  		
 	]);	  	 
 	const title = ref("學員請假資訊");
 	
@@ -110,9 +95,16 @@
 
 	const tableData = ref([
     { date: "20220630", grade: "前端班", name: "ryan", reason: "09:00", note: ""},
-		{ date: "20220630", grade: "前端班", name: "ryan", reason: "09:00", note: ""},
-		{ date: "20220630", grade: "前端班", name: "ryan", reason: "09:00", note: ""},
 	])
+
+
+	const choseSelect = ref()	
+	const totalData = (val)=>{
+		console.log(val)
+		choseSelect.value = {}
+		choseSelect.value = {
+		}
+	}
 
 </script>
 
