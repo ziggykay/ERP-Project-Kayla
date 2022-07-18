@@ -42,19 +42,16 @@
 
 	// filter-data
 	const selectArr = ref([
-		{
-			selected: "month",
-			data: [
-	  		{
-	  			name: "今日",
-	  			item: "today"
-	  		},
-	  		{
-	  			name: "本月",
-	  			item: "month"
-	  		}				 		
-			]	  			
-		},		  		  		
+		[
+			{
+				name: "今日",
+				item: "today"
+			},
+			{
+				name: "本月",
+				item: "month"
+			}				 		
+		]
 	]);	
 	const title = "使用者出勤紀錄資訊"
 
@@ -148,7 +145,7 @@
 	])
 
 	const tableData = ref([
-    	{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},
+		{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},
 		{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},
 		{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},        
 		{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},
