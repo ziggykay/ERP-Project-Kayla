@@ -130,6 +130,9 @@
 	  ],	  		
 	})
 
+	// get axios data
+	
+
 	// isChart
 	const isChart = ref(true);
 	const changeShow = () => {

@@ -36,5 +36,7 @@ import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
+
+
 createApp(App).use(router).component('Datepicker', Datepicker).component('v-chart', echarts).use(VXETable)
 .mount('#app')
