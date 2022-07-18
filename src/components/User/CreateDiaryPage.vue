@@ -169,10 +169,6 @@
 <script setup></script>
 
 <style lang="scss" scoped>
-body {
-  margin: auto;
-  padding: auto;
-}
 .inner {
   width: 100%;
   height: 100%;
@@ -198,6 +194,41 @@ body {
     width: 100%;
     height: 120px;
     border-radius: 5px;
+    .Info {
+      p {
+        font-size: 0.8rem;
+      }
+    }
+    .project {
+      height: 10vh;
+      .project-name {
+        font-weight: bolder;
+      }
+      .edit-icon {
+        color: rgb(64, 64, 64);
+      }
+    }
+  }
+  .createDiary {
+    select {
+      width: 80%;
+    }
+    .textarea {
+      width: 100%;
+      height: 150px;
+    }
+  }
+  .box1 {
+    width: 30%;
+    height: 40vh;
+  }
+  .box2 {
+    width: 65%;
+    height: 40vh;
+  }
+  .box3 {
+    width: 96.5%;
+    height: 50vh;
   }
 }
 </style>

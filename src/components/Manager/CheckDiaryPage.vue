@@ -37,7 +37,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import filterSelect from "../baseComponents/filterSelect.vue";
+import filterSelect from "../baseComponents/FilterSelect.vue";
 
 const date = ref();
 
