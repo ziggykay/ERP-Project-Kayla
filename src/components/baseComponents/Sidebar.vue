@@ -3,7 +3,9 @@
   <div class="side-menu">
     <li v-for="(data, index) of userSideBarData">
     	<template v-if="!data.subTitleArr">
-    		<router-link :to="data.href"><i class="fa-solid" :class="data.iconCss"></i><span>{{ data.title }}</span></router-link>
+    		<router-link :to="data.href" :class="($route.path == data.href ? 'active' : '' )">
+          <i class="fa-solid" :class="data.iconCss"></i><span>{{ data.title }}</span>
+        </router-link>
     	</template>
     	<template v-else>
       <a
@@ -15,7 +17,8 @@
       <div class="collapse" id="orders-collapse">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
           <router-link 
-          	v-for="(subData, index) of data.subTitleArr"
+          	v-for="(subData, index) of data.subTitleArr" :key="subData"
+            :class="($route.path == subData.href ? 'active' : '' )"
             class="btn align-items-center sub-btn dropdown"
             data-bs-target="#dashboard-collapse"
             aria-expanded="false"
@@ -42,20 +45,22 @@
 
 	// data
 	const parentSideData = ref(props.parentSideData);
+
+  // User
 	const userSideBarData = ref([
 		{
 			title: '首頁',
-			href: "/home", 
+			href: "/user/home", 
 			iconCss: 'fa-house'
 		},
 		{
 			title: '出勤紀錄',
-			href: "/punch" ,
+			href: "/user/punch" ,
 			iconCss: 'fa-chart-column'
 		},
 		{
 			title: '學習紀錄',
-			href: "/learn",
+			href: "/user/learn",
 			iconCss: 'fa-chalkboard-user'
 		},	 
 		{
@@ -64,24 +69,102 @@
 			iconCss: 'fa-book-open',
 			subTitleArr: [
 				{
-					subTitle: '查看日誌',
-					href: "/looklog",
+					subTitle: '登打日誌',
+					href: "/user/creatediary",
 				},
 				{
-					subTitle: '日誌登打率',
-					href: "/lograte"
+					subTitle: '查看日誌',
+					href: "/user/checkdiaryselect"
 				},	  				
 			]
 		},	
 		{
 			title: '查看問題回覆',
-			href: "/qa",
+			href: "/user/systemresponse",
 			iconCss: 'fa-envelope'
 		}	  		 		  		 		
 	])
+
+  // Manager
+  const managerSideBarData = ref([
+    {
+      title: '首頁',
+      href: "/manager/home", 
+      iconCss: 'fa-house'
+    },
+    {
+      title: '學員出勤紀錄',
+      href: "/manager/punch" ,
+      iconCss: 'fa-chart-column',
+      subTitleArr: [
+        {
+          subTitle: '出勤圖表',
+          href: "/manager/punch",
+        },
+        {
+          subTitle: '出勤表格',
+          href: "/manager/punchtable"
+        },	  				
+        {
+          subTitle: '學習進度圖表',
+          href: "/manager/learnschedule"
+        },	  				
+      ]      
+    },
+    {
+      title: '查看學員日誌',
+      href: "/manager/checkdiaryselect",
+      iconCss: 'fa-chalkboard-user'
+    },
+    {
+      title: '學員資訊',
+      href: "/manager/curriculum",
+      iconCss: 'fa-book-open',
+      subTitleArr: [
+        {
+          subTitle: '課表資訊',
+          href: "/manager/curriculum",
+        },
+        {
+          subTitle: '請假資訊',
+          href: "/manager/studentleave"
+        },	  								
+      ]     
+    },
+    {
+      title: '帳號權限管理',
+      href: "/manager/accountcheck",
+      iconCss: 'fa-envelope'
+    },
+    {
+      title: '系統反應管理',
+      href: "/manager/systemmanage",
+      iconCss: 'fa-envelope'
+    }
+  ])
+
+  // Company
+	const companySideBarData = ref([
+		{
+			title: '查看學員日誌',
+			href: "/company/checkdiary", 
+			iconCss: 'fa-house'
+		},
+		{
+			title: '系統反應管理',
+			href: "/company/userdiaryfeedback",
+			iconCss: 'fa-chart-column'
+		},
+		{
+			title: '查看問題回覆',
+			href: "/company/userdiaryfeedback",
+			iconCss: 'fa-chalkboard-user'
+		}		 		  		 		
+	])
+
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 body {
   height: 100vh;
   background-color: #e4ecf0;
@@ -128,6 +211,16 @@ a {
 }
 .side-menu .Logout {
   display: none;
+}
+.active{
+  background-color: #558aba;
+  padding-left: 20px;
+  i{
+    color: #fff;
+  }
+  span{
+    color: #fff;
+  }
 }
 @media (max-width: 850px) {
   .side-menu a span {

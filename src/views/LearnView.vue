@@ -69,10 +69,12 @@
     </div>
   </div>
 </div>
+
+
 </template>
 
 <script>
-import overallVue from '../../components/baseComponents/overall.vue'
+import overallVue from '../components/baseComponents/overall.vue'
 import { ref } from "vue"
 export default {
   components: overallVue,

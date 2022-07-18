@@ -65,8 +65,8 @@
 	import {ref, onMounted, computed} from "vue"
 	import axios from 'axios'
 	import VChart from "vue-echarts";
-	import Overall from "../baseComponents/overall.vue";
-	import FilterSelect from "../baseComponents/filterSelect.vue";
+	import Overall from "../baseComponents/Overall.vue";
+	import FilterSelect from "../baseComponents/FilterSelect.vue";
 	
 	// data
 	// grade

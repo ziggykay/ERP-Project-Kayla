@@ -15,8 +15,7 @@ $box-bgc: #ffffff;
 $radius: 1rem;
 
 // 陰影
-$shadow: 2.5px 4px 3px rgb(179, 175, 175);
-
+$shadow: 3px 3px 2.5px 2.5px rgb(179, 175, 175);
 
 // ===================================================================
 
@@ -25,58 +24,62 @@ $shadow: 2.5px 4px 3px rgb(179, 175, 175);
 
 // ======================== 整體 ==========================
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   list-style: none;
 }
-body{
+
+body {
   background-color: $background;
 }
-.container, .container-fluid{
+
+.container,
+.container-fluid {
   padding: 0;
 }
-.main{
+
+.main {
   padding: 2.2rem;
 }
 
 // ===================== 元件 ===========================
 
 // 按鈕
-.dropdown{
-  button{
+.dropdown {
+  button {
     color: black;
     background-color: $dropdown;
     border-style: none;
     box-shadow: $shadow;
   }
 }
-.confirm-btn{
+
+.confirm-btn {
   border-style: none;
   background-color: $primary;
   color: #fff;
-  &:hover{
+
+  &:hover {
     background-color: $primary-hover;
     color: #fff;
   }
 }
-.cancel-btn{
+
+.cancel-btn {
   border-style: none;
   background-color: $danger;
   color: #fff;
-  &:hover{
+
+  &:hover {
     background-color: $danger-hover;
     color: #fff;
   }
 }
 
-@mixin white {
-  background: #fff;
-}
-
 // 白色內容方塊
-.content-box{
+.content-box {
   margin: 1rem;
   background-color: #fff;
   box-shadow: $shadow;
@@ -86,21 +89,25 @@ body{
   border-radius: $radius;
   background-color: $box-bgc;
   box-shadow: gray;
-  .title{
+
+  .title {
     color: $primary;
     padding-left: 1rem;
   }
 }
-.content-box-border{
+
+.content-box-border {
   @extend .content-box;
   border-style: solid;
   border-width: 1px;
   border-color: $primary;
   border-radius: $radius;
 }
-.datepicker{
+
+.datepicker {
   width: 400px;
-  input{
-		background-color: $dropdown;
+
+  input {
+    background-color: $dropdown;
   }
 }

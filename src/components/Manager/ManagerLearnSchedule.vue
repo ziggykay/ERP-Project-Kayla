@@ -7,7 +7,7 @@
 
 </template>
 <script setup>
-	import FilterSelect from "../baseComponents/filterSelect.vue";
+	import FilterSelect from "../baseComponents/FilterSelect.vue";
 	import VChart from "vue-echarts";
 	import	{ref} from "vue"
 	import axios from 'axios'

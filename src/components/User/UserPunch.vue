@@ -2,14 +2,16 @@
 	
 	<!--change button  -->
 	<div class="boxContainer">
-  	<button class="confirm-btn btn me-3 shadow "  :class="{'bg-white': !isChart, 'text-black': !isChart}" @click="changeShow">圖表顯示 </button>
-  	<button class="confirm-btn btn me-3 shadow"  :class="{'bg-white': isChart, 'text-black': isChart}" @click="changeShow">表格顯示 </button>		
+  	<button class="btn confirm-btn btn me-3 shadow" :class="{'bg-white': !isChart, 'text-black': !isChart}" @click="changeShow">圖表顯示 </button>
+  	<button class="btn confirm-btn btn me-3 shadow" :class="{'bg-white': isChart, 'text-black': isChart}" @click="changeShow">表格顯示 </button>		
 	</div>
 	<!-- filter -->
   <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect>
   
   <!-- overall -->
-  <Overall :parent-data="AttendanceData"></Overall>
+  <Overall :parent-data="AttendanceData">
+		<div class="">slot</div>
+	</Overall>
 
   <!-- chart -->
   <div class="content-box overall-box chartContainer" v-show="isChart">
@@ -26,7 +28,7 @@
   	</select>  	  	
 		<hr/>
 	  <vxe-table :data="tableData">
-	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
+	    <vxe-column v-for="(data, index) of tableTitle"  :field="data.field" :title="data.title"></vxe-column>
 	  </vxe-table>
   </div> 
 
@@ -34,8 +36,8 @@
   
 <script setup>
 	import VChart from "vue-echarts";
-	import Overall from "../baseComponents/overall.vue";
-	import FilterSelect from "../baseComponents/filterSelect.vue";
+	import Overall from "../baseComponents/Overall.vue";
+	import FilterSelect from "../baseComponents/FilterSelect.vue";
 	import {ref, onMounted, computed} from "vue"
 
 	// filter-data
@@ -143,7 +145,7 @@
 	])
 
 	const tableData = ref([
-    { date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},
+    	{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},
 		{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},
 		{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},        
 		{ date: "20220630", name: "ryan", signin: "09:00", signout: "17:30"},
@@ -171,7 +173,7 @@
 	  // }
 	}	
 	.shadow{
-		box-shadow: 2.5px 4px 3px rgb(179, 175, 175);
+		box-shadow: 3px 3px 2.5px 2.5px rgb(179, 175, 175);
 	}
 	.dateHeight{
 		height: auto;

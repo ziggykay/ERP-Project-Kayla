@@ -3,13 +3,20 @@
   <nav>
     <label>Logo</label>
     <ul>
-      <li><a href="">登出</a></li>
+      <li><button class="btn confirm-btn" @click="logOut">登出</button></li>
     </ul>
     <label for="menu" class="menu-bar"><i class="fa-solid fa-bars"></i></label>
   </nav>
 </template>
 
 <script setup>
+import router from '../../router';
+
+  function logOut () {
+    router.push('/')
+  }
+
+
 </script>
 
 <style lang="scss" scoped>
