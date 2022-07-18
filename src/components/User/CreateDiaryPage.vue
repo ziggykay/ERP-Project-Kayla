@@ -9,13 +9,13 @@
                 ><strong>個人資訊</strong></span
               >
               <hr />
-              <p><strong>Class : </strong>FN102</p>
+              <p><strong>Class : </strong>{{ Class }}</p>
               <hr />
-              <p><strong>Number : </strong>001</p>
+              <p><strong>Number : </strong>{{ Id }}</p>
               <hr />
-              <p><strong>Name : </strong>王小明</p>
+              <p><strong>Name : </strong>{{ Name }}</p>
               <hr />
-              <p><strong>Email : </strong>Wang@test.com</p>
+              <p><strong>Email : </strong>{{ Email }}</p>
             </div>
           </div>
         </div>

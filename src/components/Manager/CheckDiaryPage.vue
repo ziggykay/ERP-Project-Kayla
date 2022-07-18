@@ -1,30 +1,35 @@
 <template>
-  <div class="container-fluid px-5 pt-3">
-    <div class="inner">
-      <filterSelect :parent-selectArr="selectArr" :parent-title="title" />
-      <div class="content-box checkBox mt-3">
+  <div class="container pt-3 inner">
+    <div class="col-12">
+      <filterSelect
+        class="m-0"
+        :parent-selectArr="selectArr"
+        :parent-title="title"
+      />
+    </div>
+    <div class="col-12 mt-3">
+      <div class="content-box checkBox">
         <div class="py-2 checkBoxInner">
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
+          <div v-for="data in items" class="content-box-border checkDiv d-flex">
             <div class="d-flex bigText">
               <div class="text">
-                <div>日期</div>
-                <div>2022/07/12</div>
+                <p>日期</p>
+                <p>{{ data.Time }}</p>
               </div>
               <div class="text">
-                <div>姓名</div>
-                <div>王小明</div>
+                <p>姓名</p>
+                <p>{{ data.Name }}</p>
               </div>
               <div class="text">
-                <div>內文</div>
-                <div>XXXXXXXXXXXXX</div>
+                <p>內文</p>
+
+                <p class="single-ellipsis">{{ data.Content }}</p>
               </div>
             </div>
             <div>
               <router-link
                 class="checkBtn btn btn-primary confirm-btn"
-                to="/manager/checkDiary"
+                to="/user/checkSelfDiary"
                 >查看</router-link
               >
             </div>
@@ -50,6 +55,48 @@ onMounted(() => {
 });
 const selectArr = ref([
   {
+    selected: "class",
+    data: [
+      {
+        name: "班級",
+        item: "class",
+      },
+      {
+        name: "前端班",
+        item: "fn",
+      },
+      {
+        name: "數據班",
+        item: "se",
+      },
+      {
+        name: "雲端班",
+        item: "dv",
+      },
+    ],
+  },
+  {
+    selected: "grade",
+    data: [
+      {
+        name: "班別",
+        item: "grade",
+      },
+      {
+        name: "102",
+        item: "102",
+      },
+      {
+        name: "103",
+        item: "103",
+      },
+      {
+        name: "211",
+        item: "211",
+      },
+    ],
+  },
+  {
     selected: "month",
     data: [
       {
@@ -62,14 +109,48 @@ const selectArr = ref([
       },
     ],
   },
+  {
+    selected: "project",
+    data: [
+      {
+        name: "專案",
+        item: "project",
+      },
+      {
+        name: "產品",
+        item: "product",
+      },
+    ],
+  },
 ]);
 const title = ref("查看日誌");
+
+const items = ref([
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+]);
 </script>
 
 <style lang="scss" scoped>
-* {
-  margin: auto;
-  padding: auto;
+body {
+  margin: 0;
+  padding: 0;
 }
 .inner {
   width: 100%;
@@ -77,8 +158,11 @@ const title = ref("查看日誌");
 
   .checkDiv {
     width: 90%;
-    height: 10vh;
-    margin-top: 10px;
+    height: 5rem;
+    margin-top: 5px;
+    p {
+      margin-bottom: 0;
+    }
   }
   .checkDiv:hover {
     background-color: #558aba;
@@ -90,7 +174,8 @@ const title = ref("查看日誌");
     }
   }
   .bigText {
-    width: 60%;
+    width: 80%;
+    height: 10%;
   }
   .text {
     width: 30%;
@@ -98,11 +183,17 @@ const title = ref("查看日誌");
   .checkBox {
     width: 100%;
     height: 60vh;
+    margin: 0;
 
     .checkBoxInner {
       overflow-y: scroll;
       height: 55vh;
     }
   }
+}
+.single-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

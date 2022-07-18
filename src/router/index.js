@@ -82,7 +82,7 @@ const routes = [
   },
   {
     path: '/manager/checkdiary',
-    name: 'CheckDiary',
+    name: 'CheckDiaryManager',
     component: () => import('../views/Manager/CheckUserDiaryView.vue')
   },
   {
@@ -103,7 +103,7 @@ const routes = [
   // ========== company-page ===============
   {
     path: '/company/checkdiary',
-    name: 'CheckDiary',
+    name: 'CheckDiaryCompany',
     component: () => import('../views/Company/CheckDiaryView.vue')
   },
   {

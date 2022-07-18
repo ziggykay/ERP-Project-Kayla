@@ -1,24 +1,31 @@
 <template>
-  <div class="container-fluid px-5 pt-3">
-    <div class="inner">
-      <filterSelect :parent-selectArr="selectArr" :parent-title="title" />
-      <div class="content-box checkBox mt-3">
+  <div class="container pt-3 inner">
+    <div class="col-12">
+      <filterSelect
+        class="m-0"
+        :parent-selectArr="selectArr"
+        :parent-title="title"
+      >
+        <input type="text" placeholder="123" />
+      </filterSelect>
+    </div>
+    <div class="col-12 mt-3">
+      <div class="content-box checkBox">
         <div class="py-2 checkBoxInner">
-          <div
-            class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-          >
+          <div v-for="data in items" class="content-box-border checkDiv d-flex">
             <div class="d-flex bigText">
               <div class="text">
-                <div><span>日期</span></div>
-                <div><span>2022/07/12</span></div>
+                <p>日期</p>
+                <p>{{ data.Time }}</p>
               </div>
               <div class="text">
-                <div><span>姓名</span></div>
-                <div><span>王小明</span></div>
+                <p>姓名</p>
+                <p>{{ data.Name }}</p>
               </div>
               <div class="text">
-                <div><span>內文</span></div>
-                <div><span>XXXXXXXXXXXXX</span></div>
+                <p>內文</p>
+
+                <p class="single-ellipsis">{{ data.Content }}</p>
               </div>
             </div>
             <div>
@@ -62,14 +69,48 @@ const selectArr = ref([
       },
     ],
   },
+  {
+    selected: "project",
+    data: [
+      {
+        name: "專案",
+        item: "project",
+      },
+      {
+        name: "產品",
+        item: "product",
+      },
+    ],
+  },
 ]);
 const title = ref("查看日誌");
+
+const items = ref([
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+]);
 </script>
 
 <style lang="scss" scoped>
-* {
-  margin: auto;
-  padding: auto;
+body {
+  margin: 0;
+  padding: 0;
 }
 .inner {
   width: 100%;
@@ -78,7 +119,10 @@ const title = ref("查看日誌");
   .checkDiv {
     width: 90%;
     height: 5rem;
-    margin-top: 10px;
+    margin-top: 5px;
+    p {
+      margin-bottom: 0;
+    }
   }
   .checkDiv:hover {
     background-color: #558aba;
@@ -90,7 +134,8 @@ const title = ref("查看日誌");
     }
   }
   .bigText {
-    width: 60%;
+    width: 80%;
+    height: 10%;
   }
   .text {
     width: 30%;
@@ -98,11 +143,17 @@ const title = ref("查看日誌");
   .checkBox {
     width: 100%;
     height: 60vh;
+    margin: 0;
 
     .checkBoxInner {
       overflow-y: scroll;
       height: 55vh;
     }
   }
+}
+.single-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
