@@ -4,10 +4,11 @@
     <p class="title"><strong>總覽</strong></p>
     <hr/>
     <div class="overall d-md-flex justify-content-around">
-    	<template v-for="item of data">
+    	<template v-for="item of data" :key="item">
 	      <div class="overall-item">
 	        <p class="fw-bold">{{ item.title }}</p>
 	        <p class="number fw-bolder" :style="{ color: item.color}">{{ item.number }}</p>
+					<slot></slot>
 	      </div>	    		
     	</template>
     </div>
@@ -23,7 +24,7 @@
 	})
 
 	//data
-	const data  = ref(props.parentData)
+	const data = ref(props.parentData)
 </script>
 
 <style lang="scss" scoped>

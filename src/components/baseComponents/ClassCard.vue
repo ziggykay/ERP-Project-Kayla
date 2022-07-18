@@ -1,47 +1,47 @@
 <template>
   <div class="class-card content-box">
     <div class="class-title d-flex justify-content-between">
-      <p class="title">{{ data.name }}</p>
-      <button type="button" class="btn confirm-btn watch-btn" @click="showVideo(data.id)"
+      <p class="title">{{ classData.name }}</p>
+      <button type="button" class="btn confirm-btn watch-btn" @click="updateVideo"
       >觀看影片</button>
     </div>
     <div class="class-content container-fluid d-flex">
       <div class="percent-section col-3">
-        <p class="percent-number">{{ data.progress }}%</p>
-        <p class="percent-desc">{{ data.status }}</p>
+        <p class="percent-number">{{ classData.progress }}%</p>
+        <p class="percent-desc">{{ classData.status }}</p>
       </div>
       <div class="bar-section col-9">
         <p class="bar-label">
-          總時數：{{ data.time }}小時
+          總時數：{{ classData.time }}小時
         </p>
         <p class="bar-label">
-          已完成：{{ data.done }}小時
+          已完成：{{ classData.done }}小時
         </p>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" :style="`width: ${data.progress}%`" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar" role="progressbar" :style="`width: ${classData.progress}%`" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { ref } from "vue";
-export default {
-  name: 'classCard',
-  props:{
-    parentData: Object
-  },
-  setup(props){
-    const data = ref(props.parentData)
-    function showVideo () {
-      data[0].video[0]
-    };
+<script setup>
+  import { ref, onMounted } from "vue"
 
-    return { data, showVideo }
+  const props = defineProps({
+    parentData: Object
+  })
+
+  const classData = ref(props.parentData)
+
+  const emit = defineEmits(['showVideo'])
+
+  function updateVideo () {
+    emit('showVideo', classData.value.video)
   }
-}
+
 </script>
+
 
 <style lang="scss" scoped>
 .class-box{   
@@ -85,9 +85,10 @@ export default {
           margin-top: 1rem;
           border-style: solid;
           border-width: 1px;
-          border-color: #558ABA;
-           background-color: transparent;
+          border-color: #74abdd;
+          background-color: transparent;
           .progress-bar{
+            background-color: rgb(0, 200, 236);
           }
         }
       }

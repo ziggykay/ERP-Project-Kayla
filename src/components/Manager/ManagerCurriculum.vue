@@ -1,8 +1,10 @@
 <template>
-	<FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect>
+	<FilterSelect :parent-selectArr="selectArr" :parent-title="title">
+		<button class="confirm-btn btn btn-height">匯入</button>
+	</FilterSelect>
    <!--table -->
   <div class="content-box tableContainer">
-  	<p class="title"><strong>出勤情況總覽</strong></p>  	  	
+  	<p class="title"><strong>課表資訊</strong></p>  	  	
 		<hr/>
 	  <vxe-table :data="tableData" class="tableHeight">
 	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
@@ -91,7 +93,7 @@
 			]	  			
 		},		  		  		
 	]);	  	 
-	const title = ref("學員出勤資訊");
+	const title = ref("課表資訊");
 	
 	// table
 	const tableTitle = ref([
@@ -120,5 +122,3 @@
 	  }
 	}		
 </style>
-
-	
