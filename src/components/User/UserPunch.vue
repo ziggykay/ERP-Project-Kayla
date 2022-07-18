@@ -40,19 +40,16 @@
 
 	// filter-data
 	const selectArr = ref([
-		{
-			selected: "month",
-			data: [
-	  		{
-	  			name: "今日",
-	  			item: "today"
-	  		},
-	  		{
-	  			name: "本月",
-	  			item: "month"
-	  		}				 		
-			]	  			
-		},		  		  		
+		[
+  		{
+  			name: "今日",
+  			item: "today"
+  		},
+  		{
+  			name: "本月",
+  			item: "month"
+  		}				 		
+		]	 		  		  		
 	]);	
 	const title = "使用者出勤紀錄資訊"
 
