@@ -15,18 +15,8 @@
                 <p>問題</p>
               </div>
               <div>
-                <button
-                  type="button"
-                  class="btn btn-primary confirm-btn check-res mt-2 me-1"
-                >
-                  回覆
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary confirm-btn case-end check-res mt-2"
-                >
-                  結案
-                </button>
+                <button type="button" class="btn btn-primary confirm-btn check-res mt-2 me-1">回覆</button>
+                <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2">結案</button>
               </div>
             </div>
 
@@ -90,6 +80,9 @@
                 <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
                 <div class="res-content"></div>
               </div>
+              <div class=" text-end">
+              <button type="button" class="btn btn-primary confirm-btn check-res mt-2">回覆</button>
+              </div>
             </div>
           </div>
         </div>
@@ -99,7 +92,7 @@
 </template>
 
 <script setup>
-import SystemManage from "../../views/manager/SystemManageView.vue";
+import SystemManage from "/src/views/Manager/SystemManageView.vue";
 const emit = defineEmits(["changeShow"]);
 </script>
 

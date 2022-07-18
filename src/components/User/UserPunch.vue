@@ -36,7 +36,7 @@
   
 <script setup>
 	import VChart from "vue-echarts";
-	import Overall from "../baseComponents/Overall.vue";
+	import Overall from "../baseComponents/overall.vue";
 	import FilterSelect from "../baseComponents/FilterSelect.vue";
 	import {ref, onMounted, computed} from "vue"
 

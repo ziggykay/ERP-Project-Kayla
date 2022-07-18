@@ -1,20 +1,8 @@
 <template>
   <!-- 已結案區 -->
+  <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect>
   <div class="d-flex justify-content-center">
     <div class="content-box main-outter">
-      <div class="title p-3 fw-bold">已結案區</div>
-      <!-- 日期選擇套件 Vue3-Datepicker -->
-      <div class="d-md-flex p-3">
-        <select class="me-3 selectInfo">
-          <option>本日</option>
-          <option>本月</option>
-        </select>
-        <Datepicker
-          class="w-25 dateInfo datepicker dp__theme_light"
-          v-model="date"
-          range
-        />
-      </div>
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
       <div class="d-flex justify-content-evenly">
         <div class="resbox-outter">
@@ -72,7 +60,8 @@
 </template>
 
 <script setup>
-import SystemManage from "../../views/manager/SystemManageView.vue";
+import SystemManage from "/src/views/Manager/SystemManageView.vue";
+import FilterSelect from "../baseComponents/FilterSelect.vue";
 import { ref, onMounted } from "vue";
 const date = ref();
 // For demo purposes assign range from the current date
@@ -82,9 +71,29 @@ onMounted(() => {
   date.value = [startDate, endDate];
   return Date;
 });
+// filter-data
+	const selectArr = ref([
+		{
+			selected: "month",
+			data: [
+	  		{
+	  			name: "今日",
+	  			item: "today"
+	  		},
+	  		{
+	  			name: "本月",
+	  			item: "month"
+	  		}				 		
+			]	  			
+		},		  		  		
+	]);	
+	const title = "已結案區"
 </script>
 
 <style lang="scss" scoped>
+.filter-select{
+  width:100%
+}
 .selectInfo {
   width: 70px;
   height: 38px;
@@ -96,14 +105,14 @@ onMounted(() => {
 .content-box {
   margin: 1rem;
   background-color: #fff;
-  width: 300px;
+  width: 97.5%;
   height: 180px;
   padding: 1rem;
   box-shadow: gray;
 }
 .main-outter {
   width: 100%;
-  height: 90vh;
+  height: 70vh;
 }
 .resbox {
   width: 35vw;

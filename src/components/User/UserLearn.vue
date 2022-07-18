@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-  import overallVue from "../baseComponents/Overall.vue";
+  import overallVue from "../baseComponents/overall.vue";
   import ClassCard from "../../components/baseComponents/ClassCard.vue";
   import axios from "axios";
   import { ref, watch } from "vue";
