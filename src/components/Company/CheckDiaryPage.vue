@@ -1,141 +1,35 @@
 <template>
-  <div class="container-fluid px-5 pt-3">
-    <div class="content-box inner">
-      <p class="title"><strong>查看日誌</strong></p>
-      <div class="d-flex align-items-center">
-        <div class="dropdown mx-1 mt-1">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            班別
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" value="1">選項一</a></li>
-            <li><a class="dropdown-item" href="#">選項二</a></li>
-            <li><a class="dropdown-item" href="#">選項三</a></li>
-          </ul>
-        </div>
-        <div class="dropdown mx-1 mt-1">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            班級
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" value="1">選項一</a></li>
-            <li><a class="dropdown-item" href="#">選項二</a></li>
-            <li><a class="dropdown-item" href="#">選項三</a></li>
-          </ul>
-        </div>
-        <div class="dropdown mx-1 mt-1">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            專案
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" value="1">選項一</a></li>
-            <li><a class="dropdown-item" href="#">選項二</a></li>
-            <li><a class="dropdown-item" href="#">選項三</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="d-flex align-items-center">
-        <div class="dropdown mx-1 mt-1">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            本月
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" value="1">選項一</a></li>
-            <li><a class="dropdown-item" href="#">選項二</a></li>
-            <li><a class="dropdown-item" href="#">選項三</a></li>
-          </ul>
-        </div>
+  <!-- filter -->
+  <FilterSelect
+    :parent-selectArr="selectArr"
+    :parent-title="title"
+  ></FilterSelect>
 
-        <!-- 日期選擇套件 Vue3-Datepicker -->
-        <Datepicker class="datepicker mx-1 mt-1" v-model="date" range />
-        <div class="mt-1">
-          <button type="button" class="btn btn-primary confirm-btn">
-            查詢
-          </button>
-        </div>
-        <br />
-      </div>
+  <!-- chart -->
+  <div class="content-box overall-box">
+    <div class="py-2 checkBoxInner">
+      <div v-for="data in items" class="content-box-border checkDiv d-flex">
+        <div class="d-flex bigText">
+          <div class="text">
+            <p>日期</p>
+            <p class="single-ellipsis">{{ data.Time }}</p>
+          </div>
+          <div class="text">
+            <p>姓名</p>
+            <p>{{ data.Name }}</p>
+          </div>
+          <div class="text">
+            <p>內文</p>
 
-      <hr />
-      <!-- <p>測試用內文</p> -->
-      <div class="checkBox">
-        <div
-          class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-        >
-          <div class="d-flex bigText">
-            <div class="text">
-              <div>日期</div>
-              <div>2022/07/12</div>
-            </div>
-            <div class="text">
-              <div>姓名</div>
-              <div>王小明</div>
-            </div>
-            <div class="text">
-              <div>內文</div>
-              <div>XXXXXXXXXXXXX</div>
-            </div>
-            <!-- <div>4</div> -->
-          </div>
-          <div>
-            <router-link
-              class="btn btn-primary confirm-btn"
-              to="/company/userDiaryFeedback"
-            >
-              查看回覆</router-link
-            >
+            <p class="single-ellipsis">{{ data.Content }}</p>
           </div>
         </div>
-        <div
-          class="content-box-border checkDiv d-flex align-items-center justify-content-around"
-        >
-          <div class="d-flex bigText">
-            <div class="text">
-              <div>日期</div>
-              <div>2022/07/12</div>
-            </div>
-            <div class="text">
-              <div>姓名</div>
-              <div>王小明</div>
-            </div>
-            <div class="text">
-              <div>內文</div>
-              <div>XXXXXXXXXXXXX</div>
-            </div>
-            <!-- <div>4</div> -->
-          </div>
-          <div>
-            <router-link
-              class="btn btn-primary confirm-btn"
-              to="/company/userDiaryFeedback"
-            >
-              查看</router-link
-            >
-          </div>
+        <div>
+          <router-link
+            class="checkBtn btn btn-primary confirm-btn"
+            to="/user/checkSelfDiary"
+            >查看</router-link
+          >
         </div>
       </div>
     </div>
@@ -143,7 +37,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import FilterSelect from "../baseComponents/FilterSelect.vue";
+import { ref, onMounted, computed } from "vue";
 
 const date = ref();
 
@@ -154,34 +49,136 @@ onMounted(() => {
   date.value = [startDate, endDate];
   return Date;
 });
+const selectArr = ref([
+  {
+    selected: "class",
+    data: [
+      {
+        name: "班級",
+        item: "class",
+      },
+      {
+        name: "前端班",
+        item: "fn",
+      },
+      {
+        name: "數據班",
+        item: "se",
+      },
+      {
+        name: "雲端班",
+        item: "dv",
+      },
+    ],
+  },
+  {
+    selected: "grade",
+    data: [
+      {
+        name: "班別",
+        item: "grade",
+      },
+      {
+        name: "102",
+        item: "102",
+      },
+      {
+        name: "103",
+        item: "103",
+      },
+      {
+        name: "211",
+        item: "211",
+      },
+    ],
+  },
+  {
+    selected: "month",
+    data: [
+      {
+        name: "今日",
+        item: "today",
+      },
+      {
+        name: "本月",
+        item: "month",
+      },
+    ],
+  },
+  {
+    selected: "project",
+    data: [
+      {
+        name: "專案",
+        item: "project",
+      },
+      {
+        name: "產品",
+        item: "product",
+      },
+    ],
+  },
+]);
+const title = ref("查看日誌");
+
+const items = ref([
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+  {
+    Time: "2022-07-18",
+    Name: "AAA",
+    Content:
+      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
+  },
+]);
 </script>
 
 <style lang="scss" scoped>
-.inner {
-  width: 100%;
-  height: 90vh;
-  .checkDiv {
-    width: 90%;
-    height: 10vh;
+.overall-box {
+  width: auto;
+  height: auto;
+}
+
+.checkDiv {
+  width: 60vw;
+  height: 10vh;
+  p {
+    margin-bottom: 0;
   }
-  .checkDiv:hover {
-    background-color: #558aba;
-    button {
-      background-color: #22496d;
-    }
-    .text {
-      color: #fff;
-    }
-  }
-  .bigText {
-    width: 60%;
+}
+.checkDiv:hover {
+  background-color: #558aba;
+  .checkBtn {
+    background-color: #22496d;
   }
   .text {
-    width: 30%;
+    color: #fff;
   }
-  .checkBox {
-    height: 450px;
-    overflow-y: scroll;
-  }
+}
+.bigText {
+  width: 80%;
+  height: 10%;
+}
+.text {
+  width: 30%;
+}
+.checkBoxInner {
+  overflow-y: scroll;
+  height: 55vh;
+}
+.single-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

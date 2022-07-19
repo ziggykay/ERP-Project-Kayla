@@ -1,41 +1,36 @@
 <template>
-  <div class="container pt-3 inner">
-    <div class="col-12">
-      <filterSelect
-        class="m-0"
-        :parent-selectArr="selectArr"
-        :parent-title="title"
-      >
-        <input type="text" placeholder="123" />
-      </filterSelect>
-    </div>
-    <div class="col-12 mt-3">
-      <div class="content-box checkBox">
-        <div class="py-2 checkBoxInner">
-          <div v-for="data in items" class="content-box-border checkDiv d-flex">
-            <div class="d-flex bigText">
-              <div class="text">
-                <p>日期</p>
-                <p>{{ data.Time }}</p>
-              </div>
-              <div class="text">
-                <p>姓名</p>
-                <p>{{ data.Name }}</p>
-              </div>
-              <div class="text">
-                <p>內文</p>
+  <!-- filter -->
+  <FilterSelect :parent-selectArr="selectArr" :parent-title="title">
+    <div class="py-1">
+      <input class="mx-1" type="checkbox" /><span>企業已回覆</span>
+    </div></FilterSelect
+  >
 
-                <p class="single-ellipsis">{{ data.Content }}</p>
-              </div>
-            </div>
-            <div>
-              <router-link
-                class="checkBtn btn btn-primary confirm-btn"
-                to="/user/checkSelfDiary"
-                >查看</router-link
-              >
-            </div>
+  <!-- chart -->
+  <div class="content-box overall-box">
+    <div class="py-2 checkBoxInner">
+      <div v-for="data in items" class="content-box-border checkDiv d-flex">
+        <div class="d-flex bigText">
+          <div class="text">
+            <p>日期</p>
+            <p class="single-ellipsis">{{ data.Time }}</p>
           </div>
+          <div class="text">
+            <p>姓名</p>
+            <p>{{ data.Name }}</p>
+          </div>
+          <div class="text">
+            <p>內文</p>
+
+            <p class="single-ellipsis">{{ data.Content }}</p>
+          </div>
+        </div>
+        <div>
+          <router-link
+            class="checkBtn btn btn-primary confirm-btn"
+            to="/user/checkSelfDiary"
+            >查看</router-link
+          >
         </div>
       </div>
     </div>
@@ -43,8 +38,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import filterSelect from "../baseComponents/FilterSelect.vue";
+import FilterSelect from "../baseComponents/FilterSelect.vue";
+import { ref, onMounted, computed } from "vue";
 
 const date = ref();
 
@@ -108,48 +103,37 @@ const items = ref([
 </script>
 
 <style lang="scss" scoped>
-body {
-  margin: 0;
-  padding: 0;
+.overall-box {
+  width: auto;
+  height: auto;
 }
-.inner {
-  width: 100%;
-  height: 90vh;
 
-  .checkDiv {
-    width: 90%;
-    height: 5rem;
-    margin-top: 5px;
-    p {
-      margin-bottom: 0;
-    }
+.checkDiv {
+  width: 60vw;
+  height: 10vh;
+  p {
+    margin-bottom: 0;
   }
-  .checkDiv:hover {
-    background-color: #558aba;
-    .checkBtn {
-      background-color: #22496d;
-    }
-    .text {
-      color: #fff;
-    }
-  }
-  .bigText {
-    width: 80%;
-    height: 10%;
+}
+.checkDiv:hover {
+  background-color: #558aba;
+  .checkBtn {
+    background-color: #22496d;
   }
   .text {
-    width: 30%;
+    color: #fff;
   }
-  .checkBox {
-    width: 100%;
-    height: 60vh;
-    margin: 0;
-
-    .checkBoxInner {
-      overflow-y: scroll;
-      height: 55vh;
-    }
-  }
+}
+.bigText {
+  width: 80%;
+  height: 10%;
+}
+.text {
+  width: 30%;
+}
+.checkBoxInner {
+  overflow-y: scroll;
+  height: 55vh;
 }
 .single-ellipsis {
   overflow: hidden;

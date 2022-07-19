@@ -32,11 +32,9 @@ const props = defineProps({
   parentSelectArr: Array,
   parentTitle: String,
 });
-
 // data
 const parentSelectArr = ref(props.parentSelectArr);
 const parentTitle = ref(props.parentTitle);
-
 // date
 const date = ref("");
 onMounted(() => {
@@ -44,7 +42,6 @@ onMounted(() => {
   const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
   date.value = [startDate, endDate];
 });
-
 onMounted(async () => {
   let { data } = await axios.get("http://localhost:80/api/testApi");
   console.log(data);

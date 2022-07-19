@@ -9,8 +9,7 @@
             type="button"
             id="dropdownMenuButton1"
             data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
+            aria-expanded="false">
             學員
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -55,8 +54,7 @@
               type="button"
               id="dropdownMenuButton1"
               data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+              aria-expanded="false">
               班級
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -95,25 +93,26 @@
           </div>
         </div>
         <div class="checkDiv">
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center my-2" v-for="data of usersData" :key="data">
             <div class="text">
-              <div>1</div>
+              <div>{{data.id}}</div>
             </div>
             <div class="text">
-              <div>前端班</div>
+              <div>{{data.class}}</div>
             </div>
             <div class="text">
-              <div>102</div>
+              <div>{{data.grade}}</div>
             </div>
             <div class="text">
-              <div>王小明</div>
+              <div>{{data.name}}</div>
             </div>
             <div class="text">
-              <router-link
-                class="btn btn-primary confirm-btn"
-                to="/manager/userInfo"
-                >詳細資訊</router-link
-              >
+              <!-- <router-link class="btn btn-primary confirm-btn" to="/manager/userInfo">
+                詳細資訊
+              </router-link> -->
+              <button class="btn btn-primary confirm-btn" @click="checkUserInfo(data.id)">
+                詳細資訊
+              </button>
             </div>
           </div>
         </div>
@@ -124,6 +123,39 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import router from "../../router";
+
+const usersData = ref([
+  {
+    id: 1,
+    class: "前端班",
+    grade: "101",
+    name: "王小明"
+  },
+  {
+    id: 2,
+    class: "前端班",
+    grade: "101",
+    name: "王中明"
+  },
+  {
+    id: 3,
+    class: "前端班",
+    grade: "101",
+    name: "王大明"
+  },
+  {
+    id: 4,
+    class: "前端班",
+    grade: "101",
+    name: "王巨明"
+  },
+])
+
+function checkUserInfo (id) {
+  this.router.push(`/manager/accountcheck/${id}`)
+}
+
 </script>
 
 <style lang="scss" scoped>
