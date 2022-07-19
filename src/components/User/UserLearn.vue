@@ -12,8 +12,8 @@
       <div class="scroll-box" >
         <div v-for="data of classData" :key="data.id">
           <ClassCard :parentData="data" @show-video="getVideo"/>
-          <div class="error" v-if="classData == ''">沒有課程可以顯示</div>
         </div>
+        <div class="error" v-if="classData == ''">沒有課程可以顯示</div>
       </div> 
     </div>
     <!-- 影片區塊 -->
@@ -25,8 +25,8 @@
           <iframe width="504" height="283.5" :src="data.src" 
             title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
           </iframe>
-          <div class="error" v-if="videoData == ''">沒有影片</div>
         </div>
+        <div class="error" v-if="videoData == ''">沒有影片</div>
         <!-- {{videoData}} -->
       </div>
     </div>
@@ -136,6 +136,22 @@
       status: '進行中',
       time: 40,
       done: 32,
+      video: [
+        {
+          src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
+        },
+        {
+          src: 'https://www.youtube.com/embed/rBLuvEwIF5E'
+        }
+      ]
+    },
+    {
+      id: 5,
+      name: '響應式網頁專題製作',
+      progress: 100,
+      status: '已完成',
+      time: 40,
+      done: 40,
       video: [
         {
           src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
