@@ -87,74 +87,74 @@
 </template>
 
 <script setup>
-import {watch, ref, onMounted} from "vue"
+  import {watch, ref, onMounted} from "vue"
 
-// punch
-const punchData = ref(
-  {
-    date: '20220718',
-    name: '王小明',
-    in: '08:55',
-    out: '16:37',
+  // punch
+  const punchData = ref(
+    {
+      date: '20220718',
+      name: '王小明',
+      in: '08:55',
+      out: '16:37',
+    }
+  )
+  // class
+  const todayClass = ref(
+    {
+      id: 2,
+      name: 'Jquery&Jquery extensions',
+      progress: 100,
+      status: '已完成',
+      time: 40,
+      done: 40,
+    }
+  )
+
+  // diary
+  const diaryMsg = ref('尚未登打日誌')
+  const diaryData = ref(0)
+
+  // 更改日誌區顯示內容
+  const changeDiaryStatus = () => {
+    diaryData.value == 1 ? diaryMsg.value = '日誌已登打' : diaryMsg.value = '尚未登打日誌' 
   }
-)
-// class
-const todayClass = ref(
-  {
-    id: 2,
-    name: 'Jquery&Jquery extensions',
-    progress: 100,
-    status: '已完成',
-    time: 40,
-    done: 40,
+
+  // TODO:測試 watch 功能用，串接API後刪除
+  const change = () => {
+    if(diaryData.value == 0){
+      diaryData.value = 1
+    }else{
+      diaryData.value = 0
+    }
   }
-)
+  //
 
-// diary
-const diaryMsg = ref('尚未登打日誌')
-const diaryData = ref(0)
+  onMounted(
+    changeDiaryStatus
+  )
 
-// 更改日誌區顯示內容
-const changeDiaryStatus = () => {
-  diaryData.value == 1 ? diaryMsg.value = '日誌已登打' : diaryMsg.value = '尚未登打日誌' 
-}
+  watch(
+    diaryData, changeDiaryStatus
+  )
 
-// TODO:測試 watch 功能用，串接API後刪除
-const change = () => {
-  if(diaryData.value == 0){
-    diaryData.value = 1
-  }else{
-    diaryData.value = 0
+  // job
+  const jobData = ref([
+    {
+      title: '前端工程師',
+      skillSet:[
+        'JavaScript', 'BootStrap', 'Node.JS', 'HTML'
+      ],
+      location: '台北',
+      platform: '104',
+      url: 'https://google.com.tw'
+    },
+  ])
+
+  // 開新分頁至對應平台
+  const jobDetail = (url) => {
+    // location.assign(url)
+    window.open(url)
   }
-}
-//
-
-onMounted(
-  changeDiaryStatus
-)
-
-watch(
-  diaryData, changeDiaryStatus
-)
-
-// job
-const jobData = ref([
-  {
-    title: '前端工程師',
-    skillSet:[
-      'JavaScript', 'BootStrap', 'Node.JS', 'HTML'
-    ],
-    location: '台北',
-    platform: '104',
-    url: 'https://google.com.tw'
-  },
-])
-
-// 開新分頁至對應平台
-const jobDetail = (url) => {
-  // location.assign(url)
-  window.open(url)
-}
 
 </script>
 
