@@ -1,7 +1,15 @@
 <template>
-	<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="totalData">
-		<button class="btn confirm-btn">匯入</button>
-	</FilterSelect>
+	<template v-if="selectArr[0]">
+		<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="totalData">
+			<button class="btn confirm-btn">匯入</button>
+		</FilterSelect>		
+	</template>
+	<template v-else>
+		<div class="content-box">
+			尚未有資料  
+	  </div> 			
+	</template>
+
    <!--table -->
   <div class="content-box tableContainer">
   	<p class="title"><strong>表格</strong></p>  	  	
@@ -19,78 +27,101 @@
 	
 	// data
 	// selectOption
-	const selectArr = ref([
-		[
-			{
-				name: "前端班",
-				item: "fn"
-			},
-			{
-				name: "數據班",
-				item: "bd"
-			},
-			{
-				name: "雲端班",
-				item: "cd"
-			}	  		
-		],
-		[
-			{
-				name: "101",
-				item: "101"
-			},
-			{
-				name: "102",
-				item: "102"
-			}		 		
-		],
-		[
-			{
-				name: "全部學生",
-				item: ""
-			},		
-			{
-				name: "Rossen",
-				item: "Rossen"
-			},
-			{
-				name: "andy",
-				item: "andy"
-			}			 		
-		],	
-		[
-			{
-				name: "全部請假類型",
-				item: ""
-			},			
-			{
-				name: "病假",
-				item: "病假"
-			},
-			{
-				name: "事假",
-				item: "事假"
-			},	
-			{
-				name: "喪假",
-				item: "喪假"
-			},			  				 		
-			{
-				name: "特殊原因",
-				item: "特殊原因"
-			},			  				 		
-		],		  		
-		[
-			{
-				name: "今日",
-				item: "today"
-			},
-			{
-				name: "本月",
-				item: "month"
-			}				 		
-		]			  		  		
-	]);	  	 
+	const selectArr = ref([]);	  	 
+	const getSelectArr = async() =>{
+
+			let href = 'http://localhost:80/api/diary/account'
+			let type = "fn"
+			let number = '101'
+
+			let { data } = await axios.get(href, { params: { type, number}})
+
+			try{
+				selectArr.value = [
+					[
+						{
+							name: "前端班",
+							item: "fn"
+						},
+						{
+							name: "數據班",
+							item: "bd"
+						},
+						{
+							name: "雲端班",
+							item: "cd"
+						}	  		
+					],
+					[
+						{
+							name: "101",
+							item: "101"
+						},
+						{
+							name: "102",
+							item: "102"
+						}		 		
+					],
+					[
+						{
+							name: "全部學生",
+							item: ""
+						},		
+						{
+							name: "Rossen",
+							item: "Rossen"
+						},
+						{
+							name: "andy",
+							item: "andy"
+						}			 		
+					],	
+					[
+						{
+							name: "全部請假類型",
+							item: ""
+						},			
+						{
+							name: "病假",
+							item: "病假"
+						},
+						{
+							name: "事假",
+							item: "事假"
+						},	
+						{
+							name: "喪假",
+							item: "喪假"
+						},			  				 		
+						{
+							name: "特殊原因",
+							item: "特殊原因"
+						},			  				 		
+					],		  		
+					[
+						{
+							name: "今日",
+							item: "today"
+						},
+						{
+							name: "本月",
+							item: "month"
+						}				 		
+					]	
+				]
+				// for(let i = 0; i <= data.data.length - 1; i++){
+				// 	userSelectArr.value[2].push({
+		  // 			name: data.data[i].Name,
+		  // 			item: data.data[i].Name
+		  // 		})
+				// }		  			
+			}
+			catch{
+				alert("資料錯誤")
+			}
+	}		
+	getSelectArr()
+
 	const title = ref("學員請假資訊");
 	
 	// table

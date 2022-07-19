@@ -1,5 +1,13 @@
 <template>
-	<FilterSelect :parent-selectArr="userSelectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
+	<template v-if="userSelectArr[0]">
+	<FilterSelect :parent-selectArr="userSelectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>		
+	</template>
+	<template v-else>
+		<div class="content-box">
+			尚未有資料  
+	  </div> 	
+	</template>
+
   <!-- chart -->
   <div class="content-box overall-box chartContainer" >
 		<v-chart class="chartHeight" :option="barchart" autoresize />  	
@@ -11,60 +19,73 @@
 	import VChart from "vue-echarts";
 	import	{ref, onMounted} from "vue"
 	import axios from 'axios'
-	//data 
+	
 	// user
-	const userSelectArr = ref([
-		[
-			{
-				name: "前端班",
-				item: "fn"
-			},
-			{
-				name: "數據班",
-				item: "bd"
-			},
-			{
-				name: "雲端班",
-				item: "cd"
-			}	  		
-		],
-		[
-  		{
-  			name: "101",
-  			item: "101"
-  		},
-  		{
-  			name: "102",
-  			item: "102"
-  		}		 		
-		],
-		[		
-		],	
-		[
-			{
-				name: "今日",
-				item: "today"
-			},
-			{
-				name: "本月",
-				item: "month"
-			}				 		
-		]	 		  		  		
-	]);	 	
+	const userSelectArr = ref([]);	 	
+	const getUserSelectArr = async() =>{
 
-	onMounted(async()=>{
-		let href = 'http://localhost:80/api/diary/account'
-		let type = "fn"
-		let number = '101'
+			let href = 'http://localhost:80/api/diary/account'
+			let type = "fn"
+			let number = '101'
 
-		let { data } = await axios.get(href, { params: { type, number}})
-		for(let i = 0; i <= data.data.length - 1; i++){
-			userSelectArr.value[2].push({
-  			name: data.data[i].Name,
-  			item: data.data[i].Name
-  		})
-		}
-	})
+			let { data } = await axios.get(href, { params: { type, number}})
+
+			try{
+				userSelectArr.value = [
+					[
+						{
+							name: "前端班",
+							item: "fn"
+						},
+						{
+							name: "數據班",
+							item: "bd"
+						},
+						{
+							name: "雲端班",
+							item: "cd"
+						}	  		
+					],
+					[
+			  		{
+			  			name: "101",
+			  			item: "101"
+			  		},
+			  		{
+			  			name: "102",
+			  			item: "102"
+			  		}		 		
+					],
+					[	 		
+					],				
+					[
+						{
+							name: "今日",
+							item: "today"
+						},
+						{
+							name: "本月",
+							item: "month"
+						}				 		
+					]	
+				]
+				userSelectArr.value[2].push({
+		  			name: "Rossen",
+		  			item: "rossen"
+		  	})
+				// for(let i = 0; i <= data.data.length - 1; i++){
+				// 	userSelectArr.value[2].push({
+		  // 			name: data.data[i].Name,
+		  // 			item: data.data[i].Name
+		  // 		})
+				// }		  			
+			}
+			catch{
+				alert("資料錯誤")
+			}
+	}		
+	getUserSelectArr()
+
 
 	const title = ref("學員學習進度");
 	
@@ -100,8 +121,6 @@
 	      itemStyle: {
 					color: '#558ABA'
 	      },
-	      // barWidth: '20%',
-				// barCategoryGap: '5%'
 	    },
 	    {
 	    	name: '學生學習時數',

@@ -1,5 +1,13 @@
 <template>
-	<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="totalData"></FilterSelect>
+	<template v-if="selectArr[0]">
+			<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="totalData"></FilterSelect>
+	</template>
+	<template v-else>
+		<div class="content-box">
+			尚未有資料  
+	  </div> 				
+	</template>
+
    <!--table -->
   <div class="content-box tableContainer">
   	<p class="title"><strong>出勤情況總覽</strong></p>  	  	
@@ -23,66 +31,88 @@
 
 	// data
 	// selectOption
-	const selectArr = ref([
-		[
-			{
-				name: "前端班",
-				item: "fn"
-			},
-			{
-				name: "數據班",
-				item: "bd"
-			},
-			{
-				name: "雲端班",
-				item: "cd"
-			}	  		
-		],
-		[
-  		{
-  			name: "101",
-  			item: "101"
-  		},
-  		{
-  			name: "102",
-  			item: "102"
-  		}		 		
-		],
-		[
-			{
-				name: "Rossen",
-				item: "Rossen"
-			},
-			{
-				name: "andy",
-				item: "andy"
-			}			 		
-		],	
-		[
-  		{
-  			name: "all",
-  			item: "all"
-  		},
-  		{
-  			name: "present",
-  			item: "present"
-  		},	
-  		{
-  			name: "late",
-  			item: "late"
-  		}					  				 		
-		],		  		
-		[
-  		{
-  			name: "今日",
-  			item: "today"
-  		},
-  		{
-  			name: "本月",
-  			item: "month"
-  		}				 		
-		]				  		
-	]);	  	 
+	const selectArr = ref([]);	  	 
+	const getSelectArr = async() =>{
+
+			let href = 'http://localhost:80/api/diary/account'
+			let type = "fn"
+			let number = '101'
+
+			let { data } = await axios.get(href, { params: { type, number}})
+
+			try{
+				selectArr.value = [
+					[
+						{
+							name: "前端班",
+							item: "fn"
+						},
+						{
+							name: "數據班",
+							item: "bd"
+						},
+						{
+							name: "雲端班",
+							item: "cd"
+						}	  		
+					],
+					[
+			  		{
+			  			name: "101",
+			  			item: "101"
+			  		},
+			  		{
+			  			name: "102",
+			  			item: "102"
+			  		}		 		
+					],
+					[
+						{
+							name: "Rossen",
+							item: "Rossen"
+						},
+						{
+							name: "andy",
+							item: "andy"
+						}			 		
+					],	
+					[
+			  		{
+			  			name: "all",
+			  			item: "all"
+			  		},
+			  		{
+			  			name: "present",
+			  			item: "present"
+			  		},	
+			  		{
+			  			name: "late",
+			  			item: "late"
+			  		}					  				 		
+					],		  		
+					[
+			  		{
+			  			name: "今日",
+			  			item: "today"
+			  		},
+			  		{
+			  			name: "本月",
+			  			item: "month"
+			  		}				 		
+					]	
+				]
+				// for(let i = 0; i <= data.data.length - 1; i++){
+				// 	userSelectArr.value[2].push({
+		  // 			name: data.data[i].Name,
+		  // 			item: data.data[i].Name
+		  // 		})
+				// }		  			
+			}
+			catch{
+				alert("資料錯誤")
+			}
+	}		
+	getSelectArr()	
 	const title = ref("學員出勤資訊");
 	
 	// table
@@ -138,7 +168,6 @@
 		}		
 	}
   watch([chosePage, choseSelect], ([newA, newB], [prevA, prevB]) => {
-  	// console.log(choseSelect)
 		doAxios(newB.group, newB.startdate, newB.stopdate, newB.name, newB.status, newA)
   },{deep: true});	
 

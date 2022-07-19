@@ -6,13 +6,20 @@
 	</div>
 
 	<template v-if="isGrade">
-		<!--  filter-->
-		<FilterSelect :parent-selectArr="gradeSelectArr" :parent-title="gradeTitle" @user-selectData="gradeData">
-			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
-		</FilterSelect>
-	  
-	  <!-- overall -->
-	  <Overall :parent-data="gradeAttendanceData"></Overall>
+		<template v-if="gradeSelectArr[0]">
+			<!--  filter-->
+			<FilterSelect :parent-selectArr="gradeSelectArr" :parent-title="gradeTitle" @user-selectData="gradeData">
+				<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
+			</FilterSelect>
+		  <!-- overall -->
+		  <Overall :parent-data="gradeAttendanceData"></Overall>			
+		</template>
+
+		<template v-else>
+			<div class="content-box">
+				尚未有資料  
+		  </div> 	
+		</template>
 	  
 	  <!-- chart -->
 	  <div class="d-md-flex m-auto h-auto">
@@ -24,42 +31,48 @@
 		  </div> 		  	
 	  </div>  
 
-		<!-- filter -->
-		<FilterSelect :parent-selectArr="gradeCompareSelectArr" :parent-title="gradeCompare">
-			<template v-slot:bar>
-				<input type="checkbox" id="fn" value="fn" v-model="checkedGrades">
-				<label for="fn">前端班</label>
-				<input type="checkbox" id="bd" value="bd" v-model="checkedGrades">
-				<label for="bd">數據班</label>
-				<input type="checkbox" id="cd" value="cd" v-model="checkedGrades">
-				<label for="cd">雲端班</label>					
-			</template>	
-		</FilterSelect>	
+	  <template v-if="gradeCompareSelectArr[0]">
+			<!-- filter -->
+			<FilterSelect :parent-selectArr="gradeCompareSelectArr" :parent-title="gradeCompare">
+				<template v-slot:bar>
+					<input type="checkbox" id="fn" value="fn" v-model="checkedGrades">
+					<label for="fn">前端班</label>
+					<input type="checkbox" id="bd" value="bd" v-model="checkedGrades">
+					<label for="bd">數據班</label>
+					<input type="checkbox" id="cd" value="cd" v-model="checkedGrades">
+					<label for="cd">雲端班</label>					
+				</template>	
+			</FilterSelect>		  	
+	  </template>
 
 	  <!-- chart -->
 	  <div class="content-box overall-box chartContainer" >
 			<v-chart class="chartHeight" :option="gradeCompareBarchart" autoresize />  	
 	  </div>	
-
 	</template>
 
+<!-- ============================================================================================================================= -->
 	<template v-if="!isGrade">
+		<template v-if="userSelectArr[0]">
+			<!--  filter-->
+			<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle" @user-selectData="userData">
+				<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
+			</FilterSelect>
+		  <!-- overall -->
+		  <Overall :parent-data="userAttendanceData"></Overall>			
+		</template>
 
-		<!--  filter-->
-		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle" @user-selectData="userData">
-			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
-		</FilterSelect>
-	  
-	  <!-- overall -->
-	  <Overall :parent-data="userAttendanceData"></Overall>
+		<template v-else>
+			<div class="content-box">
+				尚未有資料  
+		  </div> 			
+		</template>
 	  
 	  <!-- chart -->
 	  <div class="content-box overall-box chartContainer" >
 			<v-chart class="chartHeight" :option="userBarchart" autoresize />  	
 	  </div>		   		
 	</template>
-
-
 </template>
 
 <script setup>
@@ -234,7 +247,7 @@
 		group = val[1][0]+val[1][1]
 
 
-		// // get axios data
+		// get axios data
 		let href = "http://localhost:80/api/count/"
 		let {data} = await axios.get(href, { params: { group, startdate, stopdate}})
 
@@ -397,58 +410,71 @@
 	})
 
 	// user
-	const userSelectArr = ref([
-		[
-			{
-				name: "前端班",
-				item: "fn"
-			},
-			{
-				name: "數據班",
-				item: "bd"
-			},
-			{
-				name: "雲端班",
-				item: "cd"
-			}	  		
-		],
-		[
-  		{
-  			name: "101",
-  			item: "101"
-  		},
-  		{
-  			name: "102",
-  			item: "102"
-  		}		 		
-		],
-		[		
-		],	
-		[
-			{
-				name: "今日",
-				item: "today"
-			},
-			{
-				name: "本月",
-				item: "month"
-			}				 		
-		]	 		  		  		
-	]);	 	
+	const userSelectArr = ref([]);	 	
+	const getUserSelectArr = async() =>{
 
-	onMounted(async()=>{
-		let href = 'http://localhost:80/api/diary/account'
-		let type = "fn"
-		let number = '101'
+			let href = 'http://localhost:80/api/diary/account'
+			let type = "fn"
+			let number = '101'
 
-		let { data } = await axios.get(href, { params: { type, number}})
-		for(let i = 0; i <= data.data.length - 1; i++){
-			userSelectArr.value[2].push({
-  			name: data.data[i].Name,
-  			item: data.data[i].Name
-  		})
-		}
-	})
+			let { data } = await axios.get(href, { params: { type, number}})
+
+			try{
+				userSelectArr.value = [
+					[
+						{
+							name: "前端班",
+							item: "fn"
+						},
+						{
+							name: "數據班",
+							item: "bd"
+						},
+						{
+							name: "雲端班",
+							item: "cd"
+						}	  		
+					],
+					[
+			  		{
+			  			name: "101",
+			  			item: "101"
+			  		},
+			  		{
+			  			name: "102",
+			  			item: "102"
+			  		}		 		
+					],
+					[	 		
+					],				
+					[
+						{
+							name: "今日",
+							item: "today"
+						},
+						{
+							name: "本月",
+							item: "month"
+						}				 		
+					]	
+				]
+				userSelectArr.value[2].push({
+		  			name: "Rossen",
+		  			item: "rossen"
+		  	})
+				// for(let i = 0; i <= data.data.length - 1; i++){
+				// 	userSelectArr.value[2].push({
+		  // 			name: data.data[i].Name,
+		  // 			item: data.data[i].Name
+		  // 		})
+				// }		  			
+			}
+			catch{
+				alert("資料錯誤")
+			}
+	}		
+	getUserSelectArr()
+
 	const userTitle = ref("以學員篩選")
 
 	const userAttendanceData = ref([
@@ -520,7 +546,7 @@
 	})	  		
 	// overall and chart data
 	const choseSelect = ref();
-	const userData = async(val)=>{
+	const userData = (val)=>{
 		choseSelect.value = {}
 		choseSelect.value = {
 			startdate: val[0][0],
