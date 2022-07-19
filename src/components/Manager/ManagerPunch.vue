@@ -44,6 +44,7 @@
 	</template>
 
 	<template v-if="!isGrade">
+
 		<!--  filter-->
 		<FilterSelect :parent-selectArr="userSelectArr" :parent-title="userTitle" @user-selectData="userData">
 			<button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	  	
@@ -62,7 +63,7 @@
 </template>
 
 <script setup>
-	import {ref, onMounted, computed} from "vue"
+	import {ref, onMounted, computed, watch} from "vue"
 	import axios from 'axios'
 	import VChart from "vue-echarts";
 	import Overall from "../baseComponents/Overall.vue";
@@ -94,7 +95,7 @@
   			name: "102",
   			item: "102"
   		}		 		
-		],
+		],		
  		[
   		{
   			name: "今日",
@@ -245,9 +246,9 @@
 			}
 
 			// over all
-			gradeAttendanceData.value[0].number = `${Math.round(axiosData.present/sum*100)}%`
+			gradeAttendanceData.value[0].number = `${Math.round((axiosData.present+axiosData.late)/sum*100)}%`
 			gradeAttendanceData.value[1].number = `${Math.round(axiosData.late/sum*100)}%`
-			gradeAttendanceData.value[2].number = `${Math.round(axiosData.absent/sum*100)}%`
+			gradeAttendanceData.value[2].number = `${Math.round((axiosData.absent+axiosData.excused)/sum*100)}%`
 			gradeAttendanceData.value[3].number = `${Math.round(axiosData.excused/sum*100)}%`
 
 			// pie chart and barcart
@@ -421,16 +422,8 @@
   			item: "102"
   		}		 		
 		],
-		[
-	  	{
-  			name: "Rossen",
-  			item: "Rossen"
-  		},
-  		{
-  			name: "andy",
-  			item: "andy"
-  		}			 		
-		]	,	
+		[		
+		],	
 		[
 			{
 				name: "今日",
@@ -442,6 +435,20 @@
 			}				 		
 		]	 		  		  		
 	]);	 	
+
+	onMounted(async()=>{
+		let href = 'http://localhost:80/api/diary/account'
+		let type = "fn"
+		let number = '101'
+
+		let { data } = await axios.get(href, { params: { type, number}})
+		for(let i = 0; i <= data.data.length - 1; i++){
+			userSelectArr.value[2].push({
+  			name: data.data[i].Name,
+  			item: data.data[i].Name
+  		})
+		}
+	})
 	const userTitle = ref("以學員篩選")
 
 	const userAttendanceData = ref([
@@ -512,18 +519,17 @@
 	  ],	  		
 	})	  		
 	// overall and chart data
+	const choseSelect = ref();
 	const userData = async(val)=>{
-		let startdate = ''
-		let stopdate = ''
-		let group = ''
-		let name = ''
-
-		startdate = val[0][0];
-		stopdate = val[0][1];
-		group = val[1][0]+val[1][1]
-		name = val[2]
-
-		// // get axios data
+		choseSelect.value = {}
+		choseSelect.value = {
+			startdate: val[0][0],
+			stopdate: val[0][1],
+			group: val[1][0]+val[1][1],
+			name: val[1][2]
+		}
+	}
+	const doAxios = async(group, startdate, stopdate, name)=>{
 		let href = "http://localhost:80/api/count/"
 		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})
 		try{
@@ -532,18 +538,21 @@
 			for (let key in axiosData) {
 	    	sum = sum + axiosData[key]
 			}
-
 			// over all
-			userAttendanceData.value[0].number = `${Math.round(axiosData.present/sum*100)}%`
+			userAttendanceData.value[0].number = `${Math.round((axiosData.present+axiosData.late)/sum*100)}%`
 			userAttendanceData.value[1].number = `${Math.round(axiosData.late/sum*100)}%`
-			userAttendanceData.value[2].number = `${Math.round(axiosData.absent/sum*100)}%`
+			userAttendanceData.value[2].number = `${Math.round((axiosData.absent+axiosData.excused)/sum*100)}%`
 			userAttendanceData.value[3].number = `${Math.round(axiosData.excused/sum*100)}%`
 			//barcart
 		}
 		catch{
 			alert("資料錯誤")
-		}
+		}		
 	}
+	watch(choseSelect, (newVal, oldVal)=>{
+		// get axios data
+		doAxios(newVal.group, newVal.startdate, newVal.stopdate, newVal.name)
+	})
 
 	// changeComponent
 	const isGrade = ref(true)

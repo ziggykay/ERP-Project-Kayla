@@ -15,7 +15,6 @@
 			</ul>
 		</nav>
   </div> 
-
 </template>
 <script setup>
 	import FilterSelect from "../baseComponents/filterSelect.vue";

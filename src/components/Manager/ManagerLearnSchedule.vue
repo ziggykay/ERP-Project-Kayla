@@ -1,5 +1,5 @@
 <template>
-	<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
+	<FilterSelect :parent-selectArr="userSelectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
   <!-- chart -->
   <div class="content-box overall-box chartContainer" >
 		<v-chart class="chartHeight" :option="barchart" autoresize />  	
@@ -9,23 +9,24 @@
 <script setup>
 	import FilterSelect from "../baseComponents/FilterSelect.vue";
 	import VChart from "vue-echarts";
-	import	{ref} from "vue"
+	import	{ref, onMounted} from "vue"
 	import axios from 'axios'
 	//data 
-	const selectArr = ref([
+	// user
+	const userSelectArr = ref([
 		[
-  		{
-  			name: "前端班",
-  			item: "fn"
-  		},
-  		{
-  			name: "數據班",
-  			item: "bd"
-  		},
-  		{
-  			name: "雲端班",
-  			item: "cd"
-  		}	  		
+			{
+				name: "前端班",
+				item: "fn"
+			},
+			{
+				name: "數據班",
+				item: "bd"
+			},
+			{
+				name: "雲端班",
+				item: "cd"
+			}	  		
 		],
 		[
   		{
@@ -37,15 +38,7 @@
   			item: "102"
   		}		 		
 		],
-		[
-  		{
-  			name: "Rossen",
-  			item: "Rossen"
-  		},
-  		{
-  			name: "andy",
-  			item: "andy"
-  		}			 		
+		[		
 		],	
 		[
 			{
@@ -56,8 +49,23 @@
 				name: "本月",
 				item: "month"
 			}				 		
-		],		  		  		
-	]);	  	 
+		]	 		  		  		
+	]);	 	
+
+	onMounted(async()=>{
+		let href = 'http://localhost:80/api/diary/account'
+		let type = "fn"
+		let number = '101'
+
+		let { data } = await axios.get(href, { params: { type, number}})
+		for(let i = 0; i <= data.data.length - 1; i++){
+			userSelectArr.value[2].push({
+  			name: data.data[i].Name,
+  			item: data.data[i].Name
+  		})
+		}
+	})
+
 	const title = ref("學員學習進度");
 	
 	const barchart = ref({
