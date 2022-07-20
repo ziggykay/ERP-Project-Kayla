@@ -3,7 +3,7 @@
 	<FilterSelect :parent-selectArr="userSelectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>		
 	</template>
 	<template v-else>
-		<div class="content-box">
+		<div class="content-box w-auto">
 			尚未有資料  
 	  </div> 	
 	</template>

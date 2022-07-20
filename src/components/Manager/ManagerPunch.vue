@@ -16,7 +16,7 @@
 		</template>
 
 		<template v-else>
-			<div class="content-box">
+			<div class="content-box w-auto">
 				尚未有資料  
 		  </div> 	
 		</template>
