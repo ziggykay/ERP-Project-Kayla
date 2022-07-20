@@ -154,7 +154,6 @@
   function getVideo (vid) {
     videoData.value = '';
     videoData.value = vid
-    console.log(videoData.value)
   }
 
 
