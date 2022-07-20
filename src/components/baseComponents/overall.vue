@@ -25,8 +25,7 @@
 	})
 
 	//data
-	// const data = ref(props.parentData)
-	const data = ref()
+	const data = ref(props.parentData)
 </script>
 
 <style lang="scss" scoped>
