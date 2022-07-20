@@ -88,16 +88,19 @@
 
 <script setup>
   import {watch, ref, onMounted} from "vue"
+  import axios from "axios"
+
 
   // punch
-  const punchData = ref(
-    {
-      date: '20220718',
-      name: '王小明',
-      in: '08:55',
-      out: '16:37',
-    }
-  )
+  const punchData = ref({})
+  const getPunchData = async()=>{
+      // date: '20220718',
+      // name: '王小明',
+      // in: '08:55',
+      // out: '16:37',  	
+  	// let { data } = axios.get("/punch)
+  }
+
   // class
   const todayClass = ref(
     {
