@@ -167,14 +167,13 @@
   const currentSidebar = ref()
   const userStatus = ref(
     {
-      access: 3,
+      access: 1,
     }
   )
   const changeSidebar = () => {
     switch (userStatus.value.access) {
       case 1 :
         currentSidebar.value = userSideBarData.value
-        console.log(userSideBarData)
         break;
       case 2 :
         currentSidebar.value = managerSideBarData.value
