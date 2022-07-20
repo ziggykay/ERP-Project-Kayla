@@ -108,6 +108,10 @@
     { name: "Linux基礎到架站", date: "110/12/17", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
 	])
 
+	const curriculum = () => {
+		axios.get('')
+	}
+
 </script>
 
 <style lang="scss" scoped>
