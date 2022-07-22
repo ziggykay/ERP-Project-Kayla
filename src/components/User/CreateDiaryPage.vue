@@ -4,7 +4,7 @@
       <div class="d-md-flex">
         <!-- 個人資訊 -->
         <div class="content-box userInfo-box col d-flex">
-          <div v-for="data in items" class="container-fluid p-2">
+          <div v-for="data in info" class="container-fluid p-2">
             <p class="text-primary InfoTitle"><strong>個人資訊</strong></p>
             <hr />
             <p class="Info"><strong>Class : </strong>{{ data.Class }}</p>
@@ -22,7 +22,10 @@
             <p class="text-primary InfoTitle"><strong>已編輯日誌</strong></p>
             <hr />
             <div class="completeDiary">
-              <div v-for="data in diary" class="project content-box-border">
+              <div
+                v-for="data in diary"
+                class="project plates content-box-border"
+              >
                 <div class="project-name text-center">{{ data.project }}</div>
                 <div class="text-end">
                   <span
@@ -55,37 +58,37 @@
                 >工作時數 <span class="note">以0.5h為單位</span></label
               >
               <br />
-              <select>
-                <option>請選擇時數</option>
-                <option>0.5</option>
-                <option>1</option>
-                <option>1.5</option>
-                <option>2</option>
-                <option>2.5</option>
-                <option>3</option>
-                <option>3.5</option>
-                <option>4</option>
-                <option>4.5</option>
-                <option>5</option>
-                <option>5.5</option>
-                <option>6</option>
-                <option>6.5</option>
-                <option>7</option>
-                <option>7.5</option>
-                <option>8</option>
+              <select id="time">
+                <option value="">請選擇時數</option>
+                <option value="0.5">0.5</option>
+                <option value="1">1</option>
+                <option value="1.5">1.5</option>
+                <option value="2">2</option>
+                <option value="2.5">2.5</option>
+                <option value="3">3</option>
+                <option value="3.5">3.5</option>
+                <option value="4">4</option>
+                <option value="4.5">4.5</option>
+                <option value="5">5</option>
+                <option value="5.5">5.5</option>
+                <option value="6">6</option>
+                <option value="6.5">6.5</option>
+                <option value="7">7</option>
+                <option value="7.5">7.5</option>
+                <option value="8">8</option>
               </select>
             </div>
             <div class="work-time col-4">
-              <label for="">專案選擇</label>
+              <label for="project">專案選擇</label>
               <br />
-              <select>
-                <option>請選擇專案</option>
-                <option>專案</option>
-                <option>產品</option>
+              <select id="project">
+                <option value="">請選擇專案類型</option>
+                <option value="專案">專案</option>
+                <option value="產品">產品</option>
               </select>
             </div>
             <div class="work-time col-4">
-              <label for="">上傳圖片</label>
+              <label for="profile_pic">上傳圖片</label>
               <br />
               <input
                 type="file"
@@ -98,13 +101,22 @@
             <div class="container-fluid work-time col-12">
               <label for="">內文</label>
               <br />
-              <textarea class="textarea" placeholder="請輸入內文..."></textarea>
+              <textarea
+                v-model.trim="textarea"
+                class="textarea"
+                placeholder="請輸入內文..."
+                id="textarea"
+              ></textarea>
             </div>
           </div>
           <div class="text-end">
-            <button type="button" class="btn btn-primary confirm-btn">
-              + 新增專案
-            </button>
+            <input
+              id="submit"
+              type="submit"
+              class="btn btn-primary add-items confirm-btn"
+              @click="addProject"
+              value="+ 新增專案"
+            />
           </div>
         </div>
       </div>
@@ -115,7 +127,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 
-const items = ref([
+const info = ref([
   {
     Class: "fn102",
     Name: "Jessie",
@@ -134,6 +146,20 @@ const diary = ref([
     project: "C產品",
   },
 ]);
+
+// const textarea = ref();
+// const img = ref();
+// const items = ref([]);
+function addProject() {
+  var selectTime = document.getElementById("time").value;
+  var selectProject = document.getElementById("project").value;
+  var textarea = document.getElementById("textarea").value;
+  var image = document.getElementById("profile_pic").value;
+  var diary = { selectTime, selectProject, image, textarea };
+  localStorage.setItem("diary", JSON.stringify(diary));
+  console.log(diary);
+  alert("新增成功!");
+}
 </script>
 
 <style lang="scss" scoped>
