@@ -1,6 +1,6 @@
 <template>
   <!-- 已結案區 -->
-  <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect>
+  <!-- <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect> -->
   <div class="d-flex justify-content-center">
     <div class="content-box main-outter">
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
@@ -112,16 +112,16 @@ onMounted(() => {
 }
 .main-outter {
   width: 100%;
-  height: 70vh;
+  height: 32rem;
 }
 .resbox {
-  width: 35vw;
-  height: 13vh;
+  width: 34rem;
+  height: 6rem;
 }
 .resbox-outter {
   overflow-y: scroll;
-  height: 60vh;
-  width: 40vw;
+  height: 28rem;
+  width: 40rem;
   .date-and-title {
     color: #558aba;
   }
@@ -130,8 +130,8 @@ onMounted(() => {
   }
 }
 .question-box {
-  width: 30vw;
-  height: 55vh;
+  width: 30rem;
+  height: 27rem;
   .title {
     color: #558aba;
   }

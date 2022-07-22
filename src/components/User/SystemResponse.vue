@@ -37,7 +37,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import FilterSelect from "../baseComponents/FilterSelect.vue";
-
 const date = ref();
 // For demo purposes assign range from the current date
 onMounted(() => {
@@ -70,7 +69,6 @@ onMounted(() => {
       Title: '電腦螢幕打不開',
       question: 
         {
-          title:'電腦螢幕打不開',
           content: '今天上課發現電腦螢幕打不開，請問能幫忙維修嗎?',
           response: '這周會請相關人員前往維修，謝謝'
         },
@@ -80,23 +78,11 @@ onMounted(() => {
       Title: '教室冷氣故障',
       question: 
         {
-          title:'教室冷氣故障',
-          content: '教室冷氣故障，請問能幫忙維修嗎',
-          response: '這周會請相關人員前往維修，謝謝'
-        },
-    },
-    {
-      LeavingTime: '2020-07-17',
-      Title: '教室椅子壞掉',
-      question:
-        {
-          title:'教室椅子壞掉',
           content: '教室椅子壞掉，請問能幫忙維修嗎',
           response: '這周會請相關人員前往維修，謝謝'
         },
     },
 	]);
-
   const selectData = ref(questionList.value[0]);
 
   function updateData (data) {

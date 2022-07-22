@@ -4,7 +4,7 @@
 	</FilterSelect>
    <!--table -->
   <div class="content-box tableContainer">
-  	<p class="title"><strong>學員請假資訊</strong></p>  	  	
+  	<p class="title"><strong>表格</strong></p>  	  	
 		<hr/>
 	  <vxe-table :data="tableData" class="tableHeight">
 	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
@@ -63,20 +63,24 @@
 			]	  			
 		},	
 		{
-			selected: "late",
+			selected: "sick",
 			data: [
 	  		{
-	  			name: "late",
-	  			item: "late"
+	  			name: "病假",
+	  			item: "sick"
 	  		},
 	  		{
-	  			name: "absent",
-	  			item: "absent"
+	  			name: "事假",
+	  			item: "personal"
 	  		},	
 	  		{
-	  			name: "all",
-	  			item: "all"
-	  		}					  				 		
+	  			name: "喪假",
+	  			item: "bereavement"
+	  		},			  				 		
+	  		{
+	  			name: "特殊原因",
+	  			item: "special"
+	  		},			  				 		
 			]	  			
 		},		  		
 		{
@@ -97,18 +101,17 @@
 	
 	// table
 	const tableTitle = ref([
-		{field:"date", title:"日期"},
-		{field:"grade", title:"班級"},	  		
 		{field:"name", title:"姓名"},
-		{field:"signin", title:"簽到"},
-		{field:"signout", title:"簽退"},
-		{field:"ip", title:"IP"},	  		
+		{field:"date", title:"日期"},
+		{field:"grade", title:"班級"},
+		{field:"reason", title:"請假原因"},
+		{field:"note", title:"說明事由"},  		
 	])
 
 	const tableData = ref([
-    { date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
-		{ date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
-		{ date: "20220630", grade: "前端班", name: "ryan", signin: "09:00", signout: "17:30", ip: "127.0.0.1"},
+    { date: "20220630", grade: "前端班", name: "ryan", reason: "09:00", note: ""},
+		{ date: "20220630", grade: "前端班", name: "ryan", reason: "09:00", note: ""},
+		{ date: "20220630", grade: "前端班", name: "ryan", reason: "09:00", note: ""},
 	])
 
 </script>
