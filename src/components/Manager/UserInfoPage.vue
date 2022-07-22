@@ -1,138 +1,130 @@
 <template>
-  <div class="container-fluid px-5 pt-3">
-    <div class="inner">
-      <div class="content-box checkBox mt-3">
-        <div class="py-2 checkBoxInner">
-          <div>
-            <!-- TODO:直接套用History可能會有Bug -->
-            <a href="javascript:history.back()" class="back"
-              ><div><i class="fa-solid fa-arrow-left"></i> 回列表頁</div></a
-            >
-          </div>
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="between mx-2">
-              <p class="text-primary"><strong>學員詳細資料</strong></p>
-            </div>
-            <div class="between mx-2">
-              <button type="button" class="my-3 btn btn-primary confirm-btn">
-                <i class="fa-solid fa-pen-to-square mx-1"></i>編輯資訊
-              </button>
-            </div>
-          </div>
-          <hr />
-          <div>
-            <div class="mt-3 d-flex">
-              <div class="innerTitle">
-                <p class="mx-5 text-primary">學號</p>
-              </div>
-
-              <input class="content-box-border mx-3" type="text" />
-            </div>
-            <div class="mt-3 d-flex">
-              <div class="innerTitle">
-                <p class="mx-5 text-primary">班別</p>
-              </div>
-
-              <input class="content-box-border mx-3" type="text" />
-            </div>
-            <div class="mt-3 d-flex">
-              <div class="innerTitle">
-                <p class="mx-5 text-primary">班級</p>
-              </div>
-
-              <input class="content-box-border mx-3" type="text" />
-            </div>
-            <div class="mt-3 d-flex">
-              <div class="innerTitle">
-                <p class="mx-5 text-primary">姓名</p>
-              </div>
-
-              <input class="content-box-border mx-3" type="text" />
-            </div>
-            <div class="mt-3 d-flex">
-              <div class="innerTitle">
-                <p class="mx-5 text-primary">帳號</p>
-              </div>
-
-              <input class="content-box-border mx-3" type="text" />
-            </div>
-            <div class="mt-3 d-flex">
-              <div class="innerTitle">
-                <p class="mx-5 text-primary">Email</p>
-              </div>
-
-              <input class="content-box-border mx-3" type="text" />
-            </div>
-            <div class="mt-3 d-flex">
-              <div class="innerTitle">
-                <p class="mx-5 text-primary">Password</p>
-              </div>
-
-              <input class="content-box-border mx-3" type="text" />
-            </div>
-          </div>
-          <div class="text-end mt-3">
-            <button type="button" class="m-2 btn btn-primary cancel-btn">
-              <i class="fa-solid fa-trash-can"></i>
-              刪除帳號
-            </button>
-            <button type="button" class="m-2 btn btn-primary confirm-btn">
-              <i class="fa-solid fa-circle-check"></i>
-              確認修改
-            </button>
-          </div>
+  <div class="content-box overall-box">
+    <div class="py-2 checkBoxInner">
+      <div>
+        <!-- TODO:直接套用History可能會有Bug -->
+        <a href="javascript:history.back()" class="back"
+          ><div><i class="fa-solid fa-arrow-left"></i> 回列表頁</div></a
+        >
+      </div>
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="between mx-2">
+          <p class="text-primary"><strong>學員詳細資料</strong></p>
         </div>
+        <div class="between mx-2">
+          <button type="button" class="my-3 btn btn-primary confirm-btn">
+            <i class="fa-solid fa-pen-to-square mx-1"></i>編輯資訊
+          </button>
+        </div>
+      </div>
+      <hr />
+      <div>
+        <div class="mt-2 d-flex">
+          <div
+            class="innerTitle align-self-center mx-2 text-primary text-center"
+          >
+            學號
+          </div>
+
+          <input class="content-box-border mx-3" type="text" />
+        </div>
+        <div class="mt-2 d-flex">
+          <div
+            class="innerTitle align-self-center mx-2 text-primary text-center"
+          >
+            班別
+          </div>
+
+          <input class="content-box-border mx-3" type="text" />
+        </div>
+        <div class="mt-2 d-flex">
+          <div
+            class="innerTitle align-self-center mx-2 text-primary text-center"
+          >
+            班級
+          </div>
+
+          <input class="content-box-border mx-3" type="text" />
+        </div>
+        <div class="mt-2 d-flex">
+          <div
+            class="innerTitle align-self-center mx-2 text-primary text-center"
+          >
+            姓名
+          </div>
+
+          <input class="content-box-border mx-3" type="text" />
+        </div>
+        <div class="mt-2 d-flex">
+          <div
+            class="innerTitle align-self-center mx-2 text-primary text-center"
+          >
+            帳號
+          </div>
+
+          <input class="content-box-border mx-3" type="text" />
+        </div>
+        <div class="mt-2 d-flex">
+          <div
+            class="innerTitle align-self-center mx-2 text-primary text-center"
+          >
+            Email
+          </div>
+
+          <input class="content-box-border mx-3" type="text" />
+        </div>
+        <div class="mt-2 d-flex">
+          <div
+            class="innerTitle align-self-center mx-2 text-primary text-center"
+          >
+            Password
+          </div>
+
+          <input class="content-box-border mx-3" type="text" />
+        </div>
+      </div>
+      <div class="text-end mt-3">
+        <button type="button" class="m-2 btn btn-primary cancel-btn">
+          <i class="fa-solid fa-trash-can"></i>
+          刪除帳號
+        </button>
+        <button type="button" class="m-2 btn btn-primary confirm-btn">
+          <i class="fa-solid fa-circle-check"></i>
+          確認修改
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-
-const date = ref();
-onMounted(() => {
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-  date.value = [startDate, endDate];
-  return Date;
-});
+import { ref, onMounted, computed } from "vue";
 </script>
 
 <style lang="scss" scoped>
-* {
-  margin: auto;
-  padding: auto;
+.overall-box {
+  width: auto;
+  height: auto;
 }
-.inner {
-  width: 100%;
-  height: 90vh;
 
-  .checkBox {
-    width: 100%;
-    height: 80vh;
-
-    .checkBoxInner {
-      height: 55vh;
-      a {
-        text-decoration: none;
-        font-size: 0.8rem;
-      }
-      .between {
-        margin: 0;
-        padding: 0;
-      }
-      input {
-        height: 45px;
-        width: 50%;
-        border-radius: 5px;
-      }
-      .innerTitle {
-        margin: 0;
-        padding: 0;
-        width: 15%;
-      }
-    }
+.checkBoxInner {
+  a {
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+  .content-box-border {
+    width: 60%;
+    height: auto;
+  }
+  .between {
+    margin: 0;
+    padding: 0;
+  }
+  .innerTitle {
+    margin: 0;
+    margin-left: 1rem;
+    padding: 0;
+    width: 15%;
   }
 }
 </style>
