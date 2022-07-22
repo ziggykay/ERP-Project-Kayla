@@ -1,30 +1,30 @@
 <template>
   <!-- filter -->
-  <FilterSelect
-    :parent-selectArr="selectArr"
-    :parent-title="title"
-  ></FilterSelect>
+  <FilterSelect :parent-selectArr="selectArr" :parent-title="title">
+  </FilterSelect>
 
   <!-- chart -->
   <div class="content-box overall-box">
     <div class="py-2 checkBoxInner">
       <div v-for="data in items" class="content-box-border checkDiv d-flex">
         <div class="d-flex bigText">
-          <div class="text">
-            <p>日期</p>
-            <p class="single-ellipsis">{{ data.Time }}</p>
+          <div class="text align-self-center">
+            <div>
+              <p>日期</p>
+              <p class="single-ellipsis">{{ data.Time }}</p>
+            </div>
           </div>
-          <div class="text">
+          <div class="text align-self-center">
             <p>姓名</p>
             <p>{{ data.Name }}</p>
           </div>
-          <div class="text">
+          <div class="text align-self-center">
             <p>內文</p>
 
             <p class="single-ellipsis">{{ data.Content }}</p>
           </div>
         </div>
-        <div>
+        <div class="align-self-center">
           <router-link
             class="checkBtn btn btn-primary confirm-btn"
             to="/user/checkSelfDiary"
@@ -151,7 +151,7 @@ const items = ref([
 
 .checkDiv {
   width: 60vw;
-  height: 10vh;
+  height: auto;
   p {
     margin-bottom: 0;
   }
