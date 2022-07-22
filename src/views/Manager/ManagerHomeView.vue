@@ -1,11 +1,9 @@
 <template>
-  
+  <ManagerHome></ManagerHome>
 </template>
 
-<script>
-export default {
-
-}
+<script setup>
+  import ManagerHome from '../../components/Manager/ManagerHome.vue';
 </script>
 
 <style>

@@ -5,14 +5,20 @@
   	<p class="title"><strong>{{title}}</strong></p> 	  	
 		<hr/>
 		<div class="d-flex flex-wrap">
-	  	<select class="selectInfo me-2" v-for="item of selectArr" v-model="item.selected">
-				<option v-for="(innerItem, index) of item.data" :value="innerItem.item">
+	  	<select class="selectInfo me-2" v-for="item of selectArr" :key="item" v-model="item.selected">
+				<option v-for="innerItem of item.data" :key="innerItem" :value="innerItem.item">
 					{{ innerItem.name }}
 				</option>	      	 	
 	  	</select>
 		</div>  	
 		<div class="d-flex mt-2 flex-wrap">
-    	<button class="confirm-btn btn btn-height">搜尋</button>
+    	<!-- <button type="file" class="confirm-btn btn btn-height">匯入課表</button> -->
+    	<!-- <input type="file" accept=".csv"
+			class="confirm-btn btn btn-height"/> -->
+			<label class="btn confirm-btn">
+				<input style="display:none;" type="file" accept=".csv">
+				<i class="fa fa-photo"></i> 上傳CSV檔
+			</label>
 		</div>
 	</div>
 
@@ -21,7 +27,7 @@
   	<p class="title"><strong>課程清單</strong></p>  	  	
 		<hr/>
 	  <vxe-table :data="tableData" class="tableHeight">
-	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
+	    <vxe-column v-for="data of tableTitle " :key="data" :field="data.field" :title="data.title"></vxe-column>
 	  </vxe-table>
   </div> 
 
@@ -101,6 +107,10 @@
     { name: "Linux基礎到架站", date: "110/12/17", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
     { name: "Linux基礎到架站", date: "110/12/17", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
 	])
+
+	const curriculum = () => {
+		axios.get('')
+	}
 
 </script>
 

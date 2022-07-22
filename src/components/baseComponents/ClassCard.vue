@@ -1,24 +1,24 @@
 <template>
   <div class="class-card content-box">
     <div class="class-title d-flex justify-content-between">
-      <p class="title">{{ classData.name }}</p>
+      <p class="title">{{ classData.course }}</p>
       <button type="button" class="btn confirm-btn watch-btn" @click="updateVideo"
       >觀看影片</button>
     </div>
     <div class="class-content container-fluid d-flex">
       <div class="percent-section col-3">
-        <p class="percent-number">{{ classData.progress }}%</p>
+        <p class="percent-number">{{ progress }}%</p>
         <p class="percent-desc">{{ classData.status }}</p>
       </div>
       <div class="bar-section col-9">
         <p class="bar-label">
-          總時數：{{ classData.time }}小時
+          總時數：{{ classData.totalhours }}小時
         </p>
         <p class="bar-label">
-          已完成：{{ classData.done }}小時
+          已完成：{{ Math.floor(classData.present) }}小時
         </p>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" :style="`width: ${classData.progress}%`" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar" role="progressbar" :style="`width: ${progress}%`" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
     </div>
@@ -33,6 +33,11 @@
   })
 
   const classData = ref(props.parentData)
+  let progress = Math.floor((classData.value.present/classData.value.totalhours)*100)
+  let status = ref('')
+  const define = () => {
+    progress == 100 ? status.value = '已完成' : status.value = '進行中' 
+  }
 
   const emit = defineEmits(['showVideo'])
 

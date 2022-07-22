@@ -3,41 +3,43 @@
     <div class="row">
 
       <!-- 出勤 -->
-      <div class="content-box punch-box">
+      <div class="content-box punch-box col">
         <p class="title"><strong>今日打卡狀態</strong></p>
         <hr/>
-        <div class="punch-card" v-if="punchData">
-          <div class="container d-flex justify-content-around">
-            <p>日期</p>
-            <p>姓名</p>
-            <p>簽到</p>
-            <p>簽退</p>
-          </div>
-          <div class="container d-flex justify-content-around">
-            <p>{{punchData.date}}</p>
-            <p>{{punchData.name}}</p>
-            <p>{{punchData.in}}</p>
-            <p>{{punchData.out}}</p>
-          </div>
+        <div class="container d-flex justify-content-around">
+          <p>日期</p>
+          <p>姓名</p>
+          <p>簽到</p>
+          <p>簽退</p>
         </div>
-        <div class="error" v-else>本日無出勤資料</div>
-
+        <div class="container d-flex justify-content-around" v-if="punchData[0]">
+        	<p v-for="data in punchData[0]">
+        		{{data}}
+        	</p>
+        </div>
+        <div class="container d-flex justify-content-around" v-else>
+        	<p>
+        		沒有資料
+        	</p>
+        </div>        
       </div>
 
       <!-- 課程 -->
-      <div class="content-box class-box ">
+      <div class="content-box class-box col">
         <p class="title"><strong>今日課程</strong></p>
         <hr/>
-        <div class="class-card" v-if="todayClass">
+        <div class="class-card">
           <div class="class-title d-flex justify-content-between">
             <p class="title">{{ todayClass.name }}</p>
+            <button type="button" class="btn confirm-btn watch-btn" @click="updateVideo"
+            >觀看影片</button>
           </div>
           <div class="class-content container-fluid d-flex">
-            <div class="percent-section">
+            <div class="percent-section col-3">
               <p class="percent-number">{{ todayClass.progress }}%</p>
               <p class="percent-desc">{{ todayClass.status }}</p>
             </div>
-            <div class="bar-section">
+            <div class="bar-section col-9">
               <p class="bar-label">
                 總時數：{{ todayClass.time }}小時
               </p>
@@ -50,18 +52,17 @@
             </div>
           </div>
         </div>
-        <div class="error" v-else><span>本日無課程可以顯示</span></div>
+        <div class="error" v-if="todayClass == ''">沒有課程可以顯示</div>
       </div>
 
       <!-- 日誌 -->
       <div class="content-box diary-box col-2">
-        <p class="title"><strong>今日日誌登打狀態</strong></p>
+        <p class="title"><strong>日誌登打狀態</strong></p>
         <hr/>
         <div class="container">
           <p>{{ diaryMsg }}</p>
           <div :class="[ diaryData == 0 ? 'diarySign-red' : 'diarySign-green' ]"></div>
         </div>
-        <button class="btn confirm-btn" @click="change">test</button>
       </div>
     </div>
   </div>
@@ -70,91 +71,77 @@
   <div class="content-box job-box">
     <p class="title"><strong>推薦職缺</strong></p>
     <hr>
-    <div class="container" v-for="data in jobData" :key="data">
+    <div class="container">
       <div class="content-box-border job-card">
-        <p>{{ data.title }}</p>
+        <p></p>
         <hr/>
-        <p>技能：<span v-for="skill in data.skillSet" :key="skill">{{skill}}, </span></p>
-        <p>工作地點：{{data.location}}</p>
-        <p>平台：{{data.platform}}</p>
-        <button class="btn confirm-btn" @click="jobDetail(data.url)">詳細資訊</button>
+        <p></p>
       </div>
+    </div>
   </div>
-
-  </div>
-
 
 </template>
 
 <script setup>
-import {watch, ref, onMounted} from "vue"
+import {ref, onMounted} from "vue"
+import axios from "axios"
 
 // punch
-const punchData = ref(
-  {
-    date: '20220718',
-    name: '王小明',
-    in: '08:55',
-    out: '16:37',
-  }
-)
+const punchData = ref([])
+
+const doAxios = async()=>{
+	// get axios data
+	let href = "http://localhost:80/api/punch"
+	let startdate = new Date(2022, 2, 19).toISOString().split('T')[0] 
+	let stopdate = new Date(2022, 2, 19).toISOString().split('T')[0]
+	let group = 'fn101'
+	let name = 'Rossen' 
+	
+	let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})
+	console.log(data.data.punch[0])
+
+	punchData.value.push({
+    date: data.data.punch[0].classdate,
+    name: data.data.punch[0].student,
+    in: data.data.punch[0].intime,
+    out: data.data.punch[0].outtime,
+  })
+
+}	
+	doAxios();
+
+
+
+
+
+
 // class
-const todayClass = ref(
-  {
-    id: 2,
-    name: 'Jquery&Jquery extensions',
-    progress: 100,
-    status: '已完成',
-    time: 40,
-    done: 40,
-  }
-)
+const todayClass = ref({
+  id: 2,
+  name: 'Jquery&Jquery extensions',
+  progress: 100,
+  status: '已完成',
+  time: 40,
+  done: 40,
+})
 
 // diary
 const diaryMsg = ref('尚未登打日誌')
-const diaryData = ref(0)
-
-// 更改日誌區顯示內容
-const changeDiaryStatus = () => {
-  diaryData.value == 1 ? diaryMsg.value = '日誌已登打' : diaryMsg.value = '尚未登打日誌' 
-}
-
-// TODO:測試 watch 功能用，串接API後刪除
-const change = () => {
-  if(diaryData.value == 0){
-    diaryData.value = 1
-  }else{
-    diaryData.value = 0
-  }
-}
-//
-
-onMounted(
-  changeDiaryStatus
-)
-
-watch(
-  diaryData, changeDiaryStatus
-)
+const diaryData = ref(1)
 
 // job
 const jobData = ref([
   {
     title: '前端工程師',
     skillSet:[
-      'JavaScript', 'BootStrap', 'Node.JS', 'HTML'
+      'JavaScript', 'BootStrap', 'Node.JS'
     ],
     location: '台北',
-    platform: '104',
-    url: 'https://google.com.tw'
+    platform: '104'
   },
+
 ])
 
-// 開新分頁至對應平台
-const jobDetail = (url) => {
-  // location.assign(url)
-  window.open(url)
-}
 
 </script>
 
@@ -164,17 +151,11 @@ const jobDetail = (url) => {
   width: auto;
 }
 .punch-box{
-  height: auto;
-  width: auto;
-  .punch-card{
-    width: 100%;
-    p{
-      margin: 0 1rem 0 1rem;
-    }
-  }
+
 }
 .class-box{   
   flex-direction: column;
+  width:  auto;
   height: auto;
   max-height: 100%;
   .class-card{
@@ -187,7 +168,6 @@ const jobDetail = (url) => {
     }
     .watch-btn{
       height: 2.2rem;
-      width: fit-content;
       margin-top: 1rem;
     }
     .class-content{
@@ -223,9 +203,6 @@ const jobDetail = (url) => {
     }
   }
 }
-.diary-box {
-  height: auto;
-}
 .diarySign-red{
   width: 40px;
   height: 40px;
@@ -240,14 +217,5 @@ const jobDetail = (url) => {
   width:  auto;
   height: auto;
   max-height: 100%;
-
-  .job-card{
-    height: auto;
-  }
-}
-.error{
-  width: 100%;
-  display: flex;
-  justify-content: center;
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-import ManagerPunchTable from "../../components/Manager/ManagerPunchTable.vue";
+import ManagerPunchTable from "../../components/Manager/ManagerPunchTable2.vue";
 </script>
 
 <template>
