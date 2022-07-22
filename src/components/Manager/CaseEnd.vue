@@ -1,6 +1,7 @@
 <template>
   <!-- 已結案區 -->
-  <!-- <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect> -->
+  <!-- filter -->
+<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
   <div class="d-flex justify-content-center">
     <div class="content-box main-outter">
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
@@ -73,20 +74,17 @@ onMounted(() => {
 });
 // filter-data
 	const selectArr = ref([
-		{
-			selected: "month",
-			data: [
-	  		{
-	  			name: "今日",
-	  			item: "today"
-	  		},
-	  		{
-	  			name: "本月",
-	  			item: "month"
-	  		}				 		
-			]	  			
-		},		  		  		
-	]);	
+		[
+			{
+				name: "今日",
+				item: "today"
+			},
+			{
+				name: "本月",
+				item: "month"
+			}				 		
+		]
+	]);
 	const title = "已結案區"
 </script>
 
