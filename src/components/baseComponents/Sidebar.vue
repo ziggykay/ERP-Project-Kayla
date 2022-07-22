@@ -1,9 +1,10 @@
 <template>
 <div class="container">
   <div class="side-menu">
-    <li v-for="(data, index) of userSideBarData">
+    <li v-for="data of currentSidebar" :key="data">
+    <!-- <li v-for="data of userSideBarData" :key="data"> -->
     	<template v-if="!data.subTitleArr">
-    		<router-link :to="data.href" :class="($route.path == data.href ? 'active' : '' )">
+    		<router-link :to="data.href" :class="[$route.path == data.href ? 'active' : '' ]">
           <i class="fa-solid" :class="data.iconCss"></i><span>{{ data.title }}</span>
         </router-link>
     	</template>
@@ -17,8 +18,8 @@
       <div class="collapse" id="orders-collapse">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
           <router-link 
-          	v-for="(subData, index) of data.subTitleArr" :key="subData"
-            :class="($route.path == subData.href ? 'active' : '' )"
+          	v-for="subData of data.subTitleArr" :key="subData"
+            :class="[$route.path == subData.href ? 'active' : '' ]"
             class="btn align-items-center sub-btn dropdown"
             data-bs-target="#dashboard-collapse"
             aria-expanded="false"
@@ -36,7 +37,7 @@
 </template>
 
 <script setup>
-	import { ref } from 'vue'
+	import { onMounted, ref, watch } from 'vue'
 	
 	//props 
 	const props = defineProps({
@@ -161,6 +162,40 @@
 			iconCss: 'fa-chalkboard-user'
 		}		 		  		 		
 	])
+
+  // 模擬使用者權限
+  const currentSidebar = ref()
+  const userStatus = ref(
+    {
+      access: 1,
+    }
+  )
+  const changeSidebar = () => {
+    switch (userStatus.value.access) {
+      case 1 :
+        currentSidebar.value = userSideBarData.value
+        break;
+      case 2 :
+        currentSidebar.value = managerSideBarData.value
+        break;
+      case 3 :
+        currentSidebar.value = companySideBarData.value
+        break; 
+      default:
+        currentSidebar.value = ''
+        break;
+    }
+  }
+
+  // watch(
+    // userStatus, changeSidebar
+  // )
+
+  onMounted(()=>{
+    changeSidebar()
+  })
+  //
+
 
 </script>
 

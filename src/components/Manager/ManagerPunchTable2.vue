@@ -1,6 +1,6 @@
 <template>
-	<template v-if="selectArr[0]">
-			<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="totalData"></FilterSelect>
+	<template v-if="selectTabelArr[0]">
+			<FilterSelect :parent-selectArr="selectTabelArr" :parent-title="title2" @user-selectData="Data"></FilterSelect>
 	</template>
 	<template v-else>
 		<div class="content-box w-auto">
@@ -31,8 +31,8 @@
 
 	// data
 	// selectOption
-	const selectArr = ref([]);	  	 
-	const getSelectArr = async() =>{
+	const selectTabelArr = ref([]);	  	 
+	const getSelectTabelArr = async() =>{
 
 			let href = 'http://localhost:80/api/diary/account'
 			let type = "fn"
@@ -41,41 +41,7 @@
 			let { data } = await axios.get(href, { params: { type, number}})
 
 			try{
-				selectArr.value = [
-					[
-						{
-							name: "前端班",
-							item: "fn"
-						},
-						{
-							name: "數據班",
-							item: "bd"
-						},
-						{
-							name: "雲端班",
-							item: "cd"
-						}	  		
-					],
-					[
-			  		{
-			  			name: "101",
-			  			item: "101"
-			  		},
-			  		{
-			  			name: "102",
-			  			item: "102"
-			  		}		 		
-					],
-					[
-						{
-							name: "Rossen",
-							item: "Rossen"
-						},
-						{
-							name: "andy",
-							item: "andy"
-						}			 		
-					],	
+				selectTabelArr.value = [
 					[
 			  		{
 			  			name: "all",
@@ -100,20 +66,14 @@
 			  			item: "month"
 			  		}				 		
 					]	
-				]
-				// for(let i = 0; i <= data.data.length - 1; i++){
-				// 	userSelectArr.value[2].push({
-		  // 			name: data.data[i].Name,
-		  // 			item: data.data[i].Name
-		  // 		})
-				// }		  			
+				]	  			
 			}
 			catch{
 				alert("資料錯誤")
 			}
 	}		
-	getSelectArr()	
-	const title = ref("學員出勤資訊");
+	getSelectTabelArr()	
+	const title2 = ref("使用者出勤資訊");
 	
 	// table
 	const tableTitle = ref([
@@ -125,21 +85,21 @@
 		{field:"inip", title:"INIP"},	  		
 	])
 	const tablePage = ref()
-	const choseSelect = ref()
+	const choseSelect2 = ref()
 	const chosePage = ref(1)
 	const changePage = (number)=>{
 		chosePage.value = number		
 	}
 	const tableData = ref([])
-	// get emit data to choseSelect
-	const totalData = (val)=>{
-		choseSelect.value = {}
-		choseSelect.value = {
+	// get emit data to choseSelect2
+	const Data = (val)=>{
+		choseSelect2.value = {}
+		choseSelect2.value = {
 			startdate : val[0][0],
 			stopdate : val[0][1],
-			group : val[1][0]+val[1][1],
-			name : val[1][2],
-			status: val[1][3]
+			group : 'fn101',
+			name : 'Rossen',
+			status: val[1][0]
 		}
 	}
 
@@ -167,7 +127,7 @@
 			alert("資料錯誤")
 		}		
 	}
-  watch([chosePage, choseSelect], ([newA, newB], [prevA, prevB]) => {
+  watch([chosePage, choseSelect2], ([newA, newB], [prevA, prevB]) => {
 		doAxios(newB.group, newB.startdate, newB.stopdate, newB.name, newB.status, newA)
   },{deep: true});	
 

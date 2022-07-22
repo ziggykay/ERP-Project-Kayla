@@ -1,16 +1,43 @@
 <template>
-  <div class="inner">
-    <div class="container-fluid">
-      <div class="row">
-        <!-- 出勤 -->
-        <div class="content-box punch-box col">
-          <p class="title"><strong>今日打卡狀態</strong></p>
-          <hr />
-          <div class="container d-flex justify-content-around">
-            <p>日期</p>
-            <p>姓名</p>
-            <p>簽到</p>
-            <p>簽退</p>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- 出勤 -->
+      <div class="content-box punch-box col">
+        <p class="title"><strong>今日打卡狀態</strong></p>
+        <hr />
+        <div class="container d-flex justify-content-around">
+          <p>日期</p>
+          <p>姓名</p>
+          <p>簽到</p>
+          <p>簽退</p>
+        </div>
+        <div
+          class="container d-flex justify-content-around"
+          v-if="punchData[0]"
+        >
+          <p v-for="data in punchData[0]">
+            {{ data }}
+          </p>
+        </div>
+        <div class="container d-flex justify-content-around" v-else>
+          <p>沒有資料</p>
+        </div>
+      </div>
+
+      <!-- 課程 -->
+      <div class="content-box class-box col">
+        <p class="title"><strong>今日課程</strong></p>
+        <hr />
+        <div class="class-card">
+          <div class="class-title d-flex justify-content-between">
+            <p class="title">{{ todayClass.name }}</p>
+            <button
+              type="button"
+              class="btn confirm-btn watch-btn"
+              @click="updateVideo"
+            >
+              觀看影片
+            </button>
           </div>
           <div class="container d-flex justify-content-around">
             <p>{{ punchData[0].date }}</p>
@@ -110,16 +137,34 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+
 // punch
-const punchData = ref([
-  {
-    date: "20220718",
-    name: "王小明",
-    in: "08:55",
-    out: "16:37",
-  },
-]);
+const punchData = ref([]);
+
+const doAxios = async () => {
+  // get axios data
+  let href = "http://localhost:80/api/punch";
+  let startdate = new Date(2022, 2, 19).toISOString().split("T")[0];
+  let stopdate = new Date(2022, 2, 19).toISOString().split("T")[0];
+  let group = "fn101";
+  let name = "Rossen";
+
+  let { data } = await axios.get(href, {
+    params: { group, startdate, stopdate, name },
+  });
+  console.log(data.data.punch[0]);
+
+  punchData.value.push({
+    date: data.data.punch[0].classdate,
+    name: data.data.punch[0].student,
+    in: data.data.punch[0].intime,
+    out: data.data.punch[0].outtime,
+  });
+};
+doAxios();
+
 // class
 const todayClass = ref({
   id: 2,

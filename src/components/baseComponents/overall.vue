@@ -3,15 +3,16 @@
   <div class="content-box overall-box">
     <p class="title"><strong>總覽</strong></p>
     <hr/>
-    <div class="overall d-md-flex justify-content-around">
+    <div class="overall d-md-flex justify-content-around" v-if="data">
     	<template v-for="item of data" :key="item">
 	      <div class="overall-item">
 	        <p class="fw-bold">{{ item.title }}</p>
 	        <p class="number fw-bolder" :style="{ color: item.color}">{{ item.number }}</p>
 					<slot></slot>
-	      </div>	    		
+	      </div>
     	</template>
     </div>
+		<div class="error" v-else>無資料</div>
   </div>	
 </template>
 
