@@ -11,21 +11,23 @@
     <div class="py-2 checkBoxInner">
       <div v-for="data in items" class="content-box-border checkDiv d-flex">
         <div class="d-flex bigText">
-          <div class="text">
-            <p>日期</p>
-            <p class="single-ellipsis">{{ data.Time }}</p>
+          <div class="text align-self-center">
+            <div>
+              <p>日期</p>
+              <p class="single-ellipsis">{{ data.Time }}</p>
+            </div>
           </div>
-          <div class="text">
+          <div class="text align-self-center">
             <p>姓名</p>
             <p>{{ data.Name }}</p>
           </div>
-          <div class="text">
+          <div class="text align-self-center">
             <p>內文</p>
 
             <p class="single-ellipsis">{{ data.Content }}</p>
           </div>
         </div>
-        <div>
+        <div class="align-self-center">
           <router-link
             class="checkBtn btn btn-primary confirm-btn"
             to="/user/checkSelfDiary"
@@ -88,14 +90,14 @@ const items = ref([
       "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
   },
   {
-    Time: "2022-07-18",
-    Name: "AAA",
+    Time: "2022-07-19",
+    Name: "BBB",
     Content:
       "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
   },
   {
-    Time: "2022-07-18",
-    Name: "AAA",
+    Time: "2022-07-21",
+    Name: "CCC",
     Content:
       "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
   },
@@ -110,7 +112,7 @@ const items = ref([
 
 .checkDiv {
   width: 60vw;
-  height: 10vh;
+  height: auto;
   p {
     margin-bottom: 0;
   }
