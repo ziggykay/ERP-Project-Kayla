@@ -4,6 +4,7 @@
       <div class="content-box checkBox mt-3">
         <div class="py-2 checkBoxInner">
           <div>
+            <!-- TODO:直接套用History可能會有Bug -->
             <a href="javascript:history.back()" class="back"
               ><div><i class="fa-solid fa-arrow-left"></i> 回列表頁</div></a
             >
@@ -90,7 +91,6 @@
 import { ref, onMounted } from "vue";
 
 const date = ref();
-// For demo purposes assign range from the current date
 onMounted(() => {
   const startDate = new Date();
   const endDate = new Date(new Date().setDate(startDate.getDate() + 7));

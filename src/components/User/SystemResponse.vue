@@ -1,17 +1,16 @@
 <template>
-  <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect>
+  <!-- <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect> -->
   <div class="d-flex justify-content-center">
     <div class=" ">
       <div class="d-flex justify-content-evenly">
         <div class="content-box resbox-outter">
-          <div class="content-box resbox ps-2"  v-for="data of questionList">
-          <div class="error" v-if="questionList === ''">沒有課程可以顯示</div>
+          <div class="content-box resbox ps-2"  v-for="data of questionList" :key="data">
             <div class="d-flex date-and-title justify-content-between tyh vccc" >
               <p class="ps-3">日期</p>
               <p class="">標題</p>
               <button
                 type="button"
-                class="btn btn-primary confirm-btn check-res mt-2 ms-5" @click="updateData">查看回覆
+                class="btn btn-primary confirm-btn check-res mt-2 ms-5" @click="updateData(data)">查看回覆
               </button>
             </div>
             <div class="d-flex justify-content-evenly w-75 date-and-title-content" >
@@ -20,25 +19,24 @@
             </div>
           </div>
         </div>
-          <div class="content-box question-box" v-for="data in qData">
-            <p class="title mb-3 ps-3 fw-bold w-25 text-center">提問</p>
-            <div class="q-title">{{data.title}}</div>
-            <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
-            <div class="q-content">{{data.content}}</div>
-            <div>
-              <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-              <div class="res-content">{{data.response}}</div>
-            </div>
+        <div class="content-box question-box">
+          <p class="title mb-3 ps-3 fw-bold w-25 text-center">提問</p>
+          <div class="q-title">{{ selectData.Title }}</div>
+          <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
+          <div class="q-content">{{ selectData.question.content }}</div>
+          <div>
+            <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
+            <div class="res-content">{{ selectData.question.response }}</div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import FilterSelect from "../baseComponents/FilterSelect.vue";
-
 const date = ref();
 // For demo purposes assign range from the current date
 onMounted(() => {
@@ -66,52 +64,40 @@ onMounted(() => {
 	const title = "查看問題回覆"
 //data
   const questionList = ref([
-	  		{
-	  			LeavingTime: '2022-07-09',
-	  			Title: '電腦螢幕打不開',
-          question: [
-            {
-              title:'電腦螢幕打不開',
-              content: '今天上課發現電腦螢幕打不開，請問能幫忙維修嗎?',
-              response: '這周會請相關人員前往維修，謝謝'
-            },
-          ]
-	  		},
+    {
+      LeavingTime: '2022-07-09',
+      Title: '電腦螢幕打不開',
+      question: 
         {
-	  			LeavingTime: '2022-07-13',
-	  			Title: '教室冷氣故障',
-          question: [
-            {
-              title:'教室冷氣故障',
-              content: '教室冷氣故障，請問能幫忙維修嗎',
-              response: '這周會請相關人員前往維修，謝謝'
-            },
-          ]
-	  		},
+          content: '今天上課發現電腦螢幕打不開，請問能幫忙維修嗎?',
+          response: '這周會請相關人員前往維修，謝謝'
+        },
+    },
+    {
+      LeavingTime: '2022-07-13',
+      Title: '教室冷氣故障',
+      question: 
         {
-	  			LeavingTime: '2020-07-17',
-	  			Title: '教室椅子壞掉',
-          question: [
-            {
-              title:'教室椅子壞掉',
-              content: '教室椅子壞掉，請問能幫忙維修嗎',
-              response: '這周會請相關人員前往維修，謝謝'
-            },
-          ]
-	  		},
+          content: '教室冷氣故障，請問能幫忙維修嗎',
+          response: '這周會請相關人員前往維修，謝謝'
+        },
+    },
+    {
+      LeavingTime: '2020-07-17',
+      Title: '教室椅子壞掉',
+      question:
+        {
+          content: '教室椅子壞掉，請問能幫忙維修嗎',
+          response: '這周會請相關人員前往維修，謝謝'
+        },
+    },
 	]);
-  let qData = ref(
-    questionList.value[0].question
-  )
+  const selectData = ref(questionList.value[0]);
 
-  function getData (vid) {
-    qData.value = '';
-    qData.value = vid
-    console.log(qData.value)
+  function updateData (data) {
+    selectData.value = data
+    console.log(selectData.value)
   }
-  function updateData () {
-   questionList.value.question
-  }	  
 </script>
 
 <style lang="scss" scoped>
