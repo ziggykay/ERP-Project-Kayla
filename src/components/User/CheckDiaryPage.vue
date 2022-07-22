@@ -77,7 +77,7 @@ const title = ref("查看日誌");
 
   .checkDiv {
     width: 90%;
-    height: 10vh;
+    height: 5rem;
     margin-top: 10px;
   }
   .checkDiv:hover {
