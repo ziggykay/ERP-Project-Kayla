@@ -1,5 +1,6 @@
 <template>
-  <!-- <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect> -->
+  <!-- filter -->
+<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
   <div class="d-flex justify-content-center">
     <div class=" ">
       <div class="d-flex justify-content-evenly">
@@ -36,7 +37,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import FilterSelect from "../baseComponents/FilterSelect.vue";
+import FilterSelect from "../baseComponents/filterSelect.vue";
 const date = ref();
 // For demo purposes assign range from the current date
 onMounted(() => {
@@ -47,19 +48,16 @@ onMounted(() => {
 });
 // filter-data
 	const selectArr = ref([
-		{
-			selected: "month",
-			data: [
-	  		{
-	  			name: "今日",
-	  			item: "today"
-	  		},
-	  		{
-	  			name: "本月",
-	  			item: "month"
-	  		}				 		
-			]	  			
-		},		  		  		
+		[
+			{
+				name: "今日",
+				item: "today"
+			},
+			{
+				name: "本月",
+				item: "month"
+			}				 		
+		]
 	]);	
 	const title = "查看問題回覆"
 //data
