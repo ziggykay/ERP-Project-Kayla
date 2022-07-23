@@ -26,8 +26,8 @@ export default createStore({
                 }
             },
         ],
-        isResponse: []
-
+        isResponse: [],
+        diary: JSON.parse(localStorage.getItem("diary" || "[]")), // 保存填寫好的日誌
     },
     getters: {
 
