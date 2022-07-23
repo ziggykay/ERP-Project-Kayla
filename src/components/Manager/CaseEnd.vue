@@ -7,7 +7,7 @@
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
         <div class="d-flex justify-content-evenly">
           <div class="resbox-outter">
-            <div class="content-box resbox ps-2" v-for="data of questionList">
+            <div class="content-box resbox ps-2"  v-for="data of replied">
               <div class="d-flex justify-content-between" >
                 <div class="d-flex date-and-title w-50 justify-content-evenly">
                 <p class="">日期</p>
@@ -20,27 +20,25 @@
                   class="btn btn-primary confirm-btn check-res mt-2 ms-3" @click="updateData(data)">查看</button>
               </div>
             </div>
-            <div
-              class="d-flex justify-content-around w-75 date-and-title-content"
-            >
+            <div class="d-flex justify-content-around w-75 date-and-title-content">
               <p class="ps-4">{{data.LeavingTime}}</p>
               <p>{{data.Name}}</p>
               <p>{{data.Title}}</p>
             </div>
           </div>
         </div>
-        <div>
           <div class="content-box question-box">
             <p class="title mb-3 ps-3 fw-bold w-25 text-center">提問</p>
             <p class="q-title">{{selectData.Title}}</p>
             <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
             <div class="q-content">{{selectData.question.content}}</div>
-            <div>
+            <div >
               <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-              <div class="res-content">{{store.state.response}}</div>
+              <div class="res-content">
+                <p v-for="resData of response">{{resData}}</p>
+              </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -75,10 +73,16 @@ onMounted(() => {
 	const title = "已結案區"
   //store
   const store = useStore()
-  const questionList = computed(()=> store.state.questionList)
+  const replied = computed(()=> store.state.replied)
   const response = computed(()=> store.state.response)
+  //想要取特定Data但失敗
+  // const selectResData = ref(response.value[0]);
+  // function updateResData (resData) {
+  //   selectResData.value = resData;
+  //   console.log(selectData.value)
+  // }
   //查看按鈕
-  const selectData = ref(questionList.value[0]);
+  const selectData = ref(replied.value[0]);
   function updateData (data) {
     selectData.value = data
     console.log(selectData.value)
