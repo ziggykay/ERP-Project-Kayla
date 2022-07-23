@@ -7,11 +7,10 @@ export default createStore({
                 LeavingTime: '2022-07-09',
                 Name: 'Jay',
                 Title: '電腦螢幕打不開',
-                status: 'notResponsed',
                 question:
                 {
-                    content: '教室冷氣故障，請問能幫忙維修嗎',
-
+                    content: '電腦螢幕打不開，請問能幫忙維修嗎',
+                    responseBox: ""
                 }
             },
             {
@@ -19,21 +18,24 @@ export default createStore({
                 LeavingTime: '2022-07-13',
                 Name: 'Jay',
                 Title: '教室冷氣故障',
-                status: 'notResponsed',
                 question:
                 {
                     content: '教室冷氣故障，請問能幫忙維修嗎',
+                    responseBox: ""
                 }
             },
         ],
-        isResponse: []
+        response: [],
+
 
     },
     getters: {
 
     },
     mutations: {
-
+        addResponse(state, responseBox) {
+            state.response.push(responseBox)
+        }
     },
     actions: {
 
