@@ -3,12 +3,12 @@
     <div class="class-title d-flex justify-content-between">
       <p class="title">{{ classData.course }}</p>
       <button type="button" class="btn confirm-btn watch-btn" @click="updateVideo"
-      >觀看影片</button>
+      >網路資源</button>
     </div>
     <div class="class-content container-fluid d-flex">
       <div class="percent-section col-3">
         <p class="percent-number">{{ progress }}%</p>
-        <p class="percent-desc">{{ classData.status }}</p>
+        <p class="percent-desc">{{ status }}</p>
       </div>
       <div class="bar-section col-9">
         <p class="bar-label">
@@ -36,8 +36,9 @@
   let progress = Math.floor((classData.value.present/classData.value.totalhours)*100)
   let status = ref('')
   const define = () => {
-    progress == 100 ? status.value = '已完成' : status.value = '進行中' 
+    progress === 100 ? status.value = '已完成' : status.value = '進行中' 
   }
+  define()
 
   const emit = defineEmits(['showVideo'])
 

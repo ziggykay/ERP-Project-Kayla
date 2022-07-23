@@ -7,6 +7,7 @@
     <!-- 課程區塊 -->
     <div class="content-box class-box col d-flex">
       <p class="title"><strong>課程</strong></p>
+      <input class="search-bar" type="search">
       <hr/>
       <div class="scroll-box" >
         <!-- <div v-for="data of classData" :key="data.id"> -->
@@ -23,21 +24,30 @@
     <!-- 影片區塊 -->
     <div class="content-box video-box col">
       <p class="title"><strong>相關影片</strong></p>
-      <hr>ß
+      <hr>
+      <div class="btn-wrapper">
+        <button class="btn btn-primary confirm-btn video-btn" :class="{'bg-white': !isVideo, 'text-black': !isVideo}"
+        @click="changeShow">顯示影片</button>
+        <button class="btn btn-primary confirm-btn video-btn" :class="{'bg-white': isVideo, 'text-black': isVideo}"
+        @click="changeShow">顯示文章</button>
+      </div>
       <div class="scroll-box">
-        <template v-if="videoData">
-          <div class="video-card" v-for="data of videoData" :key="data">
+        <template v-if="isVideo">
+          <!-- <div class="video-card" v-for="data of videoData" :key="data">
             <iframe width="504" height="283.5" :src="data.src" 
               title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
             </iframe>
-          </div>  
+          </div> -->
         </template>
         <div class="error" v-else>沒有影片</div>
+        <template v-if="!isVideo">
+          <a href="{{}}" class="article-link">{{ title }}</a>
+        </template>
+        <div class="error" v-else>沒有文章</div>
       </div>
     </div>
   </div>
 
-  <button class="btn" @click="logData">test</button>
 </div>
 
 </template>
@@ -64,7 +74,6 @@
   const test = async()=>{
     let {data} = await axios.get('http://54.186.56.114:8080/course', { params:{ group: "fn101", name: 'Rossen'}} )
       courseData.value = data.data.course
-
       console.log(data.data)
   }
   test()
@@ -180,6 +189,12 @@
     },
   ])
 
+  let isVideo = ref(true)
+  function changeShow(){
+		isVideo.value = !isVideo.value
+	}
+
+
   let videoData = ref(
     // classData.value[0].video
   )
@@ -206,6 +221,12 @@
     }
   }
 }
+.btn-wrapper{
+  margin: 1rem 0;
+  .btn{
+    margin-right: .5rem;
+  }
+}
 .class-box{   
   flex-direction: column;  
   width: auto;
@@ -213,6 +234,11 @@
   max-height: 100vh;
   hr{
     margin: 0;
+  }
+  .search-bar{
+    min-width: 5rem;
+    max-width: 15rem;
+    margin-left: 1rem;
   }
 }
 .video-box{

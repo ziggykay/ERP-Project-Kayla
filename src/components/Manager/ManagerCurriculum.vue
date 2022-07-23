@@ -13,12 +13,11 @@
 		</div>  	
 		<div class="d-flex mt-2 flex-wrap">
     	<!-- <button type="file" class="confirm-btn btn btn-height">匯入課表</button> -->
-    	<!-- <input type="file" accept=".csv"
-			class="confirm-btn btn btn-height"/> -->
 			<label class="btn confirm-btn">
 				<input style="display:none;" type="file" accept=".csv">
 				<i class="fa fa-photo"></i> 上傳CSV檔
 			</label>
+			<button class="btn confirm-btn" @click="postCurriculum">送出</button>
 		</div>
 	</div>
 
@@ -34,6 +33,7 @@
 </template>
 <script setup>
 	import FilterSelect from "../baseComponents/FilterSelect.vue";
+	import axios from "axios";
 	import	{ref} from "vue"
 	
 	// data
@@ -108,8 +108,28 @@
     { name: "Linux基礎到架站", date: "110/12/17", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
 	])
 
-	const curriculum = () => {
-		axios.get('')
+	const classData = ref([])
+	let group = ref('')
+	let month = ref('')
+
+	const getOptions = async () => {
+		let {data} = await axios.get('http://54.186.56.114:8080/curriculum', { params:{ group, month } })
+		
+		classData.value = data
+	}
+	const curriculum = async ( group, month ) => {
+		let {data} = await axios.get('http://54.186.56.114:8080/curriculum', { params:{ group, month } })
+		
+		classData.value = data
+		console.log(classData)
+	}
+	curriculum ((group.value), (month.value))
+
+	const postCurriculum = (file) =>{
+		let formData = new formData()
+		formData.append(file)
+		return axios.post('http://54.186.56.114:8080/curriculum', {params: formData}
+		,{ headers: { "Content-Type": "multipart/form-data"}})
 	}
 
 </script>
