@@ -1,59 +1,44 @@
 <template>
   <!-- 已結案區 -->
-  <!-- <FilterSelect :parent-selectArr="selectArr" :parent-title="title"></FilterSelect> -->
+  <!-- filter -->
+<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
   <div class="d-flex justify-content-center">
     <div class="content-box main-outter">
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
-      <div class="d-flex justify-content-evenly">
-        <div class="resbox-outter">
-          <div class="content-box resbox ps-2">
-            <div class="d-flex justify-content-between">
-              <div class="d-flex date-and-title w-50 justify-content-evenly">
+        <div class="d-flex justify-content-evenly">
+          <div class="resbox-outter">
+            <div class="content-box resbox ps-2"  v-for="data of replied">
+              <div class="d-flex justify-content-between" >
+                <div class="d-flex date-and-title w-50 justify-content-evenly">
                 <p class="">日期</p>
                 <p>姓名</p>
                 <p>問題</p>
-              </div>
+                </div>
               <div>
                 <button
                   type="button"
-                  class="btn btn-primary confirm-btn check-res mt-2 ms-3"
-                >
-                  查看
-                </button>
+                  class="btn btn-primary confirm-btn check-res mt-2 ms-3" @click="updateData(data)">查看</button>
               </div>
             </div>
-            <div
-              class="d-flex justify-content-around w-75 date-and-title-content"
-            >
-              <p class="ps-4">2022/07/01</p>
-              <p>王阿明</p>
-              <p>我是2022/06/20請假，但是系統...</p>
+            <div class="d-flex justify-content-around w-75 date-and-title-content">
+              <p class="ps-4">{{data.LeavingTime}}</p>
+              <p>{{data.Name}}</p>
+              <p>{{data.Title}}</p>
             </div>
           </div>
         </div>
-        <div>
           <div class="content-box question-box">
             <p class="title mb-3 ps-3 fw-bold w-25 text-center">提問</p>
-            <div class="text-center">
-              <input class="q-title" type="text" placeholder="請輸入問題標題" />
-            </div>
-            <!-- <div class="q-title text-center">日誌打錯專案名字</div> -->
-            <div class="text-center mt-3">
-              <textarea
-                class="q-content"
-                name=""
-                id=""
-                cols="30"
-                rows="10"
-                placeholder="請輸入問題內容..."
-              ></textarea>
-            </div>
-            <div>
+            <p class="q-title">{{selectData.Title}}</p>
+            <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
+            <div class="q-content">{{selectData.question.content}}</div>
+            <div >
               <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-              <div class="res-content"></div>
+              <div class="res-content">
+                <p v-for="resData of response">{{resData}}</p>
+              </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -62,7 +47,8 @@
 <script setup>
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
 import FilterSelect from "../baseComponents/FilterSelect.vue";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useStore,mapActions } from "vuex";
 const date = ref();
 // For demo purposes assign range from the current date
 onMounted(() => {
@@ -73,21 +59,34 @@ onMounted(() => {
 });
 // filter-data
 	const selectArr = ref([
-		{
-			selected: "month",
-			data: [
-	  		{
-	  			name: "今日",
-	  			item: "today"
-	  		},
-	  		{
-	  			name: "本月",
-	  			item: "month"
-	  		}				 		
-			]	  			
-		},		  		  		
-	]);	
+		[
+			{
+				name: "今日",
+				item: "today"
+			},
+			{
+				name: "本月",
+				item: "month"
+			}				 		
+		]
+	]);
 	const title = "已結案區"
+  //store
+  const store = useStore()
+  const replied = computed(()=> store.state.replied)
+  const response = computed(()=> store.state.response)
+  //想要取特定Data但失敗
+  // const selectResData = ref(response.value[0]);
+  // function updateResData (resData) {
+  //   selectResData.value = resData;
+  //   console.log(selectData.value)
+  // }
+  //查看按鈕
+  const selectData = ref(replied.value[0]);
+  function updateData (data) {
+    selectData.value = data
+    console.log(selectData.value)
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -144,7 +143,7 @@ onMounted(() => {
   .q-content {
     border: solid 1px;
     width: 22vw;
-    height: 15vh;
+    height: 11vh;
     margin: 0 auto;
     overflow-y: scroll;
   }
