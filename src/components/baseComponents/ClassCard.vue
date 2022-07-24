@@ -2,8 +2,10 @@
   <div class="class-card content-box">
     <div class="class-title d-flex justify-content-between">
       <p class="title">{{ classData.course }}</p>
-      <button type="button" class="btn confirm-btn watch-btn" @click="updateVideo"
-      >網路資源</button>
+      <!-- <button type="button" class="btn confirm-btn watch-btn"
+       @click="updateVideo">網路資源</button> -->
+      <button type="button" class="btn confirm-btn watch-btn"
+       @click="getResources">網路資源</button>
     </div>
     <div class="class-content container-fluid d-flex">
       <div class="percent-section col-3">
@@ -26,7 +28,8 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from "vue"
+  import axios from "axios"
+  import { ref, onMounted, defineEmits } from "vue"
 
   const props = defineProps({
     parentData: Object
@@ -40,10 +43,26 @@
   }
   define()
 
-  const emit = defineEmits(['showVideo'])
+  const classResources = ref([])
 
-  function updateVideo () {
-    emit('showVideo', classData.value.video)
+  const getResources = () =>{
+    axios.post("http://54.186.56.114:8080/course", 
+      {
+        // course:"php",
+        course:classData.value.course,
+        group:"fn101"
+      }
+    ).then(res => {
+      classResources.value = res.data.data
+      console.log(classResources.value)
+      sendData()
+    })
+  }
+
+  const emit = defineEmits(['showResources'])
+  
+  const sendData = () =>{
+    emit('showResources', classResources.value)
   }
 
 </script>

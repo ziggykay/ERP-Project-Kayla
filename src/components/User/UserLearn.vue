@@ -13,7 +13,7 @@
         <!-- <div v-for="data of classData" :key="data.id"> -->
           <template v-if="courseData[0]">
             <div v-for="data of courseData" :key="data">
-              <ClassCard :parentData="data" @show-video="getVideo"/>
+              <ClassCard :parentData="data" @show-resources="getResources"/>
             </div>
           </template> 
 
@@ -33,17 +33,19 @@
       </div>
       <div class="scroll-box">
         <template v-if="isVideo">
-          <!-- <div class="video-card" v-for="data of videoData" :key="data">
-            <iframe width="504" height="283.5" :src="data.src" 
-              title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-            </iframe>
-          </div> -->
+          <div class="video-card" v-for="data of courseResources.video" :key="data">
+              <iframe width="504" height="283.5" :src="data.url"
+                title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+              </iframe>
+          </div>
+          <div class="error">沒有影片</div>
         </template>
-        <div class="error" v-else>沒有影片</div>
         <template v-if="!isVideo">
-          <a href="{{}}" class="article-link">{{ title }}</a>
+          <div class="video-card" v-for="data of courseResources.article" :key="data">
+              <a :href="data.url" class="article-link">{{ data.title }}</a>
+          </div>
+          <div class="error">沒有文章</div>
         </template>
-        <div class="error" v-else>沒有文章</div>
       </div>
     </div>
   </div>
@@ -71,12 +73,11 @@
     }
   )
 
-  const test = async()=>{
+  const getCourses = async()=>{
     let {data} = await axios.get('http://54.186.56.114:8080/course', { params:{ group: "fn101", name: 'Rossen'}} )
       courseData.value = data.data.course
-      console.log(data.data)
   }
-  test()
+  getCourses()
 
 
 
@@ -195,13 +196,14 @@
 	}
 
 
-  let videoData = ref(
+  let courseResources = ref(
     // classData.value[0].video
   )
 
-  function getVideo (vid) {
-    // videoData.value = '';
-    // videoData.value = vid
+  function getResources (resource) {
+    courseResources.value = '';
+    courseResources.value = resource
+    console.log(courseResources.value)
   }
 
 </script>
