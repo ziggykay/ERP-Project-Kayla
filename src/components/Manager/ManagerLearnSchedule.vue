@@ -28,9 +28,8 @@
 			let type = "fn"
 			let number = '101'
 
-			let { data } = await axios.get(href, { params: { type, number}})
-
 			try{
+							// let { data } = await axios.get(href, { params: { type, number}})
 				userSelectArr.value = [
 					[
 						{
@@ -59,6 +58,10 @@
 					[	 		
 					],				
 					[
+						{
+							name: "請選擇日期",
+							item: ""
+						},					
 						{
 							name: "今日",
 							item: "today"
@@ -138,17 +141,27 @@
 		let stopdate = ''
 		let group = ''
 		let name = ''
+		let cur = ''
 
 		startdate = val[0][0];
 		stopdate = val[0][1];
 		group = val[1][0]+val[1][1]
 		name = val[1][2]
+		cur = val[1][3]
 
-		// // get axios data
-		let href = "http://localhost:80/api/course/"
-		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})
+		//get axios data
 		try{
-			let axiosData = data.data.course
+			let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/course"
+			let axiosData = ''
+			if(cur == ''){
+			let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})			
+				axiosData = data.data.course
+			}
+			else{
+			let {data} = await axios.get(href, { params: { group, cur, name}})			
+				axiosData = data.data.course				
+			}
+
 
 			// 清空舊的資料再更新
 			barchart.value.yAxis.data = [];

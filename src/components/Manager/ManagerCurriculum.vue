@@ -12,13 +12,10 @@
 	  	</select>
 		</div>  	
 		<div class="d-flex mt-2 flex-wrap">
-    	<!-- <button type="file" class="confirm-btn btn btn-height">匯入課表</button> -->
-    	<!-- <input type="file" accept=".csv"
-			class="confirm-btn btn btn-height"/> -->
-			<label class="btn confirm-btn">
-				<input style="display:none;" type="file" accept=".csv">
-				<i class="fa fa-photo"></i> 上傳CSV檔
-			</label>
+			<label class="btn confirm-btn upload">
+				<input style="display:none;" ref="uploadFile" v-on:change="handleFileUpload()"  accept=".csv" type="file">
+				上傳CSV檔
+			</label>	
 		</div>
 	</div>
 
@@ -26,15 +23,15 @@
   <div class="content-box tableContainer">
   	<p class="title"><strong>課程清單</strong></p>  	  	
 		<hr/>
-	  <vxe-table :data="tableData" class="tableHeight">
+	  <vxe-table :data="tableData" class="tableInfo" emptyText="no data">
 	    <vxe-column v-for="data of tableTitle " :key="data" :field="data.field" :title="data.title"></vxe-column>
 	  </vxe-table>
   </div> 
-
 </template>
 <script setup>
 	import FilterSelect from "../baseComponents/FilterSelect.vue";
-	import	{ref} from "vue"
+	import	{ref, watch} from "vue"
+	import axios from "axios"
 	
 	// data
 	// selectOption
@@ -57,7 +54,7 @@
 			]
 		},
 		{
-			selected: "102",
+			selected: "101",
 			data: [
 	  		{
 	  			name: "101",
@@ -70,47 +67,105 @@
 			]
 		},	  		
 		{
-			selected: "2022/01",
+			selected: "",
 			data: [
 	  		{
-	  			name: "2022/01",
-	  			item: "2022/01"
+	  			name: "選擇月份",
+	  			item: ""
 	  		},
 	  		{
-	  			name: "2022/02",
-	  			item: "2022/02"
+	  			name: "2021-12",
+	  			item: "2021-12"
+	  		},		  					
+	  		{
+	  			name: "2022-01",
+	  			item: "2022-01"
 	  		},
 	  		{
-	  			name: "2022/03",
-	  			item: "2022/03"
-	  		}				 		
+	  			name: "2022-02",
+	  			item: "2022-02"
+	  		},
+	  		{
+	  			name: "2022-03",
+	  			item: "2022-03"
+	  		},	
+	  		{
+	  			name: "2022-04",
+	  			item: "2022-04"
+	  		},	
+	  		{
+	  			name: "2022-05",
+	  			item: "2022-05"
+	  		}	  			  			  					 		
 			]	  			
 		},		  		  		
 	]);	  	 
 	const title = ref("課表資訊");
 	
+  const uploadFile = ref(null)
+  const handleFileUpload = async() => {
+		const formData = new FormData();
+
+	 	// debugger;
+	  // console.log("selected file",uploadFile.value.files[0])
+	  //Upload to server
+	  formData.append('group', selectArr.value[0].selected+selectArr.value[1].selected)
+	  formData.append('file', uploadFile.value.files[0])
+
+	  const href = 'http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/curriculum'
+		const headers = {
+		  'Content-Type': 'multipart/form-data'
+		}
+		try{
+		let {data} = await axios.post(href, formData, {headers})
+			console.log(data.data)
+		}
+		catch(e){
+			// alert(e.response.data.message)
+			console.log(e)
+
+		}
+
+  }	
+
 	// table
 	const tableTitle = ref([
-		{field:"name", title:"課程名稱"},
+		{field:"course", title:"課程名稱"},
 		{field:"date", title:"課程日期"},	  		
-		{field:"startHour", title:"課程時起"},
-		{field:"startMin", title:"課程分起"},
-		{field:"offHour", title:"課程時訖"},
-		{field:"offMin", title:"課程分訖"},
+		{field:"classroom", title:"課程教室"},
+		{field:"hours", title:"課程時數"},
+		{field:"part", title:"課程時段"},
 	])
+	const tableData = ref([])
 
-	const tableData = ref([
-    { name: "Linux基礎到架站", date: "110/12/15", startHour: 9, startMin: 0, offHour: 12, offMin: 0},
-    { name: "Linux基礎到架站", date: "110/12/15", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
-    { name: "Linux基礎到架站", date: "110/12/16", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
-    { name: "Linux基礎到架站", date: "110/12/16", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
-    { name: "Linux基礎到架站", date: "110/12/17", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
-    { name: "Linux基礎到架站", date: "110/12/17", startHour: 13, startMin: 30, offHour: 16, offMin: 30},
-	])
 
-	const curriculum = () => {
-		axios.get('')
+
+	const curriculum = async(group, crawler) => {
+		console.log(group, crawler)
+	 	let { data } = await axios.get('http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/curriculum', { 
+			params: { group, crawler  } 
+		})
+		 let axiosData = data.data.curriculum
+
+		 // 清空資料再更新
+		 tableData.value = []
+		 for(let i = 0; i < axiosData.length; i++){
+			tableData.value.push({ 
+				course: axiosData[i].course, 
+				date: axiosData[i].date, 
+				classroom: axiosData[i].classroom, 
+				hours: axiosData[i].hours, 
+				part: axiosData[i].part, 
+			})
+		 }
+		 // console.log(tableData.value)
 	}
+	curriculum((selectArr.value[0].selected+selectArr.value[1].selected), selectArr.value[2].selected)
+
+	
+  watch(selectArr, (newA, prevA) => {
+  	curriculum((newA[0].selected+newA[1].selected), newA[2].selected)
+  },{deep: true});	
 
 </script>
 
@@ -118,8 +173,9 @@
 	.tableContainer{
 	  width: auto;
 	  height: 100vh;
-	  .tableHeight{
-	  	// height: 80%
+	  .tableInfo{
+	  	height: 80vh;
+	  	overflow-y: auto;
 	  }
 	}
 	.filter-box{
