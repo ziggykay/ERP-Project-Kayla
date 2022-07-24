@@ -140,12 +140,11 @@
 
 
 
-	const curriculum = async(group, crawler) => {
-		console.log(group, crawler)
+	const curriculum = async(group, month) => {
 	 	let { data } = await axios.get('http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/curriculum', { 
-			params: { group, crawler  } 
+			params: { group, month} 
 		})
-		 let axiosData = data.data.curriculum
+		let axiosData = data.data
 
 		 // 清空資料再更新
 		 tableData.value = []
@@ -174,7 +173,7 @@
 	  width: auto;
 	  height: 100vh;
 	  .tableInfo{
-	  	height: 80vh;
+	  	height: 80%;
 	  	overflow-y: auto;
 	  }
 	}

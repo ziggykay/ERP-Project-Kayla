@@ -67,7 +67,7 @@
 					[
 						{
 							name: "全部學生",
-							item: ""
+							// item: ""
 						},		
 						{
 							name: "Rossen",
