@@ -111,6 +111,10 @@
 		],		
  		[
   		{
+  			name: "請選擇日期",
+  			item: ""
+  		}, 		
+  		{
   			name: "今日",
   			item: "today"
   		},
@@ -139,14 +143,14 @@
 			color: "#1AAF68"
 		},
 		{
-			title: "請假率",
+			title: "早退率",
 			number: "",
 			color: "#1AAF68"
 		}
 	]);
 	const gradeBarchart = ref({
     title: {
-      text: '出勤狀況（人數）',
+      text: '出勤狀況',
 			textStyle: {
 			    color: '#558ABA'
 			}
@@ -156,7 +160,7 @@
     	left: "right",
     },
     xAxis: {
-      data: ['1110701', '1110701', '1110701', '1110701', '1110701'],
+      data: [],
     	name: '日期',
     	nameLocation : 'end',      
       nameTextStyle: {
@@ -170,7 +174,7 @@
 	  series: [
 	    {
 	    	name: '正常到班',
-	      data: [5, 2, 7, 5, 5],
+	      data: [],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
@@ -180,8 +184,8 @@
 				// barCategoryGap: '5%'
 	    },
 	    {
-	    	name: '遲到數',
-	      data: [0, 5, 0, 2, 0],
+	    	name: '遲到',
+	      data: [],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
@@ -190,7 +194,7 @@
 	    },
 	    {
 	    	name: '缺勤',
-	      data: [0, 5, 0, 2, 0],
+	      data: [],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
@@ -213,18 +217,18 @@
 	  legend: {
 	    orient: "vertical",
 	    left: "right",
-	    data: ["正常到班", "遲到數", "缺勤"]
+	    data: ["出勤", "遲到數", "缺席"]
 	  },
 	  series: [
 	    {
-	      name: "本月整體出勤狀況",
+	      name: "整體出勤狀況",
 	      type: "pie",
 	      radius: "55%",
 	      center: ["50%", "60%"],
 	      data: [
-	        { value: 335, name: "正常到班" },
-	        { value: 310, name: "遲到數" },
-	        { value: 234, name: "缺勤" },
+	        { value:'', name: "出勤" },
+	        { value:'', name: "遲到數" },
+	        { value:'', name: "缺席" },
 	      ],
         label : {
             show: true, position: 'inner',
@@ -241,36 +245,51 @@
 		let startdate = ''
 		let stopdate = ''
 		let group = ''
+		let cur = ''
 
 		startdate = val[0][0];
 		stopdate = val[0][1];
 		group = val[1][0]+val[1][1]
-
-
-		// get axios data
-		let href = "http://localhost:80/api/count/"
-		let {data} = await axios.get(href, { params: { group, startdate, stopdate}})
+		cur = val[1][2]
 
 		try{
-			let axiosData = data.data[0]
-			let sum = 0;
-			for (let key in axiosData) {
-	    	sum = sum + axiosData[key]
+			// get axios data
+			let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
+			let axiosData = ''
+			if(cur == ''){
+				let {data} = await axios.get(href, { params: { group, startdate, stopdate } })	
+				axiosData = data.data
 			}
+			else{
+				let {data} = await axios.get(href, { params: { group, cur}})	
+				axiosData = data.data				
+			}
+			// // over all
+			gradeAttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			gradeAttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			gradeAttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			gradeAttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].excused/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 
-			// over all
-			gradeAttendanceData.value[0].number = `${Math.round((axiosData.present+axiosData.late)/sum*100)}%`
-			gradeAttendanceData.value[1].number = `${Math.round(axiosData.late/sum*100)}%`
-			gradeAttendanceData.value[2].number = `${Math.round((axiosData.absent+axiosData.excused)/sum*100)}%`
-			gradeAttendanceData.value[3].number = `${Math.round(axiosData.excused/sum*100)}%`
+			// // pie chart
+			piechart.value.series[0].data[0].value = axiosData[axiosData.length-1].regular
+			piechart.value.series[0].data[1].value = axiosData[axiosData.length-1].late
+			piechart.value.series[0].data[2].value = axiosData[axiosData.length-1].absent
 
-			// pie chart and barcart
-			piechart.value.series[0].data[0].value = axiosData.present
-			piechart.value.series[0].data[1].value = axiosData.late
-			piechart.value.series[0].data[2].value = axiosData.absent
+			// // bar chart
+			// 先清空值再更改新資料
+			gradeBarchart.value.xAxis.data = [];
+			gradeBarchart.value.series[0].data = [];
+			gradeBarchart.value.series[1].data = [];
+			gradeBarchart.value.series[2].data = []
+			for(let i = 0; i < axiosData.length-1; i++){
+				gradeBarchart.value.xAxis.data.push(axiosData[i].day)
+				gradeBarchart.value.series[0].data.push(axiosData[i].regular)
+				gradeBarchart.value.series[1].data.push(axiosData[i].late)
+				gradeBarchart.value.series[2].data.push(axiosData[i].absent)
+			}
 		}
 		catch{
-			alert("資料錯誤")
+			alert("沒有該筆資料!")
 		}
 	}
 
@@ -288,6 +307,10 @@
   		}		 		
 		],
 		[
+  		{
+  			name: "請選擇日期",
+  			item: ""
+  		}, 		
   		{
   			name: "今日",
   			item: "today"
@@ -417,9 +440,9 @@
 			let type = "fn"
 			let number = '101'
 
-			let { data } = await axios.get(href, { params: { type, number}})
 
 			try{
+				// let { data } = await axios.get(href, { params: { type, number}})				
 				userSelectArr.value = [
 					[
 						{
@@ -448,6 +471,10 @@
 					[	 		
 					],				
 					[
+						{
+							name: "請選擇日期",
+							item: ""
+						},					
 						{
 							name: "今日",
 							item: "today"
@@ -494,7 +521,7 @@
 			color: "#1AAF68"
 		},
 		{
-			title: "請假率",
+			title: "早退率",
 			number: "",
 			color: "#1AAF68"
 		}
@@ -511,7 +538,7 @@
     	left: "right",
     },
     xAxis: {
-      data: ['1110701', '1110701', '1110701', '1110701', '1110701'],
+      data: [],
       nameTextStyle: {
       	fontWeight: "bolder"
       }
@@ -524,7 +551,7 @@
 	  series: [
 	    {
 	    	name: '到班時數',
-	      data: [5, 2, 7, 5, 5],
+	      data: [],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
@@ -534,8 +561,8 @@
 				// barCategoryGap: '5%'
 	    },
 	    {
-	    	name: '課程時數',
-	      data: [0, 5, 0, 2, 0],
+	    	name: '缺席時數',
+	      data: [],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
@@ -552,24 +579,41 @@
 			startdate: val[0][0],
 			stopdate: val[0][1],
 			group: val[1][0]+val[1][1],
-			name: val[1][2]
+			name: val[1][2],
+			cur: val[1][3]
 		}
 	}
-	const doAxios = async(group, startdate, stopdate, name)=>{
-		let href = "http://localhost:80/api/count/"
-		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})
+	const doAxios = async(group, startdate, stopdate, name ,cur)=>{
+		// get axios data
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
+		let axiosData = ''
+
 		try{
-			let axiosData = data.data[0]
-			let sum = 0;
-			for (let key in axiosData) {
-	    	sum = sum + axiosData[key]
+			if(cur == ''){
+				let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})	
+				axiosData = data.data
 			}
+			else{
+				let {data} = await axios.get(href, { params: { group, cur, name}})	
+				axiosData = data.data				
+			}			
 			// over all
-			userAttendanceData.value[0].number = `${Math.round((axiosData.present+axiosData.late)/sum*100)}%`
-			userAttendanceData.value[1].number = `${Math.round(axiosData.late/sum*100)}%`
-			userAttendanceData.value[2].number = `${Math.round((axiosData.absent+axiosData.excused)/sum*100)}%`
-			userAttendanceData.value[3].number = `${Math.round(axiosData.excused/sum*100)}%`
+			userAttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].excused/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`			
+			
 			//barcart
+			// 清空資料再更新
+			userBarchart.value.xAxis.data = []
+			userBarchart.value.series[0].data = []
+			userBarchart.value.series[1].data = []	
+
+			for(let i = 0; i < axiosData.length - 1; i++){
+				userBarchart.value.xAxis.data.push(axiosData[i].day)
+				userBarchart.value.series[0].data.push(axiosData[i].attendancehours)
+				userBarchart.value.series[1].data.push(axiosData[i].lackhours)
+			}
 		}
 		catch{
 			alert("資料錯誤")
@@ -577,7 +621,7 @@
 	}
 	watch(choseSelect, (newVal, oldVal)=>{
 		// get axios data
-		doAxios(newVal.group, newVal.startdate, newVal.stopdate, newVal.name)
+		doAxios(newVal.group, newVal.startdate, newVal.stopdate, newVal.name, newVal.cur)
 	})
 
 	// changeComponent

@@ -35,13 +35,12 @@
 	const selectArr = ref([]);	  	 
 	const getSelectArr = async() =>{
 
-			let href = 'http://localhost:80/api/diary/account'
+			// let href = 'http://localhost:80/api/diary/account'
 			let type = "fn"
 			let number = '101'
 
-			let { data } = await axios.get(href, { params: { type, number}})
-
 			try{
+				// let { data } = await axios.get(href, { params: { type, number}})				
 				selectArr.value = [
 					[
 						{
@@ -79,19 +78,31 @@
 					],	
 					[
 			  		{
-			  			name: "all",
-			  			item: "all"
+			  			name: "全部出勤狀態",
+			  			item: ""
 			  		},
 			  		{
-			  			name: "present",
-			  			item: "present"
+			  			name: "出勤",
+			  			item: "regular"
 			  		},	
 			  		{
-			  			name: "late",
+			  			name: "遲到",
 			  			item: "late"
-			  		}					  				 		
+			  		},			  		
+			  		{
+			  			name: "早退",
+			  			item: "excused"
+			  		},				  			
+			  		{
+			  			name: "缺勤",
+			  			item: "absent"
+			  		}			  						  				 		
 					],		  		
 					[
+						{
+							name: "請選擇日期",
+							item: ""
+						},						
 			  		{
 			  			name: "今日",
 			  			item: "today"
@@ -101,19 +112,14 @@
 			  			item: "month"
 			  		}				 		
 					]	
-				]
-				// for(let i = 0; i <= data.data.length - 1; i++){
-				// 	userSelectArr.value[2].push({
-		  // 			name: data.data[i].Name,
-		  // 			item: data.data[i].Name
-		  // 		})
-				// }		  			
+				]	  			
 			}
 			catch{
 				alert("資料錯誤")
 			}
 	}		
 	getSelectArr()	
+
 	const title = ref("學員出勤資訊");
 	
 	// table
@@ -140,24 +146,26 @@
 			stopdate : val[0][1],
 			group : val[1][0]+val[1][1],
 			name : val[1][2],
-			status: val[1][3]
+			status: val[1][3],
+			cur: val[1][4]
 		}
 	}
 
-	const doAxios = async(group, startdate, stopdate, name, status, page)=>{
+	const doAxios = async(group, startdate, stopdate, name, status, cur, page)=>{
 		// get axios data
-		let href = "http://localhost:80/api/punch"
-		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name, status, page}})
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/punch"
+
 		try{
+			let {data} = await axios.get(href, { params: { group, startdate, stopdate, name, status, cur, page}})		
 			tablePage.value = Number(data.data.pagination[0].totalpages)
 			let axiosData = data.data.punch
 			tableData.value = [] 			// 清空舊的資料再更新
 
 			for(let i = 0; i <= axiosData.length - 1; i ++){
 				tableData.value.push({ 
-					date: axiosData[i].classdate, 
+					date: axiosData[i].date, 
 					grade: group, 
-					name: axiosData[i].student, 
+					name: axiosData[i].name, 
 					signin: axiosData[i].intime, 
 					signout: axiosData[i].outtime, 
 					inip: axiosData[i].inip
@@ -169,7 +177,7 @@
 		}		
 	}
   watch([chosePage, choseSelect], ([newA, newB], [prevA, prevB]) => {
-		doAxios(newB.group, newB.startdate, newB.stopdate, newB.name, newB.status, newA)
+		doAxios(newB.group, newB.startdate, newB.stopdate, newB.name, newB.status, newB.cur, newA)
   },{deep: true});	
 
 	
