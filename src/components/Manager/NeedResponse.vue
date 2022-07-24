@@ -8,7 +8,7 @@
       <div class="d-flex justify-content-evenly" >
         <div class="resbox-outter">
           <!-- 按了回覆後會顯示的區塊 -->
-          <!-- <div class="content-box resbox ps-2" v-for="data of questionList">
+          <!-- <div class="content-box resbox ps-2" v-for="data of unreplied">
             <div class="d-flex justify-content-between">
               <div class="d-flex date-and-title w-50 justify-content-evenly">
                 <p class="">日期</p>
@@ -27,21 +27,21 @@
             </div>
           </div> -->
           <!-- 尚未按回覆 -->
-          <div class="content-box resbox res-box-hover ps-2" v-for="data of questionList">
+          <div class="content-box resbox res-box-hover ps-2" v-for="data of unreplied">
             <div class="d-flex justify-content-between">
               <div class="d-flex date-and-title w-50 justify-content-evenly ms-3">
                 <p class="">日期</p>
                 <p class="">姓名</p>
                 <p class="">問題</p>
               </div>
-              <div>
+              <div v-if="tempResponse == ''">
                 <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-                 @click="updateData(data)">回覆</button>
+                 @click="updateData(data)" >回覆</button>
               </div>
-              <!-- <div>
+              <div v-else>
                 <button type="button" class="btn btn-primary confirm-btn check-res mt-2 me-1">回覆</button>
-                <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2">結案</button>
-              </div> -->
+                <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2" @click="save()">結案</button>
+              </div>
             </div>
             <div class="d-flex justify-content-between w-50 date-and-title-content ms-5">
               <p class="">{{data.LeavingTime}}</p>
@@ -66,12 +66,14 @@
                   cols="30"
                   rows="10"
                   placeholder="請輸入回覆內容..."
-                  v-model="responseBox">
+                  v-model="responseText">
+                  {{}}
                 </textarea>
+                <input type="hidden" v-for="resData of tempResponse">{{resData}}
               </div>
               <div class=" text-end">
               <button type="button" class="btn btn-primary confirm-btn check-res mt-2"
-               @click="save">送出</button>
+                @click="changeStatus(); removeFromTemp(selectData.id)">送出</button>
               </div>
             </div>
           </div>
@@ -85,17 +87,27 @@ import { ref, computed, onMounted } from "vue";
 import { useStore,mapActions } from "vuex";
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
 const emit = defineEmits(["changeShow"]);
+const isResponse = false
 //store
   const store = useStore()
-  const questionList = computed(()=> store.state.questionList)
-  const responseBox = ref("")
-  const response = computed(()=> store.state.response)
-  function save() {
-    store.commit("addResponse", responseBox.value);
-    responseBox.value=""
+  const unreplied = computed(()=> store.state.unreplied)
+  const responseText = ref("")
+  const tempResponse = computed(()=> store.state.tempResponse)
+  function changeStatus() {
+    store.commit("addTempResponse", responseText.value);
+    alert('已回覆')
   }
+  function save() {
+    store.commit("addResponse", responseText.value);
+    alert('已結案')
+  }
+  function removeFromTemp(itemId){
+    this.$store.dispatch('removeFromTemp', itemId)
+  }
+  //是否顯示節按按鈕
+  
 //data
-  // const questionList = ref([
+  // const unreplied = ref([
 	//   		{
   //         id:1,
 	//   			LeavingTime: '2022-07-09',
@@ -121,7 +133,7 @@ const emit = defineEmits(["changeShow"]);
 	//   		},
 	// ]);
   //查看按鈕
-  const selectData = ref(questionList.value[0]);
+  const selectData = ref(unreplied.value[0]);
   function updateData (data) {
     selectData.value = data
     console.log(selectData.value)
