@@ -19,13 +19,15 @@
           <div class="container-fluid p-2">
             <p class="text-primary InfoTitle"><strong>已編輯日誌</strong></p>
             <hr />
-            <div class="completeDiary">
+            <!-- <div class=""> -->
+            <div v-if="isCreated" class="d-flex completeDiary">
               <div
-                v-if="isCreated"
-                class="project plates content-box-border d-flex flex-column"
+                v-for="(item, i) of store.state.diary"
+                :key="i"
+                class="content-box-border project plates d-flex flex-column"
               >
                 <div class="project-name text-center align-self-center mt-4">
-                  {{ $store.state.diary.Project }}
+                  {{ item }}
                 </div>
                 <div class="align-self-end mt-3">
                   <span
@@ -38,17 +40,18 @@
                   ></span>
                 </div>
               </div>
-              <div v-else class="project plates">
-                <div class="project-name text-center align-self-center mb-5">
-                  無已登打的日誌
-                </div>
+            </div>
+            <div v-else class="project plates">
+              <div class="project-name text-center align-self-center mb-5">
+                無已登打的日誌
               </div>
             </div>
-            <div class="text-end mt-2">
+            <div v-if="isCreated" class="text-end mt-2">
               <button type="button" class="btn btn-primary confirm-btn">
                 確認送出
               </button>
             </div>
+            <!-- </div> -->
           </div>
         </div>
       </div>
@@ -84,7 +87,7 @@
           <div class="work-time col-md-4">
             <label for="project">專案選擇</label>
             <br />
-            <select id="project" v-model="project">
+            <select id="project" v-model="Project">
               <option value="">請選擇專案類型</option>
               <option value="專案">專案</option>
               <option value="產品">產品</option>
@@ -118,7 +121,7 @@
             type="submit"
             class="btn btn-primary add-items confirm-btn"
             @click="
-              $store.dispatch('updateDiary', project);
+              $store.dispatch('updateDiary', Project);
               addProject();
             "
             value="+ 新增專案"
@@ -131,14 +134,13 @@
 
 <script setup>
 import axios from "axios";
+import { useStore, mapActions } from "vuex";
 import { ref, onMounted, reactive, watch, defineAsyncComponent } from "vue";
 
-// const isCreated = ref(true);
 const isCreated = ref(false);
 
 const Project = ref("");
-// const diary = ref(this.$store.state.diary);
-
+const store = useStore();
 const info = ref([
   {
     Class: "fn102",
@@ -155,6 +157,7 @@ function addProject() {
     this.isCreated = true;
   }
 }
+// addProject();
 </script>
 
 <style lang="scss" scoped>
@@ -204,6 +207,7 @@ function addProject() {
   width: 100%;
   white-space: nowrap;
   .project {
+    min-width: 40%;
     display: inline-block;
   }
 }

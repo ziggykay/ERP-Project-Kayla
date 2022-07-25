@@ -2,12 +2,12 @@ import { createStore } from 'vuex'
 export default createStore({
     state: {
         diary: [
-            {
-                // workinghour: "5",
-                Project: "",
-                // Imgurl: "888",
-                // Content: "9999"
-            },
+            // {
+            // workinghour: "5",
+            // Project: "",
+            // Imgurl: "888",
+            // Content: "9999"
+            // },
         ],
         unreplied: [
             {
@@ -87,7 +87,7 @@ export default createStore({
             state.unreplied.splice(indexToDelete, 1)
         },
         CreatedProject(state, status) {
-            state.diary.Project = status;
+            state.diary.push(status);
         }
     },
     actions: {
