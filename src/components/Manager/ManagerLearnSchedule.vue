@@ -1,13 +1,37 @@
 <template>
-	<template v-if="userSelectArr[0]">
-	<FilterSelect :parent-selectArr="userSelectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>		
-	</template>
-	<template v-else>
-		<div class="content-box w-auto">
-			尚未有資料  
-	  </div> 	
-	</template>
-
+	<div class="content-box filter-box">
+		<p class="title"><strong>學員學習進度</strong></p> 	  	
+		<hr/>
+		<div class="d-flex flex-wrap">
+	  	<select class="selectInfo me-2" v-model="type" @change="axiosNumber">
+	  		<option value="">請選擇班別</option>
+				<option v-for="(data, index) of selectType" :value="data.item">
+					{{ data.name}}
+				</option>	    	 	
+	  	</select>
+	  	<select class="selectInfo me-2" v-model="number" @change="axiosName">
+	  		<option value="">請選擇班級</option>
+				<option v-for="(data, index) of selectNumber" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>		  
+	  	<select class="selectInfo me-2" v-model="name">
+	  		<option value="">請選擇學生</option>
+				<option v-for="(data, index) of selectName" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>	
+<!-- 	  	<select class="selectInfo me-2">
+				<option v-for="(data, index) of selectDate" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>		 -->	  	
+		</div>  	
+		<div class="d-flex mt-2 flex-wrap">
+	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
+		</div>
+	</div>	
   <!-- chart -->
   <div class="content-box overall-box chartContainer" >
 		<v-chart class="chartHeight" :option="barchart" autoresize />  	
@@ -15,82 +39,137 @@
 
 </template>
 <script setup>
-	import FilterSelect from "../baseComponents/filterSelect.vue";
 	import VChart from "vue-echarts";
-	import	{ref, onMounted} from "vue"
+	import	{ref, watch, onMounted} from "vue"
 	import axios from 'axios'
 	
-	// user
-	const userSelectArr = ref([]);	 	
-	const getUserSelectArr = async() =>{
+	// date
+	const date = ref("");
+	onMounted(() => {
+    const startDate = new Date(2021, 11, 16);
+    const endDate = new Date(2022, 4, 27)
+    date.value = [startDate, endDate]	
+	})
+	//  set date to yyyy-mm-dd
+	watch(date, (newVal, oldVal) => {
+		for(let i = 0; i <= date.value.length - 1; i++){
+			date.value[i] = newVal[i].toISOString().split('T')[0] 
+		}
+	});
 
-			let href = 'http://localhost:80/api/diary/account'
-			let type = "fn"
-			let number = '101'
+	// dynamic select option
+	const type = ref("")
+	const number = ref("")
+	const name = ref("") 
 
+
+	// dynamic select option value have three function
+	const selectDate = ref([
+		{
+			name: "請選擇日期範圍",
+			item: ""
+		},					
+		{
+			name: "今日",
+			item: "today"
+		},
+		{
+			name: "本月",
+			item: "month"
+		}				 		
+	]);	 	
+	const selectType = ref([])
+	const selectNumber = ref([])
+	const selectName = ref([])	
+
+	const axiosType = async() =>{
+		// clear  option valeu
+		selectType.value = []
+		selectNumber.value = []
+		selectName.value = []
+		type.value = ''
+		number.value = ''
+		name.value = ''		
+		let href = 'http://54.186.56.114:8081/Getdatalist'
+		try{
+			let { data } = await axios.post(href)
+			let type = data.data.type
+
+
+			for(let i = 0; i < type.length; i++){
+				selectType.value.push({
+					name: type[i],
+					item: type[i]
+				})
+			}
+		}
+		catch{
+			alert("資料錯誤")
+		}
+	}		
+	axiosType()
+
+	const axiosNumber = async() =>{
+		// clear  option valeu
+		selectNumber.value = []
+		selectName.value = []
+		number.value = ''
+		name.value = ''		
+		let href = 'http://54.186.56.114:8081/Getdatalist'
+
+		if(type.value !== ""){
 			try{
-							// let { data } = await axios.get(href, { params: { type, number}})
-				userSelectArr.value = [
-					[
-						{
-							name: "前端班",
-							item: "fn"
-						},
-						{
-							name: "數據班",
-							item: "bd"
-						},
-						{
-							name: "雲端班",
-							item: "cd"
-						}	  		
-					],
-					[
-			  		{
-			  			name: "101",
-			  			item: "101"
-			  		},
-			  		{
-			  			name: "102",
-			  			item: "102"
-			  		}		 		
-					],
-					[	 		
-					],				
-					[
-						{
-							name: "請選擇日期",
-							item: ""
-						},					
-						{
-							name: "今日",
-							item: "today"
-						},
-						{
-							name: "本月",
-							item: "month"
-						}				 		
-					]	
-				]
-				userSelectArr.value[2].push({
-		  			name: "Rossen",
-		  			item: "rossen"
-		  	})
-				// for(let i = 0; i <= data.data.length - 1; i++){
-				// 	userSelectArr.value[2].push({
-		  // 			name: data.data[i].Name,
-		  // 			item: data.data[i].Name
-		  // 		})
-				// }		  			
+				let postData = {
+					type: type.value
+				}
+				let { data } = await axios.post(href, postData)
+				let number = data.data.number
+				for(let i = 0; i < number.length; i++){
+					selectNumber.value.push({
+						name: number[i],
+						item: number[i]
+					})
+				}
+			}
+			catch(e){
+				console.log(e)
+				alert("資料錯誤")
+			}		
+		}
+		else{
+			alert("請選擇資料")
+		}
+	}
+
+	const axiosName = async() =>{
+		// clear  option valeu
+		selectName.value = []
+		name.value = ''		
+		let href = 'http://54.186.56.114:8081/Getdatalist'
+		if(number.value !== ""){
+			try{
+				let postData = {
+					type: type.value,
+					number: number.value
+				}
+				let { data } = await axios.post(href, postData)
+				let name = data.data.name
+				for(let i = 0; i < name.length; i++){
+					selectName.value.push({
+						name: name[i].Name,
+						item: name[i].Name
+					})
+				}
 			}
 			catch{
 				alert("資料錯誤")
-			}
-	}		
-	getUserSelectArr()
+			}		
+		}
+		else{
+			alert("請選擇資料")
+		}
 
-
-	const title = ref("學員學習進度");
+	}
 	
 	const barchart = ref({
     title: {
@@ -136,39 +215,24 @@
 	    }
 	  ],	  		
 	})	 
-	const userData = async(val)=>{
-		let startdate = ''
-		let stopdate = ''
-		let group = ''
-		let name = ''
-		let cur = ''
-
-		startdate = val[0][0];
-		stopdate = val[0][1];
-		group = val[1][0]+val[1][1]
-		name = val[1][2]
-		cur = val[1][3]
-
-		//get axios data
+  //search bar chart axios data
+	const search = async()=>{
 		try{
 			let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/course"
 			let axiosData = ''
-			if(cur == ''){
-			let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})			
-				axiosData = data.data.course
-			}
-			else{
-			let {data} = await axios.get(href, { params: { group, cur, name}})			
-				axiosData = data.data.course				
-			}
-
+			let { data } = await axios.get(href, { params: { 
+				group: type.value+number.value,
+				name: name.value,				 
+				startdate: date.value[0], 
+				stopdate: date.value[1] 
+			}})			
+			axiosData = data.data.course			
 
 			// 清空舊的資料再更新
 			barchart.value.yAxis.data = [];
 			barchart.value.series[0].data = [];
 			barchart.value.series[1].data = []			
 			for(let i = 0; i <= axiosData.length - 1; i++){
-
 				barchart.value.yAxis.data.push(axiosData[i].course)
 				barchart.value.series[0].data.push(axiosData[i].totalhours)
 				barchart.value.series[1].data.push(axiosData[i].present)
@@ -177,11 +241,27 @@
 		catch{
 			alert("資料錯誤")
 		}
-	}
+	} 
+
 
 </script>
 
 <style lang="scss" scoped>
+.filter-box {
+  height: auto;
+  width: auto;
+  .selectInfo {
+    width: 100px;
+    height: 38px;
+    background-color: #e9f2ff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-height {
+    height: 38px;
+  }
+}	
 	.overall-box{
 	  width: auto;
 	  height: auto;

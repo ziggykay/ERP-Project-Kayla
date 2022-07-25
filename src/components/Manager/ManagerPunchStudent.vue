@@ -1,6 +1,7 @@
 <template>
+	<!--  filter-->
 	<div class="content-box filter-box">
-		<p class="title"><strong>學員學習進度</strong></p> 	  	
+		<p class="title"><strong>以學員篩選</strong></p> 	  	
 		<hr/>
 		<div class="d-flex flex-wrap">
 	  	<select class="selectInfo me-2" v-model="type" @change="axiosNumber">
@@ -20,11 +21,6 @@
 				<option v-for="(data, index) of selectName" :value="data.item">
 					{{ data.name }}
 				</option>	      	 	
-	  	</select>	
-	  	<select class="selectInfo me-2"  v-model="status">
-				<option v-for="(data, index) of selectStatus" :value="data.item">
-					{{ data.name }}
-				</option>	      	 	
 	  	</select>			 	  	
 <!-- 	  	<select class="selectInfo me-2">
 				<option v-for="(data, index) of selectDate" :value="data.item">
@@ -37,26 +33,22 @@
 	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
 		</div>
 	</div>	
+	<!-- <button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	 -->
 
-   <!--table -->
-  <div class="content-box tableContainer">
-  	<p class="title"><strong>出勤情況總覽</strong></p>  	  	
-		<hr/>
-	  <vxe-table :data="tableData" class="tableInfo" emptyText="no data">
-	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
-	  </vxe-table>
-	  <nav aria-label="Page navigation example" class="mt-2">
-			<ul class="pagination justify-content-center">
-			  <li class="page-item" v-for="n in tablePage">
-			  	<button class="page-link" @click="changePage(n)">{{ n }}</button>
-			  </li>
-			</ul>
-		</nav>
-  </div> 
+	<!-- overall -->
+	<Overall :parent-data="userAttendanceData"></Overall>			
+	<!-- chart -->
+	<div class="content-box overall-box chartContainer" >
+	<v-chart class="chartHeight" :option="userBarchart" autoresize />  	
+	</div>		   		
 </template>
+
 <script setup>
-	import	{ref, watch, onMounted} from "vue"
+	import {ref, onMounted, computed, watch} from "vue"
 	import axios from 'axios'
+	import VChart from "vue-echarts";
+	import Overall from "../baseComponents/Overall.vue";
+
 
 	const date = ref(""); 	// date
 	onMounted(() => {
@@ -78,28 +70,6 @@
 	const selectType = ref([]) // dynamic select option value
 	const selectNumber = ref([])
 	const selectName = ref([])	
-	const selectStatus = ref([
-		{
-			name: "全部出勤狀態",
-			item: ""
-		},
-		{
-			name: "出勤",
-			item: "regular"
-		},	
-		{
-			name: "遲到",
-			item: "late"
-		},			  		
-		{
-			name: "早退",
-			item: "excused"
-		},				  			
-		{
-			name: "缺勤",
-			item: "absent"
-		}			  						  				 		 // fix select option	value
-	])
 	const selectDate = ref([
 		{
 			name: "請選擇日期範圍",
@@ -112,7 +82,7 @@
 		{
 			name: "本月",
 			item: "month"
-		}				 		
+		}				 		// fix select option	value
 	]);		
 
 	const axiosType = async() =>{
@@ -203,55 +173,110 @@
 		}
 	}
 
-	//=================================================== 
-	const tableTitle = ref([ 	// table
-		{field:"date", title:"日期"},
-		{field:"grade", title:"班級"},	  		
-		{field:"name", title:"姓名"},
-		{field:"signin", title:"簽到"},
-		{field:"signout", title:"簽退"},
-		{field:"inip", title:"INIP"},	  		
-	])
-	const tablePage = ref()
-	const chosePage = ref(1)
-	const changePage = (number)=>{
-		chosePage.value = number	
-		search()	
-	}
-	const tableData = ref([])
+
+
+// overvall and chart =================================================================
+	const userAttendanceData = ref([
+		{
+			title: "出席率",
+			number: "",
+			color: "#558ABA"
+		},
+		{
+			title: "遲到率",
+			number: "",
+			color: "#1AAF68"
+		},
+		{
+			title: "缺席率",
+			number: "",
+			color: "#1AAF68"
+		},
+		{
+			title: "早退率",
+			number: "",
+			color: "#1AAF68"
+		}
+	]); 	
+	const userBarchart = ref({
+    title: {
+      text: '出席狀況',
+			textStyle: {
+			    color: '#558ABA'
+			}
+    },
+    tooltip: {},
+    legend: {
+    	left: "right",
+    },
+    xAxis: {
+      data: [],
+      nameTextStyle: {
+      	fontWeight: "bolder"
+      }
+    },
+    yAxis: {
+			nameTextStyle: {
+      	fontWeight: "bolder"
+      }
+    },
+	  series: [
+	    {
+	    	name: '到班時數',
+	      data: [],
+	      type: 'bar',
+	      stack: 'x',
+	      itemStyle: {
+					color: '#558ABA'
+	      },
+	      // barWidth: '20%',
+				// barCategoryGap: '5%'
+	    },
+	    {
+	    	name: '缺席時數',
+	      data: [],
+	      type: 'bar',
+	      stack: 'x',
+	      itemStyle: {
+					color: '#FF6A3C'
+	      },			      
+	    }
+	  ],	  		
+	})	  		
+
 	const search = async()=>{
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/punch"
+		// get axios data
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
+		let axiosData = ''
 		try{
 			let {data} = await axios.get(href, { params: { 
 				group: type.value+number.value, 
-				startdate: date[0], 
-				stopdate: date[1], 
-				name: name.value, 
-				status: status.value,
-				page: chosePage.value
+				startdate: date.value[0], 
+				stopdate: date.value[1], 
+				name: name.value
 			}})	
+			axiosData = data.data		
+				// over all
+			userAttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].excused/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`			
+			//barcart
+			// 清空資料再更新
+			userBarchart.value.xAxis.data = []
+			userBarchart.value.series[0].data = []
+			userBarchart.value.series[1].data = []	
 
-			tablePage.value = Number(data.data.pagination[0].totalpages)
-			let axiosData = data.data.punch
-			tableData.value = [] 			// 清空舊的資料再更新
-
-			for(let i = 0; i <= axiosData.length - 1; i ++){
-				tableData.value.push({ 
-					date: axiosData[i].date, 
-					grade: type.value+number.value, 
-					name: axiosData[i].name, 
-					signin: axiosData[i].intime, 
-					signout: axiosData[i].outtime, 
-					inip: axiosData[i].inip
-				})
-			} 
+			for(let i = 0; i < axiosData.length - 1; i++){
+				userBarchart.value.xAxis.data.push(axiosData[i].day)
+				userBarchart.value.series[0].data.push(axiosData[i].attendancehours)
+				userBarchart.value.series[1].data.push(axiosData[i].lackhours)
+			}
 		}
-		catch(e){
-			console.log(e)
+		catch{
 			alert("資料錯誤")
 		}		
 	}
-
 </script>
 
 <style lang="scss" scoped>
@@ -270,14 +295,31 @@
     height: 38px;
   }
 }	
-.tableContainer{
+.boxContainer{
+	margin: 1rem;
+}	
+.overall-box{
   width: auto;
-  height: 100vh;
-  .tableInfo{
-  	height: 80vh;
-  	overflow-y: auto;
-  }
+  height: auto;
+
+}
+
+.check-info{
+	border-radius: 4px;
+	cursor: pointer;		
 }		
+.chartContainer{
+	height: 70vh;
+	.chartHeight{
+		height: 100%
+	}
+}		
+.bar-width{
+	width: 40%
+}
+.pie-width{
+	width: 60%;
+}
 </style>
 
 	
