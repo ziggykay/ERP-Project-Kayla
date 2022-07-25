@@ -2,7 +2,7 @@
   <div class="container text-center">
     <div class="">
       <label for="">選擇身分</label>
-      <select>
+      <select v-model="Class">
           <option>學生</option>
           <option>管理員</option>
           <option>企業</option>
@@ -11,17 +11,17 @@
     <br/>
     <div class="">
       <label for="name">姓名</label>
-      <input id="name" type="name"/>
+      <input v-model="name" type="name"/>
     </div>
     <br/>
     <div class="">
       <label for="passWord">密碼</label>
-      <input id="passWord" type="password"/>
+      <input v-model="passWord" type="password"/>
     </div>
-    <div class="">
+<!--     <div class="">
       <label for="passWord">驗證碼</label>
       <input id="passWord" type="password"/>
-    </div>
+    </div> -->
     <br/>
     <!-- <router-link to="/home">
       <button class="btn btn-primary text-light">Login</button>
@@ -45,21 +45,27 @@ const loginAuth = ref(
 )
 
 const toHomePage = () => {
-  // router.push('/user/home')
-  switch (loginAuth.value.access) {
-    case 1:
-      router.push('/user/home')
-      break;
-    case 2:
-      router.push('/manager/home')
-      break;
-    case 3:
-      router.push('/company/home')
-      break;
-    default:
-      router.push('/')
-      break;
-  }
+	let href = "http://54.186.56.114:8081/login"
+	let postData = {
+		Class,
+		Name,
+		Password
+	}
+	axios.post("href", )
+  // switch (loginAuth.value.access) {
+  //   case 1:
+  //     router.push('/user/home')
+  //     break;
+  //   case 2:
+  //     router.push('/manager/home')
+  //     break;
+  //   case 3:
+  //     router.push('/company/home')
+  //     break;
+  //   default:
+  //     router.push('/')
+  //     break;
+  // }
 }
 
 </script>
