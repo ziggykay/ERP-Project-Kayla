@@ -200,10 +200,6 @@
 </script>
 
 <style lang="scss" scoped>
-body {
-  height: 100vh;
-  background-color: #e4ecf0;
-}
 a {
   text-decoration: none;
 }

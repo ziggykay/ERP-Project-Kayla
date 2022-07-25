@@ -37,10 +37,10 @@
 				<template v-slot:bar>
 					<input type="checkbox" id="fn" value="fn" v-model="checkedGrades">
 					<label for="fn">前端班</label>
-					<input type="checkbox" id="bd" value="bd" v-model="checkedGrades">
-					<label for="bd">數據班</label>
-					<input type="checkbox" id="cd" value="cd" v-model="checkedGrades">
-					<label for="cd">雲端班</label>					
+					<input type="checkbox" id="dv" value="dv" v-model="checkedGrades">
+					<label for="dv">數據班</label>
+					<input type="checkbox" id="se" value="se" v-model="checkedGrades">
+					<label for="se">雲端班</label>					
 				</template>	
 			</FilterSelect>		  	
 	  </template>
@@ -92,11 +92,11 @@
   		},
   		{
   			name: "數據班",
-  			item: "bd"
+  			item: "dv"
   		},
   		{
   			name: "雲端班",
-  			item: "cd"
+  			item: "se"
   		}	  		
 		],
  		[
@@ -107,7 +107,15 @@
   		{
   			name: "102",
   			item: "102"
-  		}		 		
+  		},	
+  		{
+  			name: "111",
+  			item: "111"
+  		},	
+  		{
+  			name: "211",
+  			item: "211"
+  		}	  		  			 		
 		],		
  		[
   		{
@@ -124,6 +132,21 @@
   		}				 		
 		],		  		  		
 	]);		
+
+	// const gradeSelectData = async()=>{
+	// 	let href = "http://54.186.56.114/diary/Getdatalist"
+	// 	try{
+	// 		let { data } = await axios.get(href)
+	// 		let { type } = data.data
+	// 		let { number } = data.data			
+	// 	}
+	// 	catch{
+
+	// 	}
+	// }
+
+	// gradeSelectData()
+
 	const gradeTitle = ref("以班級篩選")
 
 	const gradeAttendanceData = ref([
@@ -296,7 +319,7 @@
 	// gradecompare
 	const checkedGrades = ref([])	
 	const gradeCompareSelectArr =ref([
-		[
+ 		[
   		{
   			name: "101",
   			item: "101"
@@ -304,8 +327,16 @@
   		{
   			name: "102",
   			item: "102"
-  		}		 		
-		],
+  		},	
+  		{
+  			name: "111",
+  			item: "111"
+  		},	
+  		{
+  			name: "211",
+  			item: "211"
+  		}	  		  			 		
+		],		
 		[
   		{
   			name: "請選擇日期",
@@ -433,75 +464,80 @@
 	})
 
 	// user
-	const userSelectArr = ref([]);	 	
-	const getUserSelectArr = async() =>{
+	const userSelectArr = ref([
+ 		[
+  		{
+  			name: "前端班",
+  			item: "fn"
+  		},
+  		{
+  			name: "數據班",
+  			item: "dv"
+  		},
+  		{
+  			name: "雲端班",
+  			item: "se"
+  		}	  		
+		],
+ 		[
+  		{
+  			name: "101",
+  			item: "101"
+  		},
+  		{
+  			name: "102",
+  			item: "102"
+  		},	
+  		{
+  			name: "111",
+  			item: "111"
+  		},	
+  		{
+  			name: "211",
+  			item: "211"
+  		}	  		  			 		
+		],		
+		[	 	
+  		{
+  			name: "請選擇學生",
+  			item: ""
+  		}	  			
+		],				
+		[
+			{
+				name: "請選擇日期",
+				item: ""
+			},					
+			{
+				name: "今日",
+				item: "today"
+			},
+			{
+				name: "本月",
+				item: "month"
+			}				 		
+		]	
+	]);	 	
+	const getUserSelectArr = async(type="fn", number="101") =>{
 
-			let href = 'http://localhost:80/api/diary/account'
-			let type = "fn"
-			let number = '101'
-
+			let href = 'http://54.186.56.114/diary/account'
 
 			try{
-				// let { data } = await axios.get(href, { params: { type, number}})				
-				userSelectArr.value = [
-					[
-						{
-							name: "前端班",
-							item: "fn"
-						},
-						{
-							name: "數據班",
-							item: "bd"
-						},
-						{
-							name: "雲端班",
-							item: "cd"
-						}	  		
-					],
-					[
-			  		{
-			  			name: "101",
-			  			item: "101"
-			  		},
-			  		{
-			  			name: "102",
-			  			item: "102"
-			  		}		 		
-					],
-					[	 		
-					],				
-					[
-						{
-							name: "請選擇日期",
-							item: ""
-						},					
-						{
-							name: "今日",
-							item: "today"
-						},
-						{
-							name: "本月",
-							item: "month"
-						}				 		
-					]	
-				]
-				userSelectArr.value[2].push({
-		  			name: "Rossen",
-		  			item: "rossen"
-		  	})
-				// for(let i = 0; i <= data.data.length - 1; i++){
-				// 	userSelectArr.value[2].push({
-		  // 			name: data.data[i].Name,
-		  // 			item: data.data[i].Name
-		  // 		})
-				// }		  			
+				let { data } = await axios.get(href, { params: { type, number}})	
+				userSelectArr.value[2] = []			
+				for(let i = 0; i < data.data.length; i++){
+					userSelectArr.value[2].push({
+							name: data.data[i].Name,
+							item: data.data[i].Name
+			  	})	  
+				}				  	
+
 			}
 			catch{
 				alert("資料錯誤")
 			}
-	}		
+	}
 	getUserSelectArr()
-
 	const userTitle = ref("以學員篩選")
 
 	const userAttendanceData = ref([
@@ -578,6 +614,8 @@
 		choseSelect.value = {
 			startdate: val[0][0],
 			stopdate: val[0][1],
+			type: val[1][0],
+			number: val[1][1],
 			group: val[1][0]+val[1][1],
 			name: val[1][2],
 			cur: val[1][3]
@@ -619,8 +657,11 @@
 			alert("資料錯誤")
 		}		
 	}
+
+	// chart
 	watch(choseSelect, (newVal, oldVal)=>{
 		// get axios data
+		getUserSelectArr(newVal.type, newVal.number)
 		doAxios(newVal.group, newVal.startdate, newVal.stopdate, newVal.name, newVal.cur)
 	})
 

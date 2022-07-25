@@ -1,10 +1,10 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import { Store } from 'vuex'
 // import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 import "./styles/custom.scss"
-import store from './store'
 // data-picker
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -36,6 +36,7 @@ import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
+const store = new Store()
 
 
 createApp(App).use(router).use(store).component('Datepicker', Datepicker).component('v-chart', echarts).use(VXETable)
