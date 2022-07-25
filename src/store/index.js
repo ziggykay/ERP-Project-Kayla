@@ -1,6 +1,14 @@
 import { createStore } from 'vuex'
 export default createStore({
     state: {
+        diary: [
+            {
+                // workinghour: "5",
+                Project: "",
+                // Imgurl: "888",
+                // Content: "9999"
+            },
+        ],
         unreplied: [
             {
                 id: 1,
@@ -78,8 +86,13 @@ export default createStore({
             let indexToDelete = state.unreplied.indexOf(Number(payload));
             state.unreplied.splice(indexToDelete, 1)
         },
+        CreatedProject(state, status) {
+            state.diary.Project = status;
+        }
     },
     actions: {
-
-    }
+        updateDiary(context, status) {
+            context.commit("CreatedProject", status);
+        }
+    },
 })
