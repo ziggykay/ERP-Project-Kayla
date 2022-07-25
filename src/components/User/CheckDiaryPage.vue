@@ -5,6 +5,11 @@
       <input class="mx-1" type="checkbox" /><span>企業已回覆</span>
     </div></FilterSelect
   >
+  <!-- <FilterSelect :parent-selectArr="selectArr" :parent-title="title">
+    <div class="py-1">
+      <input class="mx-1" type="checkbox" /><span>企業已回覆</span>
+    </div>
+  </FilterSelect> -->
 
   <!-- chart -->
   <div class="content-box overall-box">
@@ -41,6 +46,7 @@
 
 <script setup>
 import FilterSelect from "../baseComponents/FilterSelect.vue";
+
 import { ref, onMounted, computed } from "vue";
 
 const date = ref();
@@ -53,32 +59,34 @@ onMounted(() => {
   return Date;
 });
 const selectArr = ref([
-  {
-    selected: "month",
-    data: [
-      {
-        name: "今日",
-        item: "today",
-      },
-      {
-        name: "本月",
-        item: "month",
-      },
-    ],
-  },
-  {
-    selected: "project",
-    data: [
-      {
-        name: "專案",
-        item: "project",
-      },
-      {
-        name: "產品",
-        item: "product",
-      },
-    ],
-  },
+  [
+    {
+      name: "請選擇日期",
+      item: "",
+    },
+    {
+      name: "今日",
+      item: "today",
+    },
+    {
+      name: "本月",
+      item: "month",
+    },
+  ],
+  [
+    {
+      name: "請選擇專案",
+      item: "",
+    },
+    {
+      name: "專案",
+      item: "project",
+    },
+    {
+      name: "產品",
+      item: "product",
+    },
+  ],
 ]);
 const title = ref("查看日誌");
 

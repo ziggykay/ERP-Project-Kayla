@@ -21,11 +21,13 @@
             <hr />
             <div class="completeDiary">
               <div
-                v-for="data in diary"
-                class="project plates content-box-border"
+                v-if="isCreated"
+                class="project plates content-box-border d-flex flex-column"
               >
-                <div class="project-name text-center">{{ data.project }}</div>
-                <div class="text-end">
+                <div class="project-name text-center align-self-center mt-4">
+                  {{ $store.state.diary.Project }}
+                </div>
+                <div class="align-self-end mt-3">
                   <span
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-pen-to-square mx-1"></i></a
@@ -34,6 +36,11 @@
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-trash-can mx-1"></i></a
                   ></span>
+                </div>
+              </div>
+              <div v-else class="project plates">
+                <div class="project-name text-center align-self-center mb-5">
+                  無已登打的日誌
                 </div>
               </div>
             </div>
@@ -50,11 +57,9 @@
       <div class="container-fluid p-2 col-12">
         <p class="text-primary InfoTitle"><strong>日誌登打</strong></p>
         <hr />
-        <div class="d-flex flex-wrap">
+        <div class="d-flex flex-wrap justify-content-between">
           <div class="work-time col-md-4">
-            <label for=""
-              >工作時數 <span class="note">以0.5h為單位</span></label
-            >
+            <label for="">工作時數</label>
             <br />
             <select id="time">
               <option value="">請選擇時數</option>
@@ -79,7 +84,7 @@
           <div class="work-time col-md-4">
             <label for="project">專案選擇</label>
             <br />
-            <select id="project">
+            <select id="project" v-model="project">
               <option value="">請選擇專案類型</option>
               <option value="專案">專案</option>
               <option value="產品">產品</option>
@@ -88,20 +93,20 @@
           <div class="work-time col-md-4">
             <label for="profile_pic">上傳圖片</label>
             <br />
-            <input
-              type="file"
-              id="profile_pic"
-              name="profile_pic"
-              accept=".jpg, .jpeg, .png"
-            />
+            <span
+              ><input
+                type="file"
+                id="profile_pic"
+                name="profile_pic"
+                accept=".jpg, .jpeg, .png"
+            /></span>
           </div>
           <br />
         </div>
-        <div class="container-fluid work-time col-12">
+        <div class="container-fluid col-12">
           <label for="">內文</label>
           <br />
           <textarea
-            v-model.trim="textarea"
             class="textarea"
             placeholder="請輸入內文..."
             id="textarea"
@@ -112,7 +117,10 @@
             id="submit"
             type="submit"
             class="btn btn-primary add-items confirm-btn"
-            @click="addProject"
+            @click="
+              $store.dispatch('updateDiary', project);
+              addProject();
+            "
             value="+ 新增專案"
           />
         </div>
@@ -122,10 +130,14 @@
 </template>
 
 <script setup>
-import overallVue from "../baseComponents/Overall.vue";
-import ClassCard from "../../components/baseComponents/ClassCard.vue";
 import axios from "axios";
 import { ref, onMounted, reactive, watch, defineAsyncComponent } from "vue";
+
+// const isCreated = ref(true);
+const isCreated = ref(false);
+
+const Project = ref("");
+// const diary = ref(this.$store.state.diary);
 
 const info = ref([
   {
@@ -135,17 +147,14 @@ const info = ref([
     Email: "nini880219.gmail.com",
   },
 ]);
-const diary = ref([
-  {
-    project: "A專案",
-  },
-  {
-    project: "B專案",
-  },
-  {
-    project: "C產品",
-  },
-]);
+
+function addProject() {
+  if (Project === "") {
+    this.isCreated = false;
+  } else {
+    this.isCreated = true;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -183,19 +192,6 @@ const diary = ref([
   }
 }
 
-// .userInfo-box {
-//   flex-direction: column;
-//   width: auto;
-//   height: auto;
-//   max-height: 100vh;
-//   hr {
-//     margin: 0;
-//   }
-//   p.Info {
-//     margin-top: 1rem;
-//     margin-bottom: 1rem;
-//   }
-// }
 .diary-box {
   display: flex;
   flex-direction: column;
@@ -209,6 +205,14 @@ const diary = ref([
   white-space: nowrap;
   .project {
     display: inline-block;
+  }
+}
+.work-time {
+  font-size: 1rem;
+  width: 25%;
+  input {
+    font-size: 0.8rem;
+    width: 80%;
   }
 }
 </style>

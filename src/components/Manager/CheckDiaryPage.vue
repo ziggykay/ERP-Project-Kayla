@@ -50,74 +50,70 @@ onMounted(() => {
   return Date;
 });
 const selectArr = ref([
-  {
-    selected: "class",
-    data: [
-      {
-        name: "班級",
-        item: "class",
-      },
-      {
-        name: "前端班",
-        item: "fn",
-      },
-      {
-        name: "數據班",
-        item: "se",
-      },
-      {
-        name: "雲端班",
-        item: "dv",
-      },
-    ],
-  },
-  {
-    selected: "grade",
-    data: [
-      {
-        name: "班別",
-        item: "grade",
-      },
-      {
-        name: "102",
-        item: "102",
-      },
-      {
-        name: "103",
-        item: "103",
-      },
-      {
-        name: "211",
-        item: "211",
-      },
-    ],
-  },
-  {
-    selected: "month",
-    data: [
-      {
-        name: "今日",
-        item: "today",
-      },
-      {
-        name: "本月",
-        item: "month",
-      },
-    ],
-  },
-  {
-    selected: "project",
-    data: [
-      {
-        name: "專案",
-        item: "project",
-      },
-      {
-        name: "產品",
-        item: "product",
-      },
-    ],
-  },
+  [
+    {
+      name: "請選擇班級",
+      item: "",
+    },
+    {
+      name: "前端班",
+      item: "fn",
+    },
+    {
+      name: "數據班",
+      item: "se",
+    },
+    {
+      name: "雲端班",
+      item: "dv",
+    },
+  ],
+  [
+    {
+      name: "請選擇班別",
+      item: "",
+    },
+    {
+      name: "102",
+      item: "102",
+    },
+    {
+      name: "103",
+      item: "103",
+    },
+    {
+      name: "211",
+      item: "211",
+    },
+  ],
+  [
+    {
+      name: "請選擇日期",
+      item: "",
+    },
+    {
+      name: "今日",
+      item: "today",
+    },
+    {
+      name: "本月",
+      item: "month",
+    },
+  ],
+  [
+    {
+      name: "請選擇專案",
+      item: "",
+    },
+    {
+      name: "專案",
+      item: "project",
+    },
+    {
+      name: "產品",
+      item: "product",
+    },
+  ],
 ]);
 const title = ref("查看日誌");
 
