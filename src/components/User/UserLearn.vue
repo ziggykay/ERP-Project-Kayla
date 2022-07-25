@@ -1,23 +1,19 @@
 <template>
 <div class="section">
 
-  <overallVue :parent-data="allClassData"/>
-  
+  <overallVue :parent-data="totalData"/>
+  <div>{{ totalData }}</div>
   <div class="container-fluid d-md-flex">
     <!-- 課程區塊 -->
     <div class="content-box class-box col d-flex">
       <p class="title"><strong>課程</strong></p>
-      <input class="search-bar" type="search">
       <hr/>
       <div class="scroll-box" >
-        <!-- <div v-for="data of classData" :key="data.id"> -->
-          <template v-if="courseData[0]">
-            <div v-for="data of courseData" :key="data">
-              <ClassCard :parentData="data" @show-resources="getResources"/>
-            </div>
-          </template> 
-
-        <!-- <div class="error" v-if="classData == ''">沒有課程可以顯示</div> -->
+        <template v-if="courseData[0]">
+          <div v-for="data of courseData" :key="data">
+            <ClassCard :parentData="data" @show-resources="getResources"/>
+          </div>
+        </template> 
         <div class="error" v-else>沒有課程可以顯示</div>
       </div> 
     </div>
@@ -33,18 +29,22 @@
       </div>
       <div class="scroll-box">
         <template v-if="isVideo">
-          <div class="video-card" v-for="data of courseResources.video" :key="data">
+          <div class="" v-if="courseResources">
+            <div class="video-card" v-for="data of courseResources.video" :key="data">
               <iframe width="504" height="283.5" :src="data.url"
                 title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
               </iframe>
+            </div>
           </div>
-          <div class="error">沒有影片</div>
+          <div v-else class="error">沒有影片</div>
         </template>
         <template v-if="!isVideo">
-          <div class="video-card" v-for="data of courseResources.article" :key="data">
+          <div class="" v-if="courseResources">
+            <div class="video-card" v-for="data of courseResources.article" :key="data">
               <a :href="data.url" class="article-link">{{ data.title }}</a>
+            </div>
           </div>
-          <div class="error">沒有文章</div>
+          <div v-else class="error">沒有文章</div>
         </template>
       </div>
     </div>
@@ -59,12 +59,9 @@
   import ClassCard from "../../components/baseComponents/ClassCard.vue";
   import axios from "axios";
   import { ref, reactive, watch, defineAsyncComponent } from "vue";
-  
-  // const AsyncComp = defineAsyncComponent(() => {
-  //   import ClassCard from "../../components/baseComponents/ClassCard.vue";
-  // })
 
 
+  const totalData = ref([])
   const courseData = ref([])
   const input = ref(
     {
@@ -73,132 +70,23 @@
     }
   )
 
+  // 獲得全部課程
   const getCourses = async()=>{
     let {data} = await axios.get('http://54.186.56.114:8080/course', { params:{ group: "fn101", name: 'Rossen'}} )
       courseData.value = data.data.course
+      totalData.value = data.data.total
   }
   getCourses()
 
 
-
-  const allClassData = ref([
-    {
-      title: "課程總時數",
-      number: 400,
-      color: "#558ABA"
-    },
-    {
-      title: "課程總堂數",
-      number: "5%",
-      color: "#1AAF68"
-    },
-    {
-      title: "已進行堂數",
-      number: "5堂",
-      color: "#1AAF68"
-    },
-    {
-      title: "完成率",
-      number: 50,
-      color: "#1AAF68"
-    }
-  ]);
-
-  const classData = ref([
-    {
-      id: 1,
-      name: '系統服務與計算機概論',
-      progress: 20,
-      status: '進行中',
-      time: 40,
-      done: 8,
-      video: [
-        {
-          src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
-        },
-        {
-          src: 'https://www.youtube.com/embed/0jeTAEQziv4'
-        },
-        {
-          src: 'https://www.youtube.com/embed/AKqwkjcyRGY'
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Jquery&Jquery extensions',
-      progress: 100,
-      status: '已完成',
-      time: 40,
-      done: 40,
-      video: [
-        {
-          src: 'https://www.youtube.com/embed/MbjObHmDbZo&t'
-        },
-        {
-          src: 'https://www.youtube.com/embed/rBLuvEwIF5E'
-        }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Linux基礎到架站',
-      progress: 80,
-      status: '進行中',
-      time: 40,
-      done: 32,
-      video: [
-        {
-          src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
-        },
-        {
-          src: 'https://www.youtube.com/embed/rBLuvEwIF5E'
-        }
-      ]
-    },
-    {
-      id: 4,
-      name: '響應式網頁專題製作',
-      progress: 80,
-      status: '進行中',
-      time: 40,
-      done: 32,
-      video: [
-        {
-          src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
-        },
-        {
-          src: 'https://www.youtube.com/embed/rBLuvEwIF5E'
-        }
-      ]
-    },
-    {
-      id: 5,
-      name: '響應式網頁專題製作',
-      progress: 100,
-      status: '已完成',
-      time: 40,
-      done: 40,
-      video: [
-        {
-          src: 'https://www.youtube.com/embed/TWyJJjvLiqs'
-        },
-        {
-          src: 'https://www.youtube.com/embed/rBLuvEwIF5E'
-        }
-      ]
-    },
-  ])
-
+  // 顯示切換
   let isVideo = ref(true)
   function changeShow(){
 		isVideo.value = !isVideo.value
 	}
 
-
-  let courseResources = ref(
-    // classData.value[0].video
-  )
+  // 影片文章資料
+  let courseResources = ref()
 
   function getResources (resource) {
     courseResources.value = '';
