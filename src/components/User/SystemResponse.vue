@@ -1,66 +1,33 @@
 <template>
+  <!-- filter -->
+<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
   <div class="d-flex justify-content-center">
-    <div class="content-box main-outter">
-      <div class="title p-3 fw-bold">查看問題回覆</div>
-      <div class="d-flex justify-content-start p-3 border-bottom pb-5">
-        <!-- 日期選擇套件 Vue3-Datepicker -->
-        <select class="me-3 selectInfo">
-          <option>本日</option>
-          <option>本月</option>
-        </select>
-        <Datepicker
-          class="w-25 dateInfo datepicker dp__theme_light"
-          v-model="date"
-          range
-        />
-        <div class="ms-2">
-          <button type="button" class="btn btn-primary confirm-btn">
-            搜索
-          </button>
-        </div>
-      </div>
+    <div class=" ">
       <div class="d-flex justify-content-evenly">
-        <div class="resbox-outter">
-          <div class="content-box resbox ps-2">
-            <div class="d-flex date-and-title justify-content-around">
-              <p class="">日期</p>
-              <p>標題</p>
+        <div class="content-box resbox-outter">
+          <div class="content-box resbox ps-2"  v-for="data of questionList" :key="data">
+            <div class="d-flex date-and-title justify-content-between tyh vccc" >
+              <p class="ps-3">日期</p>
+              <p class="">標題</p>
               <button
                 type="button"
-                class="btn btn-primary confirm-btn check-res mt-2 ms-5"
-              >
-                查看回覆
+                class="btn btn-primary confirm-btn check-res mt-2 ms-5" @click="updateData(data)">查看回覆
               </button>
             </div>
-            <div
-              class="d-flex justify-content-evenly w-75 date-and-title-content"
-            >
-              <p class="pe-4">2022/07/01</p>
-              <p>XXXXXXXXXXX</p>
+            <div class="d-flex justify-content-evenly w-75 date-and-title-content" >
+              <p class="pe-5">{{data.LeavingTime}}</p>
+              <p class="dataTitle single-ellipsis">{{data.Title}}</p>
             </div>
           </div>
         </div>
-        <div>
-          <div class="content-box question-box">
-            <p class="title mb-3 ps-3 fw-bold w-25 text-center">提問</p>
-            <div class="text-center">
-              <input class="q-title" type="text" placeholder="請輸入問題標題" />
-            </div>
-            <!-- <div class="q-title text-center">日誌打錯專案名字</div> -->
-            <div class="text-center mt-3">
-              <textarea
-                class="q-content"
-                name=""
-                id=""
-                cols="30"
-                rows="10"
-                placeholder="請輸入問題內容..."
-              ></textarea>
-            </div>
-            <div>
-              <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-              <div class="res-content"></div>
-            </div>
+        <div class="content-box question-box">
+          <p class="title mb-3 ps-3 fw-bold w-25 text-center">提問</p>
+          <div class="q-title">{{ selectData.Title }}</div>
+          <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
+          <div class="q-content">{{ selectData.question.content }}</div>
+          <div>
+            <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
+            <div class="res-content">{{ selectData.question.response }}</div>
           </div>
         </div>
       </div>
@@ -70,6 +37,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import FilterSelect from "../baseComponents/filterSelect.vue";
 const date = ref();
 // For demo purposes assign range from the current date
 onMounted(() => {
@@ -78,6 +46,47 @@ onMounted(() => {
   date.value = [startDate, endDate];
   return Date;
 });
+// filter-data
+	const selectArr = ref([
+		[
+			{
+				name: "今日",
+				item: "today"
+			},
+			{
+				name: "本月",
+				item: "month"
+			}				 		
+		]
+	]);	
+	const title = "查看問題回覆"
+//data
+  const questionList = ref([
+    {
+      LeavingTime: '2022-07-09',
+      Title: '電腦螢幕打不開',
+      question: 
+        {
+          content: '今天上課發現電腦螢幕打不開，請問能幫忙維修嗎?',
+          response: '這周會請相關人員前往維修，謝謝'
+        },
+    },
+    {
+      LeavingTime: '2022-07-13',
+      Title: '教室冷氣故障',
+      question: 
+        {
+          content: '教室椅子壞掉，請問能幫忙維修嗎',
+          response: '這周會請相關人員前往維修，謝謝'
+        },
+    },
+	]);
+  const selectData = ref(questionList.value[0]);
+
+  function updateData (data) {
+    selectData.value = data
+    console.log(selectData.value)
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -92,14 +101,14 @@ onMounted(() => {
 .content-box {
   margin: 1rem;
   background-color: #fff;
-  width: 300px;
+  width: 97.5%;
   height: 180px;
   padding: 1rem;
   box-shadow: gray;
 }
 .main-outter {
   width: 100%;
-  height: 90vh;
+  height: 70vh;
 }
 .resbox {
   width: 35vw;
@@ -108,7 +117,7 @@ onMounted(() => {
 .resbox-outter {
   overflow-y: scroll;
   height: 60vh;
-  width: 40vw;
+  width: 42vw;
   .date-and-title {
     color: #558aba;
   }
@@ -117,8 +126,8 @@ onMounted(() => {
   }
 }
 .question-box {
-  width: 30vw;
-  height: 55vh;
+  width: 34vw;
+  height: 60vh;
   .title {
     color: #558aba;
   }
@@ -131,9 +140,8 @@ onMounted(() => {
   .q-content {
     border: solid 1px;
     width: 22vw;
-    height: 15vh;
+    height: 11vh;
     margin: 0 auto;
-    overflow-y: scroll;
   }
   .res-content {
     border: solid 1px;
@@ -152,5 +160,10 @@ div.resbox:hover {
   p {
     color: white;
   }
+}
+.single-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

@@ -26,6 +26,7 @@
 </template>
 <script setup>
 	import FilterSelect from "../baseComponents/filterSelect.vue";
+	import	{ref} from "vue"
 	import	{ref, watch} from "vue"
 	import axios from 'axios'
 

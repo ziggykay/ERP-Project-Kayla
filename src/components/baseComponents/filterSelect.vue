@@ -59,23 +59,20 @@
 
 </script>
 
-
 <style lang="scss" scoped>
-	.filter-box{
-		height: auto;
-		width: auto;
-	  .selectInfo{
-	  	width: 100px;
-	  	height: 38px;
-	  	background-color: #E9F2FF;
-	  	border-radius: 4px;
-	  	border: none;
-	  	cursor: pointer;
-	  };		
-	  .btn-height{
-	  	height: 38px;
-	  }
-	}
+.filter-box {
+  height: auto;
+  width: auto;
+  .selectInfo {
+    width: 100px;
+    height: 38px;
+    background-color: #e9f2ff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-height {
+    height: 38px;
+  }
+}
 </style>
-	
-	
