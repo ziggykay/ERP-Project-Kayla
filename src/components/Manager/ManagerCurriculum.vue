@@ -30,8 +30,13 @@
 </template>
 <script setup>
 	import FilterSelect from "../baseComponents/FilterSelect.vue";
+<<<<<<< HEAD
 	import	{ref, watch} from "vue"
 	import axios from "axios"
+=======
+	import axios from "axios";
+	import	{ref} from "vue"
+>>>>>>> Hank
 	
 	// data
 	// selectOption
@@ -139,6 +144,7 @@
 	const tableData = ref([])
 
 
+<<<<<<< HEAD
 
 	const curriculum = async(group, month) => {
 	 	let { data } = await axios.get('http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/curriculum', { 
@@ -158,6 +164,30 @@
 			})
 		 }
 		 // console.log(tableData.value)
+=======
+	const classData = ref([])
+	let group = ref('')
+	let month = ref('')
+
+	const getOptions = async () => {
+		let {data} = await axios.get('http://54.186.56.114:8080/curriculum', { params:{ group, month } })
+		
+		classData.value = data
+	}
+	const curriculum = async ( group, month ) => {
+		let {data} = await axios.get('http://54.186.56.114:8080/curriculum', { params:{ group, month } })
+		
+		classData.value = data
+		console.log(classData)
+	}
+	curriculum ((group.value), (month.value))
+
+	const postCurriculum = (file) =>{
+		let formData = new formData()
+		formData.append(file)
+		return axios.post('http://54.186.56.114:8080/curriculum', {params: formData}
+		,{ headers: { "Content-Type": "multipart/form-data"}})
+>>>>>>> Hank
 	}
 	curriculum((selectArr.value[0].selected+selectArr.value[1].selected), selectArr.value[2].selected)
 
