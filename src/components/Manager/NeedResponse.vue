@@ -5,7 +5,7 @@
   <div class="content-box main-outter">
     <div class="title p-3 fw-bold">待回覆區</div>
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
-        <div class="d-flex justify-content-evenly" v-if="unrepliedsDateCount!==0">
+        <div class="d-flex justify-content-evenly" v-if="unrepliedsDateCount!=0">
           <div class="resbox-outter">
              <!-- 尚未按回覆 -->
             <div class="content-box resbox res-box-hover ps-2" v-for="data of unreplieds" >
@@ -66,14 +66,21 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useStore,mapActions } from "vuex";
+import { useStore } from "vuex";
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
 const emit = defineEmits(["changeShow"]);
 const isResponse = false
 //store
   const store = useStore()
-  const unreplieds = computed(()=> store.state.unreplieds)
+
+  console.log(store)
+
+
+  const unreplieds = computed(()=>  store.state.unreplieds)
+
+
   const selectData = ref(unreplieds.value[0]);
+  console.log(selectData.value)
   function updateData (data) {
     selectData.value = data
     console.log(selectData.value)
@@ -96,7 +103,6 @@ const isResponse = false
   function removeFromTemp(itemId){
     this.$store.dispatch('removeFromTemp', itemId)
   }
-
   //測試
   // onMounted(()=> {
   //   store.dispatch('loadEndMessage')

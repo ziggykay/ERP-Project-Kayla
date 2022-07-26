@@ -2,10 +2,15 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 export default createStore({
     state: {
+        // diary: [
+        //     {
+
+        //     },
+        // ],
         unreplieds: [
             {
                 id: 1,
-                LeavingTime: '',
+                LeavingTime: '2022-06-06',
                 Name: 'Jay',
                 Title: '電腦螢幕打不開',
                 question:
@@ -16,7 +21,7 @@ export default createStore({
             },
             {
                 id: 2,
-                LeavingTime: '',
+                LeavingTime: '2022-06-09',
                 Name: 'Jay',
                 Title: '教室冷氣故障',
                 question:
@@ -29,7 +34,7 @@ export default createStore({
         replieds: [
             {
                 id: 3,
-                LeavingTime: '',
+                LeavingTime: '2022-06-12',
                 Name: 'May',
                 Title: '電腦螢幕有殘影',
                 question:
@@ -40,7 +45,7 @@ export default createStore({
             },
             {
                 id: 4,
-                LeavingTime: '',
+                LeavingTime: '2022-06-20',
                 Name: 'Penny',
                 Title: '教室冷氣故障',
                 question:
@@ -52,7 +57,8 @@ export default createStore({
         ],
         tempResponse: [],
         tempResponseItem: [],
-        response: []
+        response: [],
+        test: 'test'
 
 
 
@@ -66,9 +72,6 @@ export default createStore({
         },
         repliedsDate: state => {
             return state.replieds.filter(r => r.LeavingTime)
-        },
-        unrepliedsDateCount: (state, getters) => {
-            return getters.repliedsDate.length
         },
         tempResponseItem: (state) => {
             return state.tempResponse.map(
@@ -92,11 +95,14 @@ export default createStore({
         // GET_REPLIEDS(state, replied) {
         //     state.replied = replied
         // }
+        // CreatedProject(state, status) {
+        //     state.diary.Project = status;
+        // }
     },
     actions: {
         test() {
             console.log(getters.unrepliedId)
-        }
+        },
         // loadEndMessage() {
         //     axios
         //         .get('http://54.186.56.114:8081/Endmessage')
@@ -109,5 +115,14 @@ export default createStore({
         //             console.log(error)
         //         })
         // }
+        // updateDiary(context, status) {
+        //     context.commit("CreatedProject", status);
+        // }
     }
 })
+
+
+
+
+
+

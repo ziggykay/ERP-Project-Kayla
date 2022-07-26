@@ -76,15 +76,6 @@ onMounted(() => {
       Title: '教室冷氣故障',
       question: 
         {
-          content: '教室冷氣故障，請問能幫忙維修嗎',
-          response: '這周會請相關人員前往維修，謝謝'
-        },
-    },
-    {
-      LeavingTime: '2020-07-17',
-      Title: '教室椅子壞掉',
-      question:
-        {
           content: '教室椅子壞掉，請問能幫忙維修嗎',
           response: '這周會請相關人員前往維修，謝謝'
         },
