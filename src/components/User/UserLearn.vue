@@ -32,11 +32,11 @@
         <template v-if="isVideo">
           <div class="" v-if="courseResources">
             <div class="video-card" v-for="data of courseResources.video" :key="data">
-                <iframe width="504" height="283.5" :src="data.url" 
-                  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                </iframe>
-              <div v-if="!data.url" class="">此課程暫無影片</div>
+              <iframe  width="504" height="283.5" :src="data.url" 
+                title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+              </iframe>
             </div>
+            <div v-show="courseResources.video.length == 0" class="">此課程暫無影片</div>
           </div>
           <div v-else class="error">沒有影片</div>
         </template>
@@ -46,6 +46,7 @@
             <div class="video-card" v-for="data of courseResources.article" :key="data">
               <a :href="data.url" class="article-link">{{ data.title }}</a>
             </div>
+            <div v-show="courseResources.article.length == 0" class="">此課程暫無文章</div>
           </div>
           <div v-else class="error">沒有文章</div>
         </template>
