@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import axios from 'axios'
 export default createStore({
     state: {
         diary: [
@@ -12,7 +13,7 @@ export default createStore({
         unreplied: [
             {
                 id: 1,
-                LeavingTime: '2022-07-09',
+                LeavingTime: '',
                 Name: 'Jay',
                 Title: '電腦螢幕打不開',
                 question:
@@ -23,7 +24,7 @@ export default createStore({
             },
             {
                 id: 2,
-                LeavingTime: '2022-07-13',
+                LeavingTime: '',
                 Name: 'Jay',
                 Title: '教室冷氣故障',
                 question:
@@ -33,10 +34,10 @@ export default createStore({
                 },
             },
         ],
-        replied: [
+        replieds: [
             {
                 id: 3,
-                LeavingTime: '2022-06-02',
+                LeavingTime: '',
                 Name: 'May',
                 Title: '電腦螢幕有殘影',
                 question:
@@ -47,7 +48,7 @@ export default createStore({
             },
             {
                 id: 4,
-                LeavingTime: '2022-06-13',
+                LeavingTime: '',
                 Name: 'Penny',
                 Title: '教室冷氣故障',
                 question:
@@ -58,18 +59,28 @@ export default createStore({
             },
         ],
         tempResponse: [],
+        tempResponseItem: [],
         response: []
 
 
 
     },
     getters: {
-        unreplied: (state) => (id) => {
-            return state.unreplied.filter(u => u.id === Number(id))[0]
+        unrepliedsDate: state => {
+            return state.unreplieds.filter(u => u.LeavingTime)
         },
-        tempResponse: (state) => {
+        unrepliedsDateCount: (state, getters) => {
+            return getters.unrepliedsDate.length
+        },
+        repliedsDate: state => {
+            return state.replieds.filter(r => r.LeavingTime)
+        },
+        unrepliedsDateCount: (state, getters) => {
+            return getters.repliedsDate.length
+        },
+        tempResponseItem: (state) => {
             return state.tempResponse.map(
-                itemId => state.unreplied.find(
+                itemId => state.unreplieds.find(
                     unreplied => unreplied.id === itemId
                 )
             )
@@ -83,8 +94,8 @@ export default createStore({
             state.response.push(responseText)
         },
         removeFromTemp(state, payload) {
-            let indexToDelete = state.unreplied.indexOf(Number(payload));
-            state.unreplied.splice(indexToDelete, 1)
+            let indexToDelete = state.tempResponse.indexOf(Number(payload));
+            state.tempResponse.splice(indexToDelete, 1)
         },
         CreatedProject(state, status) {
             state.diary.Project = status;
@@ -94,5 +105,25 @@ export default createStore({
         updateDiary(context, status) {
             context.commit("CreatedProject", status);
         }
+        // GET_REPLIEDS(state, replied) {
+        //     state.replied = replied
+        // }
     },
+    actions: {
+        test() {
+            console.log(getters.unrepliedId)
+        }
+        // loadEndMessage() {
+        //     axios
+        //         .get('http://54.186.56.114:8081/Endmessage')
+        //         .then(data => {
+        //             console.log(data.data)
+        //             let replied = data.data
+        //             commit('GET_REPLIEDS', replied)
+        //         })
+        //         .catch(error => {
+        //             console.log(error)
+        //         })
+        // }
+    }
 })
