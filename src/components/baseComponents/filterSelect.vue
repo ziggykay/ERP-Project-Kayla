@@ -12,7 +12,7 @@
 		</div>  	
 		<div class="d-flex mt-2 flex-wrap">
     	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
-    	<button class="confirm-btn btn btn-height">搜尋</button>
+    	<!-- <button class="confirm-btn btn btn-height">搜尋</button> -->
     	<slot></slot>	  
 		</div>
 	</div>
@@ -39,8 +39,8 @@
 	// date
 	const date = ref("");
 	onMounted(() => {
-    const startDate = new Date(2022, 2, 20);
-    const endDate = new Date()
+    const startDate = new Date(2021, 11, 16);
+    const endDate = new Date(2022, 4, 27)
     date.value = [startDate, endDate]	
 	})
 	//  set date to yyyy-mm-dd
@@ -59,23 +59,20 @@
 
 </script>
 
-
 <style lang="scss" scoped>
-	.filter-box{
-		height: auto;
-		width: auto;
-	  .selectInfo{
-	  	width: 100px;
-	  	height: 38px;
-	  	background-color: #E9F2FF;
-	  	border-radius: 4px;
-	  	border: none;
-	  	cursor: pointer;
-	  };		
-	  .btn-height{
-	  	height: 38px;
-	  }
-	}
+.filter-box {
+  height: auto;
+  width: auto;
+  .selectInfo {
+    width: 100px;
+    height: 38px;
+    background-color: #e9f2ff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-height {
+    height: 38px;
+  }
+}
 </style>
-	
-	
