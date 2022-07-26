@@ -121,7 +121,7 @@
             type="submit"
             class="btn btn-primary add-items confirm-btn"
             @click="
-              $store.dispatch('updateDiary', Project);
+              store.dispatch('updateDiary', Project);
               addProject();
             "
             value="+ 新增專案"
