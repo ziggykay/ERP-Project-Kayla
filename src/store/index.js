@@ -1,4 +1,4 @@
-import { createStore, Store } from 'vuex'
+import { createStore } from 'vuex'
 import axios from 'axios'
 export default createStore({
     state: {
@@ -96,7 +96,10 @@ export default createStore({
         },
         CreatedProject(state, status) {
             state.diary.push(status);
-        }
+        },
+        removeProject(state, status) {
+            state.diary.splice(state.diary.indexOf(status), 1);
+        },
     },
     actions: {
         updateDiary(context, status) {

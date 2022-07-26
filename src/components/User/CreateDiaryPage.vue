@@ -64,7 +64,7 @@
           <div class="work-time col-md-4">
             <label for="">工作時數</label>
             <br />
-            <select id="time">
+            <select id="time" v-model="workinghour">
               <option value="">請選擇時數</option>
               <option value="0.5">0.5</option>
               <option value="1">1</option>
@@ -113,6 +113,7 @@
             class="textarea"
             placeholder="請輸入內文..."
             id="textarea"
+            v-model="Content"
           ></textarea>
         </div>
         <div class="text-end">
@@ -120,10 +121,7 @@
             id="submit"
             type="submit"
             class="btn btn-primary add-items confirm-btn"
-            @click="
-              store.dispatch('updateDiary', Project);
-              addProject();
-            "
+            @click="submitDiary"
             value="+ 新增專案"
           />
         </div>
@@ -139,22 +137,36 @@ import { ref, onMounted, reactive, watch, defineAsyncComponent } from "vue";
 
 const isCreated = ref(false);
 
-const Project = ref("");
 const store = useStore();
+
+const workinghour = ref("");
+const Project = ref("");
+const Content = ref("");
+const AllProject = ref([
+  {
+    workinghour: workinghour.value,
+    Project: Project.value,
+    Content: Content.value,
+  },
+]);
+const submitDiary = () => {
+  store.dispatch("updateDiary", Project.value);
+  addProject();
+};
 const info = ref([
   {
     Class: "fn102",
     Name: "Jessie",
     Id: 13,
-    Email: "nini880219.gmail.com",
+    Email: "nini880219@gmail.com",
   },
 ]);
 
 function addProject() {
-  if (Project === "") {
-    this.isCreated = false;
+  if (AllProject === "") {
+    isCreated.value = false;
   } else {
-    this.isCreated = true;
+    isCreated.value = true;
   }
 }
 // addProject();
