@@ -224,13 +224,12 @@
 		try{
 			let {data} = await axios.get(href, { params: { 
 				group: type.value+number.value, 
-				startdate: date[0], 
-				stopdate: date[1], 
+				startdate: date.value[0], 
+				stopdate: date.value[1], 
 				name: name.value, 
 				status: status.value,
 				page: chosePage.value
 			}})	
-
 			tablePage.value = Number(data.data.pagination[0].totalpages)
 			let axiosData = data.data.punch
 			tableData.value = [] 			// 清空舊的資料再更新

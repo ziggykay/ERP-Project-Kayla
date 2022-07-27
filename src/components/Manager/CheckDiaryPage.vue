@@ -1,7 +1,39 @@
 <template>
-  <!-- filter -->
-  <FilterSelect :parent-selectArr="selectArr" :parent-title="title">
-  </FilterSelect>
+	<!-- filter -->
+	<div class="content-box filter-box">
+		<p class="title"><strong>查看日誌</strong></p> 	  	
+		<hr/>
+		<div class="d-flex flex-wrap">
+	  	<select class="selectInfo me-2" v-model="type" @change="axiosNumber">
+	  		<option value="">請選擇班別</option>
+				<option v-for="(data, index) of selectType" :value="data.item">
+					{{ data.name}}
+				</option>	    	 	
+	  	</select>
+	  	<select class="selectInfo me-2" v-model="number">
+	  		<option value="">請選擇班級</option>
+				<option v-for="(data, index) of selectNumber" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>		 
+	  	<select class="selectInfo me-2" v-model="projectType" @change="axiosProject">
+	  		<option value="">請選擇類型</option>
+				<option v-for="(data, index) of selectProjectType" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>		  	 
+	  	<select class="selectInfo me-2" v-model="project">
+	  		<option value="">請選擇專案</option>
+				<option v-for="(data, index) of selectProjct" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>	  		 	  	  	
+		</div> 		 	
+		<div class="d-flex mt-2 flex-wrap">
+	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
+		</div>
+	</div>
 
   <!-- chart -->
   <div class="content-box overall-box">
@@ -37,89 +69,140 @@
 </template>
 
 <script setup>
-import FilterSelect from "../baseComponents/FilterSelect.vue";
-import { ref, onMounted, computed } from "vue";
+import {ref, onMounted, computed, watch} from "vue"
+import axios from 'axios'
+import VChart from "vue-echarts";
+import Overall from "../baseComponents/Overall.vue";
 
-const date = ref();
+	const date = ref(""); 	// date
+	onMounted(() => {
+    const startDate = new Date(2021, 11, 16);
+    const endDate = new Date(2022, 4, 27)
+    date.value = [startDate, endDate]	
+	})
+	watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
+		for(let i = 0; i <= date.value.length - 1; i++){
+			date.value[i] = newVal[i].toISOString().split('T')[0] 
+		}
+	});
 
-// For demo purposes assign range from the current date
-onMounted(() => {
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-  date.value = [startDate, endDate];
-  return Date;
-});
-const selectArr = ref([
-  {
-    selected: "class",
-    data: [
-      {
-        name: "班級",
-        item: "class",
-      },
-      {
-        name: "前端班",
-        item: "fn",
-      },
-      {
-        name: "數據班",
-        item: "se",
-      },
-      {
-        name: "雲端班",
-        item: "dv",
-      },
-    ],
-  },
-  {
-    selected: "grade",
-    data: [
-      {
-        name: "班別",
-        item: "grade",
-      },
-      {
-        name: "102",
-        item: "102",
-      },
-      {
-        name: "103",
-        item: "103",
-      },
-      {
-        name: "211",
-        item: "211",
-      },
-    ],
-  },
-  {
-    selected: "month",
-    data: [
-      {
-        name: "今日",
-        item: "today",
-      },
-      {
-        name: "本月",
-        item: "month",
-      },
-    ],
-  },
-  {
-    selected: "project",
-    data: [
-      {
-        name: "專案",
-        item: "project",
-      },
-      {
-        name: "產品",
-        item: "product",
-      },
-    ],
-  },
-]);
-const title = ref("查看日誌");
+	const type = ref("") // dynamic select option
+	const number = ref("")
+	const project = ref("")
+	const projectType = ref("")// fix select option
+
+
+	const selectType = ref([]) // dynamic select option value
+	const selectNumber = ref([])
+	const selectProjct = ref([])
+	const selectDate = ref([
+		{
+			name: "請選擇日期範圍",
+			item: ""
+		},					
+		{
+			name: "今日",
+			item: "today"
+		},
+		{
+			name: "本月",
+			item: "month"
+		}				 		 // fix select option	value //fix slect option value //fix select option value
+	]);
+	const selectProjectType = ref([
+		{
+			name: "專案",
+			item: "專案"
+		},					
+		{
+			name: "產品",
+			item: "產品"
+		},
+	])		
+
+	const axiosType = async() =>{
+		// clear  option valeu
+		selectType.value = []
+		selectNumber.value = []
+		type.value = ''
+		number.value = ''
+		let href = 'http://54.186.56.114:8081/Getdatalist'
+
+		try{
+			let { data } = await axios.post(href)
+			let type = data.data.type
+
+
+			for(let i = 0; i < type.length; i++){
+				selectType.value.push({
+					name: type[i],
+					item: type[i]
+				})
+			}
+		}
+		catch{
+			alert("資料錯誤")
+		}
+	}		
+	axiosType()
+
+	const axiosNumber = async() =>{
+		// clear  option valeu
+		selectNumber.value = []
+		number.value = ''	
+		let href = 'http://54.186.56.114:8081/Getdatalist'
+
+		if(type.value !== ""){
+			try{
+				let postData = {
+					type: type.value
+				}
+				let { data } = await axios.post(href, postData)
+				
+				let number = data.data.number
+				for(let i = 0; i < number.length; i++){
+					selectNumber.value.push({
+						name: number[i],
+						item: number[i]
+					})
+				}
+			}
+			catch(e){
+				console.log(e)
+				alert("資料錯誤")
+			}		
+		}
+		else{
+			alert("請選擇資料")
+		}
+	}
+	const axiosProject = async() =>{
+		let href = "http://54.186.56.114:8081/Getdatalist";
+		selectProjct.value = [];
+		project.value = ''
+		
+		try{
+			let { data } = await axios.get(href)
+			let filterProject = data.data.Project.filter((item)=>{
+				return item.Status == projectType.value
+			})
+			for(let i = 0; i <= filterProject.length; i++){
+				selectProjct.value.push({
+					name: filterProject[i].Project,
+					item: filterProject[i].Project
+				})
+			}
+		}
+		catch(e){
+			console.log(e)
+		}
+	}
+
+
+
+
+
+
 
 const items = ref([
   {
@@ -144,6 +227,21 @@ const items = ref([
 </script>
 
 <style lang="scss" scoped>
+.filter-box {
+  height: auto;
+  width: auto;
+  .selectInfo {
+    width: 100px;
+    height: 38px;
+    background-color: #e9f2ff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-height {
+    height: 38px;
+  }
+}		
 .overall-box {
   width: auto;
   height: auto;

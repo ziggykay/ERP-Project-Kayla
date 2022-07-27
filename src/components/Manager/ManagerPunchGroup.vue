@@ -88,6 +88,7 @@
 	import axios from 'axios'
 	import VChart from "vue-echarts";
 	import Overall from "../baseComponents/Overall.vue";
+	
 	// data
 	// grade
 	const date = ref(""); 	// date
@@ -129,6 +130,7 @@
 		type.value = ''
 		number.value = ''
 		let href = 'http://54.186.56.114:8081/Getdatalist'
+
 		try{
 			let { data } = await axios.post(href)
 			let type = data.data.type
@@ -159,6 +161,7 @@
 					type: type.value
 				}
 				let { data } = await axios.post(href, postData)
+				
 				let number = data.data.number
 				for(let i = 0; i < number.length; i++){
 					selectNumber.value.push({

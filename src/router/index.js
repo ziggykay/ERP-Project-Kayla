@@ -92,9 +92,10 @@ const routes = [
     component: () => import('../views/Manager/AccountCheckView.vue')
   },
   {
-    path: '/manager/accountcheck/:id',
+    path: '/manager/accountcheck/user',
     name: 'AccountCheckId',
-    component: () => import('../views/Manager/UserInfoView.vue')
+    component: () => import('../views/Manager/UserInfoView.vue'),
+		props: (route) => route.params
   },
   // {
   //   path: '/manager/userinfo',
