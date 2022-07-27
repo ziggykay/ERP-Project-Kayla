@@ -1,17 +1,24 @@
 <template>
+  <router-link to="/manager/checkdiaryselect" class="back">
+		<div>
+			<i class="fa-solid fa-arrow-left">
+			</i> 
+			回列表頁
+		</div>        	
+  </router-link>	
   <div class="d-flex justify-content-center">
     <div class="content-box-outter">
       <div class="title border-bottom p-2 fw-bold">日誌詳情</div>
       <div class="d-flex justify-content-center">
         <div class="content-box">
-          <p class="m-3">2022/06/30 17:21</p>
+          <p class="m-3">{{ user.Time }}</p>
           <div class="d-flex justify-content-evenly mt-3">
             <div>
-              <h3 class="p-2 fw-bold">A專案</h3>
-              <p>Class : fn102</p>
-              <p>Number : 001</p>
-              <p>Name : 王小明</p>
-              <p>Email : Wang@test.com</p>
+              <h3 class="p-2 fw-bold">{{ user.Project }}</h3>
+              <p>Class : {{ user.Class }}</p>
+              <p>Number : {{ user.Id }}</p>
+              <p>Name : {{ user.Name }}</p>
+              <p>Email : {{ user.Email }}</p>
             </div>
             <div>
               <img
@@ -23,7 +30,7 @@
           </div>
           <div class="d-flex justify-content-center">
             <p class="pt-0 pt-md-4 col-10">
-              完成粗切、頁面切換功能，下午開了座標擷取轉換案跟發想產品-貓咖地圖專案的會議，大致分工完成了，接下來就是後續的討論，一下子事情又變好多唷
+            	{{ user.Content }}
             </p>
           </div>
         </div>
@@ -44,7 +51,17 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import {ref, onMounted, computed, watch} from "vue"	
+const props = defineProps({
+  parentUser:{
+    type: Object,
+  },		
+})
+const user = ref(props.parentUser)
+// console.log(user.value)
+
+</script>
 
 <style lang="scss" scoped>
 .content-box-outter {

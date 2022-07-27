@@ -2,10 +2,17 @@
   <div class="content-box overall-box">
     <div class="py-2 checkBoxInner">
       <div>
-        <!-- TODO:直接套用History可能會有Bug -->
-        <a href="javascript:history.back()" class="back"
+        <router-link to="/manager/accountcheck" class="back">
+					<div>
+						<i class="fa-solid fa-arrow-left">
+						</i> 
+						回列表頁
+					</div>        	
+        </router-link>
+<!-- TODO:直接套用History可能會有Bug -->
+<!--<a href="javascript:history.back()" class="back"
           ><div><i class="fa-solid fa-arrow-left"></i> 回列表頁</div></a
-        >
+        > -->
       </div>
       <div class="d-flex align-items-center justify-content-between">
         <div class="between mx-2">
@@ -19,15 +26,6 @@
       </div>
       <hr />
       <div>
-<!--         <div class="mt-2 d-flex">
-          <div
-            class="innerTitle align-self-center mx-2 text-primary text-center" 
-          >
-            學號
-          </div>
-
-          <input class="content-box-border mx-3" type="text" v-model="id" :disabled="disableStatus" />
-        </div> -->
         <div class="mt-2 d-flex">
           <div
             class="innerTitle align-self-center mx-2 text-primary text-center"
@@ -55,15 +53,6 @@
 
           <input class="content-box-border mx-3" type="text" v-model="name" :disabled="disableStatus"/>
         </div>
-<!--         <div class="mt-2 d-flex">
-          <div
-            class="innerTitle align-self-center mx-2 text-primary text-center"
-          >
-            帳號
-          </div>
-
-          <input class="content-box-border mx-3" type="text" />
-        </div> -->
         <div class="mt-2 d-flex">
           <div
             class="innerTitle align-self-center mx-2 text-primary text-center"
@@ -84,7 +73,7 @@
         </div>
       </div>
       <div class="text-end mt-3">
-        <button type="button" class="m-2 btn btn-primary cancel-btn">
+        <button type="button" class="m-2 btn btn-primary cancel-btn"  @click="delUser">
           <i class="fa-solid fa-trash-can"></i>
           刪除帳號
         </button>
@@ -141,7 +130,24 @@ const submitEdit = async()=>{
 		alert("資料更新失敗")
 	}
 }
-
+const delUser = async()=>{
+	let href = 'http://54.186.56.114:8081/account'
+	let yes = confirm('確定要整個刪除該商品嗎？！');
+	if(yes){
+		try{
+			let { data } = await axios.delete(href, {data: {
+				Name: name.value,
+				number: grade.value,
+				type: group.value
+			}})
+			alert("已刪除該筆資料!")
+		}
+		catch(e){
+			alert("刪除失敗!")
+			console.log(e)
+		}		
+	}	
+}
 
 </script>
 

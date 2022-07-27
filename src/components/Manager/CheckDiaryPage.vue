@@ -30,15 +30,14 @@
 	  	</select>	  		 	  	  	
 		</div> 		 	
 		<div class="d-flex mt-2 flex-wrap">
-	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range fixedStart/>
 	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
 		</div>
 	</div>
-
   <!-- chart -->
   <div class="content-box overall-box">
     <div class="py-2 checkBoxInner">
-      <div v-for="data in items" class="content-box-border checkDiv d-flex">
+      <div v-for="(data, index) of diaryData" class="content-box-border checkDiv d-flex">
         <div class="d-flex bigText">
           <div class="text align-self-center">
             <div>
@@ -57,11 +56,12 @@
           </div>
         </div>
         <div class="align-self-center">
-          <router-link
-            class="checkBtn btn btn-primary confirm-btn"
-            to="/user/checkSelfDiary"
-            >查看</router-link
-          >
+	        <button
+	          class="btn btn-primary confirm-btn"
+	          @click="checkUserInfo(data)"
+	        >
+	          詳細資訊
+	        </button>
         </div>
       </div>
     </div>
@@ -73,157 +73,169 @@ import {ref, onMounted, computed, watch} from "vue"
 import axios from 'axios'
 import VChart from "vue-echarts";
 import Overall from "../baseComponents/Overall.vue";
+import { useRouter, useRoute } from 'vue-router'
 
-	const date = ref(""); 	// date
-	onMounted(() => {
-    const startDate = new Date(2021, 11, 16);
-    const endDate = new Date(2022, 4, 27)
-    date.value = [startDate, endDate]	
-	})
-	watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
-		for(let i = 0; i <= date.value.length - 1; i++){
-			date.value[i] = newVal[i].toISOString().split('T')[0] 
-		}
-	});
+	
+  const router = useRouter()
+// ==========================================================
+// select option data
+const date = ref(""); 	// date
+onMounted(() => {
+  const startDate = new Date(2022, 6, 2);
+  const endDate = new Date(2022, 6, 31)
+  date.value = [startDate, endDate]	
+})
+watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
+	for(let i = 0; i <= date.value.length - 1; i++){
+		date.value[i] = newVal[i].toISOString().split('T')[0] 
+	}
+});
 
-	const type = ref("") // dynamic select option
-	const number = ref("")
-	const project = ref("")
-	const projectType = ref("")// fix select option
-
-
-	const selectType = ref([]) // dynamic select option value
-	const selectNumber = ref([])
-	const selectProjct = ref([])
-	const selectDate = ref([
-		{
-			name: "請選擇日期範圍",
-			item: ""
-		},					
-		{
-			name: "今日",
-			item: "today"
-		},
-		{
-			name: "本月",
-			item: "month"
-		}				 		 // fix select option	value //fix slect option value //fix select option value
-	]);
-	const selectProjectType = ref([
-		{
-			name: "專案",
-			item: "專案"
-		},					
-		{
-			name: "產品",
-			item: "產品"
-		},
-	])		
-
-	const axiosType = async() =>{
-		// clear  option valeu
-		selectType.value = []
-		selectNumber.value = []
-		type.value = ''
-		number.value = ''
-		let href = 'http://54.186.56.114:8081/Getdatalist'
-
-		try{
-			let { data } = await axios.post(href)
-			let type = data.data.type
+const type = ref("") // dynamic select option
+const number = ref("")
+const project = ref("")
+const projectType = ref("")// fix select option
 
 
-			for(let i = 0; i < type.length; i++){
-				selectType.value.push({
-					name: type[i],
-					item: type[i]
-				})
-			}
-		}
-		catch{
-			alert("資料錯誤")
-		}
-	}		
-	axiosType()
+const selectType = ref([]) // dynamic select option value
+const selectNumber = ref([])
+const selectProjct = ref([])
+const selectDate = ref([
+	{
+		name: "請選擇日期範圍",
+		item: ""
+	},					
+	{
+		name: "今日",
+		item: "today"
+	},
+	{
+		name: "本月",
+		item: "month"
+	}				 		 // fix select option	value //fix slect option value //fix select option value
+]);
+const selectProjectType = ref([
+	{
+		name: "專案",
+		item: "專案"
+	},					
+	{
+		name: "產品",
+		item: "產品"
+	},
+])		
 
-	const axiosNumber = async() =>{
-		// clear  option valeu
-		selectNumber.value = []
-		number.value = ''	
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+const axiosType = async() =>{
+	// clear  option valeu
+	selectType.value = []
+	selectNumber.value = []
+	type.value = ''
+	number.value = ''
+	let href = 'http://54.186.56.114:8081/Getdatalist'
 
-		if(type.value !== ""){
-			try{
-				let postData = {
-					type: type.value
-				}
-				let { data } = await axios.post(href, postData)
-				
-				let number = data.data.number
-				for(let i = 0; i < number.length; i++){
-					selectNumber.value.push({
-						name: number[i],
-						item: number[i]
-					})
-				}
-			}
-			catch(e){
-				console.log(e)
-				alert("資料錯誤")
-			}		
-		}
-		else{
-			alert("請選擇資料")
+	try{
+		let { data } = await axios.post(href)
+		let type = data.data.type
+
+
+		for(let i = 0; i < type.length; i++){
+			selectType.value.push({
+				name: type[i],
+				item: type[i]
+			})
 		}
 	}
-	const axiosProject = async() =>{
-		let href = "http://54.186.56.114:8081/Getdatalist";
-		selectProjct.value = [];
-		project.value = ''
-		
+	catch{
+		alert("資料錯誤")
+	}
+}		
+axiosType()
+
+const axiosNumber = async() =>{
+	// clear  option valeu
+	selectNumber.value = []
+	number.value = ''	
+	let href = 'http://54.186.56.114:8081/Getdatalist'
+
+	if(type.value !== ""){
 		try{
-			let { data } = await axios.get(href)
-			let filterProject = data.data.Project.filter((item)=>{
-				return item.Status == projectType.value
-			})
-			for(let i = 0; i <= filterProject.length; i++){
-				selectProjct.value.push({
-					name: filterProject[i].Project,
-					item: filterProject[i].Project
+			let postData = {
+				type: type.value
+			}
+			let { data } = await axios.post(href, postData)
+			
+			let number = data.data.number
+			for(let i = 0; i < number.length; i++){
+				selectNumber.value.push({
+					name: number[i],
+					item: number[i]
 				})
 			}
 		}
 		catch(e){
 			console.log(e)
-		}
+			alert("資料錯誤")
+		}		
 	}
-
-
-
-
-
-
-
-const items = ref([
-  {
-    Time: "2022-07-18",
-    Name: "AAA",
-    Content:
-      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
-  },
-  {
-    Time: "2022-07-18",
-    Name: "AAA",
-    Content:
-      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
-  },
-  {
-    Time: "2022-07-18",
-    Name: "AAA",
-    Content:
-      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
-  },
-]);
+	else{
+		alert("請選擇資料")
+	}
+}
+const axiosProject = async() =>{
+	let href = "http://54.186.56.114:8081/Getdatalist";
+	selectProjct.value = [];
+	project.value = ''
+	
+	try{
+		let { data } = await axios.get(href)
+		let filterProject = data.data.Project.filter((item)=>{
+			return item.Status == projectType.value
+		})
+		filterProject.forEach(function(item, index){
+			selectProjct.value.push({
+				name: item.Project,
+				item: item.Project
+			})			
+		})
+	}
+	catch(e){
+		console.log(e)
+	}
+}
+// ============================================================
+// diary data
+const diaryData = ref([])
+const search = async() =>{
+	let href = 'http://54.186.56.114:8081/ReadDiaryLog'
+	let postData = {
+		date_from: date.value[0],
+		date_to: date.value[1],
+		number: number.value,
+		project: project.value,
+		type: type.value
+	}
+	try{
+		diaryData.value = []
+		let { data } = await axios.post(href, postData)
+		// console.log(data.data)
+		data.data.forEach(function(item, index){
+			diaryData.value.push(item)
+		})
+	}
+	catch(e){
+		console.log(e)
+	}
+}
+// =========================================================
+// to  /user/checkSelfDiary"
+function checkUserInfo(data) {
+  router.push({
+    name: "CheckSelfDiary",
+    params: {
+    	user: JSON.stringify(data) 
+    },
+  });	
+}
 </script>
 
 <style lang="scss" scoped>

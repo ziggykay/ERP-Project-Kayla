@@ -8,7 +8,21 @@
 
 	<template v-if="isChart">
 		<!-- filter -->
-	  <FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
+		<div class="content-box filter-box">
+			<p class="title"><strong>使用者出勤紀錄資訊</strong></p> 	  	
+			<hr/>
+			<div class="d-flex flex-wrap">		 	  	
+	<!-- 	  	<select class="selectInfo me-2">
+					<option v-for="(data, index) of selectDate" :value="data.item">
+						{{ data.name }}
+					</option>	      	 	
+		  	</select>		 -->	  	
+			</div>  	
+			<div class="d-flex mt-2 flex-wrap">
+		  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+		  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
+			</div>
+		</div>	
 	  
 	  <!-- overall -->
 	  <Overall :parent-data="AttendanceData">
@@ -59,34 +73,39 @@
 
 	// chartCopmponent
 	// filter-data
-	const selectArr = ref([
-		[
-			{
-				name: "請選擇日期",
-				item: ""
-			},		
-			{
-				name: "今日",
-				item: "today"
-			},
-			{
-				name: "本月",
-				item: "month"
-			}				 		
-		]
-	]);	
-	const title = "使用者出勤紀錄資訊"
-
-	const choseSelect = ref()
-	const userData = (val)=>{
-		choseSelect.value = {}
-		choseSelect.value = {
-			startdate: val[0][0],
-			stopdate: val[0][1],
-			cur :val[1][0]
+	const date = ref(""); 	// date
+	onMounted(() => {
+    const startDate = new Date(2021, 11, 16);
+    const endDate = new Date(2022, 4, 27)
+    date.value = [startDate, endDate]	
+	})
+	watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
+		for(let i = 0; i <= date.value.length - 1; i++){
+			date.value[i] = newVal[i].toISOString().split('T')[0] 
 		}
-	}
+	});
+	const type = ref("fn")
+	const number = ref('101')	
+	// const group = ref('fn101')
+	const	name = ref('Rossen') 	
 
+	const selectDate = ref([
+		{
+			name: "請選擇日期範圍",
+			item: ""
+		},					
+		{
+			name: "今日",
+			item: "today"
+		},
+		{
+			name: "本月",
+			item: "month"
+		}				 		// fix select option	value
+	]);		
+
+
+//chart and overall =========================================
 	// AttendanceData
 	const AttendanceData = ref([
 		{
@@ -157,21 +176,20 @@
 	    }
 	  ],	  		
 	})
-	// get axios data
-	const doAxios = async(group, startdate, stopdate, cur, name)=>{
+
+	const search = async()=>{
 		// console.log(cur)
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"	
 		let axiosData = ""
 
 		try{
-			if(cur == ''){
-				let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})	
-				axiosData = data.data
-			}
-			else{
-				let {data} = await axios.get(href, { params: { group, cur, name}})	
-				axiosData = data.data				
-			}					
+			let {data} = await axios.get(href, { params: { 
+				group: type.value+number.value, 
+				startdate: date.value[0], 
+				stopdate: date.value[1], 
+				name: name.value
+			}})	
+			axiosData = data.data			
 			// console.log(axiosData)
 			
 			// over all
@@ -195,29 +213,19 @@
 		}
 		catch{
 			alert("資料錯誤")
-		}		
+		}	
 	}
-	watch(choseSelect, (newVal, oldVal)=>{
-		let group = 'fn101'
-		let name = 'Rossen' 		
-		// console.log(newVal)
-		doAxios(group, newVal.startdate, newVal.stopdate, newVal.cur, name)
-	})
-
-
+	// =========================================================
 	// isChart
 	const isChart = ref(true);
 	const changeShow = () => {
 		isChart.value = !isChart.value
 	}
-
+	// =========================================================
 	// tableComponent
 	const selectTabelArr = ref([]);	  	 
 	const getSelectTabelArr = async() =>{
 		let href = 'http://localhost:80/api/diary/account'
-		let type = "fn"
-		let number = '101'
-
 		try{
 			// let { data } = await axios.get(href, { params: { type, number}})			
 			selectTabelArr.value = [
@@ -327,39 +335,54 @@
 </script>
 
 <style lang="scss" scoped >  
-	.boxContainer{
-		margin: 1rem;
+.filter-box {
+  height: auto;
+  width: auto;
+  .selectInfo {
+    width: 100px;
+    height: 38px;
+    background-color: #e9f2ff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+.btn-height {
+  height: 38px;
+}
+}		
+.boxContainer{
+	margin: 1rem;
+}
+.overall-box{
+  width: auto;
+  height: auto;
+  .selectInfo{
+  	width: 100px;
+  	height: 38px;
+  	background-color: #E9F2FF;
+  	border-radius: 4px;
+  	border: none;
+  	cursor: pointer;
+  };
+}	
+.shadow{
+	box-shadow: 3px 3px 2.5px 2.5px rgb(179, 175, 175);
+}
+.dateHeight{
+	height: auto;
+}
+.chartContainer{
+	height: 100vh;
+	.chartHeight{
+		height: 100%
 	}
-	.overall-box{
-	  width: auto;
-	  height: auto;
-	  .selectInfo{
-	  	width: 100px;
-	  	height: 38px;
-	  	background-color: #E9F2FF;
-	  	border-radius: 4px;
-	  	border: none;
-	  	cursor: pointer;
-	  };
-	}	
-	.shadow{
-		box-shadow: 3px 3px 2.5px 2.5px rgb(179, 175, 175);
-	}
-	.dateHeight{
-		height: auto;
-	}
-	.chartContainer{
-		height: 100vh;
-		.chartHeight{
-			height: 100%
-		}
-	}	
-	.tableContainer{
-	  width: auto;
-	  height: 100vh;
-	  .tableInfo{
-	  	height: 80vh;
-	  	overflow-y: auto;
-	  }
-	}		
+}	
+.tableContainer{
+  width: auto;
+  height: 100vh;
+  .tableInfo{
+  	height: 80vh;
+  	overflow-y: auto;
+  }
+}		
 </style>

@@ -247,6 +247,7 @@ import axios from "axios";
 		}
   }
 // =================================================================
+// get checkpage data
 	const usersData = ref([])
 	const search = async()=>{
 		let href = 'http://54.186.56.114:8081/account'
@@ -289,6 +290,7 @@ import axios from "axios";
 
 	}
 // ========================================================================
+// to checkUserInfo
 function checkUserInfo(data) {
   router.push({
     name: "AccountCheckId",
@@ -296,12 +298,6 @@ function checkUserInfo(data) {
     	user: JSON.stringify(data) 
     },
   });	
-	// router.push({
-	// 	name: "AccountCheckId",
-	// 	params: {
-	// 		user: data,
- //    },
-	// });
 }
 </script>
 

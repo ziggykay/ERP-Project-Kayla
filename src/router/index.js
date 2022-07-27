@@ -42,7 +42,8 @@ const routes = [
   {
     path: '/user/checkselfdiary',
     name: 'CheckSelfDiary',
-    component: () => import('../views/User/CheckSelfDiaryView.vue')
+    component: () => import('../views/User/CheckSelfDiaryView.vue'),
+		props: (route) => route.params
   },
   // ========== manager-page ============== 
   {
