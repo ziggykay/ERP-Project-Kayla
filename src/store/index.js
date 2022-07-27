@@ -2,122 +2,102 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 export default createStore({
     state: {
-        // diary: [
-        //     {
-
-        //     },
-        // ],
         unreplieds: [
             {
                 id: 1,
                 LeavingTime: '2022-06-06',
                 Name: 'Jay',
                 Title: '電腦螢幕打不開',
-                question:
-                {
-                    content: '電腦螢幕打不開，請問能幫忙維修嗎',
-                    responseBox: ""
-                },
+
+                content: '電腦螢幕打不開，請問能幫忙維修嗎',
+                responseBox: "zz"
+
             },
             {
                 id: 2,
                 LeavingTime: '2022-06-09',
                 Name: 'Jay',
                 Title: '教室冷氣故障',
-                question:
-                {
-                    content: '教室冷氣故障，請問能幫忙維修嗎',
-                    responseBox: ""
-                },
+
+
+                content: '教室冷氣故障，請問能幫忙維修嗎',
+                responseBox: "cc"
+
             },
         ],
-        replieds: [
-            {
-                id: 3,
-                LeavingTime: '2022-06-12',
-                Name: 'May',
-                Title: '電腦螢幕有殘影',
-                question:
-                {
-                    content: '電腦螢幕有殘影，請問能幫忙維修嗎',
-                    responseBox: "我們會盡快找人去修理，請您耐心等候。"
-                },
-            },
-            {
-                id: 4,
-                LeavingTime: '2022-06-20',
-                Name: 'Penny',
-                Title: '教室冷氣故障',
-                question:
-                {
-                    content: '教室冷氣故障，請問能幫忙維修嗎',
-                    responseBox: "我們收到您的問題了，這周我們會找人去修理。"
-                },
-            },
-        ],
+        replieds: [],
         tempResponse: [],
         tempResponseItem: [],
-        response: [],
-        test: 'test'
 
 
 
     },
     getters: {
+        // unreplieds
+        unrepliedsid: (state) => {
+            return state.unreplieds.filter(u => u.id)
+        },
+        unrepliedsLength: (state, getters) => {
+            return getters.unrepliedsid.length
+        },
         unrepliedsDate: state => {
             return state.unreplieds.filter(u => u.LeavingTime)
         },
         unrepliedsDateCount: (state, getters) => {
             return getters.unrepliedsDate.length
         },
+        //暫存區
+        tempResponse: state => {
+            return state.tempResponse
+        },
+        //replieds
+        replieds: state => {
+            return state.replieds
+        },
         repliedsDate: state => {
             return state.replieds.filter(r => r.LeavingTime)
         },
-        tempResponseItem: (state) => {
-            return state.tempResponse.map(
-                itemId => state.unreplieds.find(
-                    unreplied => unreplied.id === itemId
-                )
-            )
+        tempItem: (state) => {
+            return state.unreplieds.map(u => u.id)
         }
     },
     mutations: {
-        addTempResponse(state, responseText) {
-            state.tempResponse.push(responseText)
+        //抓取unreplieds裡的值
+        updateRes(state, endAns) {
+            // let target = state.unreplieds.filter(u => u.id)
+            // console.log(target)
+            // state.replieds.push(data)
+            state.replieds.push({ endAns })
         },
-        addResponse(state, responseText) {
-            state.response.push(responseText)
+        addTempResponse(state, temp) {
+            state.tempResponse.push({ temp })
         },
-        removeFromTemp(state, payload) {
-            let indexToDelete = state.tempResponse.indexOf(Number(payload));
-            state.tempResponse.splice(indexToDelete, 1)
+        removeFromTemp(state) {
+            // state.unreplieds.forEach(function (data, i) {
+            //     data == state.activeData && state.unreplieds.splice(i, 1)
+            // })
+            let indexToDelete = state.unreplieds.indexOf(state.unreplieds);
+            state.unreplieds.splice(indexToDelete, 1)
+            state.payload = state.unreplieds[0] || {}
+            // for (let i in state.unreplieds) {
+            //     if (state.unreplieds[i] === state.activeUnreplied) {
+            //         state.unreplieds.splice(i, 1)
+            //     }
+            // }
         },
-        // GET_REPLIEDS(state, replied) {
-        //     state.replied = replied
-        // }
-        // CreatedProject(state, status) {
-        //     state.diary.Project = status;
-        // }
     },
     actions: {
-        test() {
-            console.log(getters.unrepliedId)
+        //更新到結案區
+        toggleRes({ commit }, payload) {
+            commit("updateRes", payload);
         },
-        // loadEndMessage() {
-        //     axios
-        //         .get('http://54.186.56.114:8081/Endmessage')
-        //         .then(data => {
-        //             console.log(data.data)
-        //             let replied = data.data
-        //             commit('GET_REPLIEDS', replied)
-        //         })
-        //         .catch(error => {
-        //             console.log(error)
-        //         })
-        // }
-        // updateDiary(context, status) {
-        //     context.commit("CreatedProject", status);
-        // }
+        //加到暫存
+        toggleTempRes({ commit }, payload) {
+            commit("addTempResponse", payload);
+        },
+        toggleremove({ commit }, payload) {
+            commit('removeFromTemp', payload)
+        },
     }
 })
 
