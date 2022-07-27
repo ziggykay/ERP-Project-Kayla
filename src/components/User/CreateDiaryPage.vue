@@ -22,8 +22,8 @@
             <!-- <div class=""> -->
             <div v-if="isCreated" class="d-flex completeDiary">
               <div
-                v-for="(item, i) of store.state.diary"
-                :key="i"
+                v-for="(item, index) of store.state.diary"
+                :key="index"
                 class="content-box-border project plates d-flex flex-column"
               >
                 <div class="project-name text-center align-self-center mt-4">
@@ -34,7 +34,7 @@
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-pen-to-square mx-1"></i></a
                   ></span>
-                  <span
+                  <span @click="removeDiary(index)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-trash-can mx-1"></i></a
                   ></span>
@@ -142,16 +142,19 @@ const store = useStore();
 const workinghour = ref("");
 const Project = ref("");
 const Content = ref("");
-const AllProject = ref([
-  {
+const AllProject = ref([]);
+const submitDiary = () => {
+  AllProject.value.push({
     workinghour: workinghour.value,
     Project: Project.value,
     Content: Content.value,
-  },
-]);
-const submitDiary = () => {
+  });
   store.dispatch("updateDiary", Project.value);
-  addProject();
+  if_else();
+  console.log(AllProject.value);
+};
+const removeDiary = () => {
+  store.dispatch("deleteDiary", Project.value);
 };
 const info = ref([
   {
@@ -162,7 +165,7 @@ const info = ref([
   },
 ]);
 
-function addProject() {
+function if_else() {
   if (AllProject === "") {
     isCreated.value = false;
   } else {

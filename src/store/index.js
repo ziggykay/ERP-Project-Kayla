@@ -2,14 +2,7 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 export default createStore({
     state: {
-        diary: [
-            // {
-            // workinghour: "5",
-            // Project: "",
-            // Imgurl: "888",
-            // Content: "9999"
-            // },
-        ],
+        diary: [],
         unreplieds: [
             {
                 id: 1,
@@ -98,15 +91,16 @@ export default createStore({
             state.diary.push(status);
         },
         removeProject(state, status) {
-            state.diary.splice(state.diary.indexOf(status), 1);
+            state.diary.splice(state.diary.indexOf(Number(status)), 1);
+            // state.diary.filter((diary) => diary.id !== status);
         },
     },
     actions: {
         updateDiary(context, status) {
             context.commit("CreatedProject", status);
         },
-        // test: () => {
-        //     console.log('test')
-        // }
+        deleteDiary(context, status) {
+            context.commit("removeProject", status);
+        },
     },
 });
