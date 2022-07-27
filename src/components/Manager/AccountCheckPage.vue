@@ -87,8 +87,10 @@
 </template>
 <script setup>
 import { ref, watch,  onMounted } from "vue";
-import router from "../../router";
+import { useRouter, useRoute } from 'vue-router'
 import axios from "axios";
+	
+  const router = useRouter()
 
 	const type = ref("") // dynamic select option
 	const number = ref("")
@@ -288,13 +290,10 @@ import axios from "axios";
 	}
 // ========================================================================
 function checkUserInfo(data) {
-	console.log(data)
   router.push({
     name: "AccountCheckId",
     params: {
-    	user: {
-    		tset: "setset"
-    	}
+    	user: JSON.stringify(data) 
     },
   });	
 	// router.push({
