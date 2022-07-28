@@ -23,7 +23,7 @@
                   <!-- 按了回覆改變狀態為新增結案按鈕 -->
                   <div v-else>
                     <button type="button" class="btn btn-primary confirm-btn check-res mt-2 me-1" @click="updateData(data)">回覆</button>
-                    <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2" @click="{close: [updateRes(),endCase(item)]}">結案</button>
+                    <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2" @click="{close: [updateRes(),endCase(data)]}">結案</button>
                   </div>
               </div>
               <div class="d-flex justify-content-between w-50 date-and-title-content ms-5">
@@ -52,13 +52,14 @@
                   ><span>{{selectData.responseBox}}</span>
                 </textarea>
                 </div>
-                <div v-else v-for="tempData of tempResponse">
+                <div v-else >
                   <textarea
                   class="q-content d-block"
                   cols="30"
                   rows="10"
                   placeholder="請輸入修改回覆內容..."
                   v-model="responseText"
+                  v-for="tempData of tempResponse"
                   >{{tempData}}
                 </textarea>
                 </div>
@@ -84,6 +85,7 @@ const emit = defineEmits(["changeShow"]);
 //store
   const store = useStore()
   const replieds = computed(()=> store.state.replieds)
+  console.log(replieds)
   const unreplieds = computed(()=>  store.state.unreplieds)
   const unrepliedsid = store.getters.unrepliedsid
   const unrepliedsLength = store.getters.unrepliedsLength
@@ -105,22 +107,25 @@ const emit = defineEmits(["changeShow"]);
    alert('已結案')
    console.log(unrepliedsid)
  }
+ console.log(unrepliedsid.length)
  //從暫存區消失
- function endCase(item){
-  for(let i=0; i<this.unrepliedsLength;i++){
-    if (this.unrepliedsid[i] == item){
-      this.unrepliedsid.splice(i,1)
+ function endCase(data){
+  console.log(data)
+  for(let i=0; i<unrepliedsid.length;i++){
+    if (this.unreplieds[i] === data){
+        this.unreplieds.splice(i,1)
     }
   }
   // store.dispatch("toggleremove")
+  
  }
   //動態切換顯示資料
   const selectData = ref(unreplieds.value[0]);
   function updateData (data) {
     selectData.value = data;
     console.log(data)
-
   }
+
 </script>
 
 <style lang="scss" scoped>

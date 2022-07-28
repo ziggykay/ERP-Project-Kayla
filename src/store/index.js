@@ -37,9 +37,6 @@ export default createStore({
         unrepliedsid: (state) => {
             return state.unreplieds.filter(u => u.id)
         },
-        unrepliedsLength: (state, getters) => {
-            return getters.unrepliedsid.length
-        },
         unrepliedsDate: state => {
             return state.unreplieds.filter(u => u.LeavingTime)
         },
@@ -76,9 +73,9 @@ export default createStore({
             // state.unreplieds.forEach(function (data, i) {
             //     data == state.activeData && state.unreplieds.splice(i, 1)
             // })
-            let indexToDelete = state.unreplieds.indexOf(state.unreplieds);
-            state.unreplieds.splice(indexToDelete, 1)
-            state.payload = state.unreplieds[0] || {}
+            // let indexToDelete = state.unreplieds.indexOf(state.unreplieds);
+            // state.unreplieds.splice(indexToDelete, 1)
+            // state.payload = state.unreplieds[0] || {}
             // for (let i in state.unreplieds) {
             //     if (state.unreplieds[i] === state.activeUnreplied) {
             //         state.unreplieds.splice(i, 1)
@@ -95,9 +92,9 @@ export default createStore({
         toggleTempRes({ commit }, payload) {
             commit("addTempResponse", payload);
         },
-        toggleremove({ commit }, payload) {
-            commit('removeFromTemp', payload)
-        },
+        // toggleremove({ commit }, payload) {
+        //     commit('removeFromTemp', payload)
+        // },
     }
 })
 
