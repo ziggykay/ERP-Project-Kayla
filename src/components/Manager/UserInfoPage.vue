@@ -88,8 +88,10 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import { useRouter, useRoute } from 'vue-router'
 import axios from "axios"
 
+ const router = useRouter()
 const props = defineProps({
   parentUser:{
     type: Object,
@@ -132,7 +134,7 @@ const submitEdit = async()=>{
 }
 const delUser = async()=>{
 	let href = 'http://54.186.56.114:8081/account'
-	let yes = confirm('確定要整個刪除該商品嗎？！');
+	let yes = confirm('確定要刪除該使用者嗎？！');
 	if(yes){
 		try{
 			let { data } = await axios.delete(href, {data: {
@@ -141,6 +143,7 @@ const delUser = async()=>{
 				type: group.value
 			}})
 			alert("已刪除該筆資料!")
+			router.go()
 		}
 		catch(e){
 			alert("刪除失敗!")

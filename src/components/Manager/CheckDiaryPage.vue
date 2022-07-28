@@ -76,7 +76,7 @@ import Overall from "../baseComponents/Overall.vue";
 import { useRouter, useRoute } from 'vue-router'
 
 	
-  const router = useRouter()
+const router = useRouter()
 // ==========================================================
 // select option data
 const date = ref(""); 	// date
