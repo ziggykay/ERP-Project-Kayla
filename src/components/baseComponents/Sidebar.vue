@@ -68,6 +68,7 @@
 			title: '日誌',
 			href: "/log",
 			iconCss: 'fa-book-open',
+      id: 'user-diary',
 			subTitleArr: [
 				{
 					subTitle: '登打日誌',
@@ -169,7 +170,7 @@
   const currentSidebar = ref()
   const userStatus = ref(
     {
-      access: 2,
+      access: 1,
     }
   )
   const changeSidebar = () => {
@@ -259,6 +260,7 @@
 #menu {
   display: none;
 }
+// 當前頁面
 .active{
   background-color: #558aba;
   padding-left: 20px;

@@ -1,138 +1,110 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <!-- 出勤 -->
-      <div class="content-box punch-box col">
-        <p class="title"><strong>今日打卡狀態</strong></p>
-        <hr />
-        <div class="container d-flex justify-content-around">
-          <p>日期</p>
-          <p>姓名</p>
-          <p>簽到</p>
-          <p>簽退</p>
-        </div>
-        <div
-          class="container d-flex justify-content-around"
-          v-if="punchData[0]"
-        >
-          <p v-for="data in punchData[0]">
-            {{ data }}
-          </p>
-        </div>
-        <div class="container d-flex justify-content-around" v-else>
-          <p>沒有資料</p>
-        </div>
+  <div class="container-fluid d-flex">
+    <!-- 出勤 -->
+    <div class="content-box punch-box col">
+      <p class="title"><strong>今日打卡狀態</strong></p>
+      <hr />
+      <div class="container d-flex justify-content-around">
+        <p>日期</p>
+        <p>姓名</p>
+        <p>簽到</p>
+        <p>簽退</p>
       </div>
+      <div class="container d-flex justify-content-around" v-if="punchData">
+        <p v-for="data in punchData[0]">
+          {{ data }}
+        </p>
+      </div>
+      <div class="container d-flex justify-content-around" v-else>
+        <p>暫無資料</p>
+      </div>
+    </div>
 
-      <!-- 課程 -->
-      <div class="content-box class-box col">
-        <p class="title"><strong>今日課程</strong></p>
-        <hr />
+    <!-- 課程 -->
+    <div class="content-box class-box col">
+      <p class="title"><strong>今日課程</strong></p>
+      <hr/>
+      <div class="" v-if="todayClass!=''">
         <div class="class-card">
           <div class="class-title d-flex justify-content-between">
-            <p class="title">{{ todayClass.name }}</p>
-            <button
-              type="button"
-              class="btn confirm-btn watch-btn"
-              @click="updateVideo"
-            >
-              觀看影片
-            </button>
+            <p class="title">{{ todayClass[0].course }}</p>
           </div>
-          <div class="container d-flex justify-content-around">
-            <p>{{ punchData[0].date }}</p>
-            <p>王小明</p>
-            <p>08:50</p>
-            <p>16:37</p>
-          </div>
-        </div>
-
-        <!-- 課程 -->
-        <div class="content-box class-box col">
-          <p class="title"><strong>今日課程</strong></p>
-          <hr />
-          <div class="class-card">
-            <div class="class-title d-flex justify-content-between">
-              <p class="title">{{ todayClass.name }}</p>
-              <button
-                type="button"
-                class="btn confirm-btn watch-btn"
-                @click="updateVideo"
-              >
-                觀看影片
-              </button>
+          <div class="class-content container-fluid d-flex">
+            <div class="percent-section col-3">
+              <p class="percent-number">{{ Math.floor(todayClass[0].present)/(todayClass[0].totalhours)*100 }}%</p>
+              <p class="percent-desc">{{ todayClass[0].status }}</p>
             </div>
-            <div class="class-content container-fluid d-flex">
-              <div class="percent-section col-3">
-                <p class="percent-number">{{ todayClass.progress }}%</p>
-                <p class="percent-desc">{{ todayClass.status }}</p>
-              </div>
-              <div class="bar-section col-9">
-                <p class="bar-label">總時數：{{ todayClass.time }}小時</p>
-                <p class="bar-label">已完成：{{ todayClass.done }}小時</p>
-                <div class="progress">
-                  <div
-                    class="progress-bar"
-                    role="progressbar"
-                    :style="`width: ${todayClass.progress}%`"
-                    aria-valuenow="25"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  ></div>
-                </div>
+            <div class="bar-section col-9">
+              <p class="bar-label">總時數：{{ todayClass[0].totalhours }}小時</p>
+              <p class="bar-label">已完成：{{ Math.floor(todayClass[0].present) }}小時</p>
+              <div class="progress">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  :style="`width: ${Math.floor(todayClass[0].present)/(todayClass[0].totalhours)*100 }%`"
+                  aria-valuenow="25"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               </div>
             </div>
-          </div>
-          <div class="error" v-if="todayClass == ''">沒有課程可以顯示</div>
-        </div>
-
-        <!-- 日誌 -->
-        <div class="content-box diary-box col-2">
-          <p class="title"><strong>日誌登打狀態</strong></p>
-          <hr />
-          <div class="container">
-            <p>{{ diaryMsg }}</p>
-            <div
-              :class="[diaryData == 0 ? 'diarySign-red' : 'diarySign-green']"
-            ></div>
           </div>
         </div>
       </div>
+      <div class="error" v-else>沒有課程可以顯示</div>
     </div>
 
-    <!-- 職缺 -->
-    <div class="content-box job-box">
-      <p class="title"><strong>推薦職缺</strong></p>
+    <!-- 日誌 -->
+    <div class="content-box diary-box col-1">
+      <p class="title"><strong>日誌登打狀態</strong></p>
       <hr />
       <div class="container">
-        <div class="content-box-border job-card">
-          <p></p>
-          <hr />
-          <p></p>
-        </div>
+        <p>{{ diaryMsg }}</p>
+        <div
+          :class="[diaryMsg == '今日尚未登打' ? 'diarySign-red' : 'diarySign-green']"
+        ></div>
       </div>
     </div>
 
-    <!-- 彈出視窗-系統反應區 -->
-    <div class="serveIcon">
-      <button id="show" class="btn-primary icon" @click="systemReaction">
-        <i class="fa-solid fa-envelopes-bulk text-light"></i>
-      </button>
-      <dialog id="infoModal">
-        <div class="mx-5">
-          <div class="text-primary my-4">系統反應區</div>
-          <div class="dialogTitle mb-3">
-            <input type="text" placeholder="標題 :" />
-          </div>
-          <div class="question mb-3">
-            <textarea type="text" placeholder="請輸入問題..." />
-          </div>
-          <div class="text-end">
-            <button id="close" class="btn btn-primary text-light">close</button>
-          </div>
-        </div>
-      </dialog>
+  </div>
+
+  <!-- 職缺 -->
+  <div class="content-box job-box">
+    <p class="title"><strong>推薦職缺</strong></p>
+    <hr/>
+    <div class="container d-flex job-wrapper">
+      <div class="content-box-border job-card" v-for="data of jobData" :key="data">
+        <p>{{ data.Job }}</p>
+        <hr/>
+        <p>工作地點：{{ data.Region }}</p>
+        <p>技能：{{ data.Skill }}</p>
+        <a :href="data.Url">{{data.Resource}}</a>
+      </div>
     </div>
+  </div>
+
+  <!-- 彈出視窗-系統反應區 -->
+  <div class="serveIcon">
+    <button id="show" class="btn-primary icon" @click="systemReaction">
+      <i class="fa-solid fa-envelopes-bulk text-light"></i>
+    </button>
+    <dialog id="infoModal">
+      <div class="mx-5">
+        <div class="">
+          <div class="text-primary my-4">系統反應區</div>
+          <div id="close" class="close" :click="close">X</div>
+        </div>
+        <div class="dialogTitle mb-3">
+          <input v-model="title" type="text" placeholder="標題 :" />
+        </div>
+        <div class="question mb-3">
+          <textarea v-model="content" type="text" placeholder="請輸入問題..." />
+        </div>
+        <div class="text-end">
+          <button id="send" @click="sendQuestion" class="btn btn-primary text-light">送出</button>
+        </div>
+      </div>
+    </dialog>
   </div>
 </template>
 
@@ -143,72 +115,143 @@ import axios from "axios";
 // punch
 const punchData = ref([]);
 
-const doAxios = async () => {
-  // get axios data
-  let href = "http://localhost:80/api/punch";
-  let startdate = new Date(2022, 2, 19).toISOString().split("T")[0];
-  let stopdate = new Date(2022, 2, 19).toISOString().split("T")[0];
-  let group = "fn101";
-  let name = "Rossen";
+const getTodayPunch = async () => {
+  let href = "http://54.186.56.114:8080/punch";
+  let group = 'dv102';
+  let name = 'Jeff';
 
-  let { data } = await axios.get(href, {
-    params: { group, startdate, stopdate, name },
-  });
-  console.log(data.data.punch[0]);
-
-  punchData.value.push({
-    date: data.data.punch[0].classdate,
-    name: data.data.punch[0].student,
-    in: data.data.punch[0].intime,
-    out: data.data.punch[0].outtime,
-  });
+  let { data } = await axios.get(href, { params: {
+    group: group,
+    cur: 'today',
+    name: name
+  }});
+  punchData.value = data.punch
 };
-doAxios();
+getTodayPunch();
 
 // class
-const todayClass = ref({
-  id: 2,
-  name: "Jquery&Jquery extensions",
-  progress: 100,
-  status: "已完成",
-  time: 40,
-  done: 40,
-});
+const todayClass = ref([]);
+
+const getTodayCourse = async () => {
+  let group = 'fn101'
+  let name = 'Rossen'
+  let href = 'http://54.186.56.114:8080/course'
+  let { data } = await axios.get(href, {params:{
+    group: group,
+    // cur:'today',
+    startdate: '2022-01-12',
+    stopdate: '2022-01-12',
+    name: name
+  }})
+  todayClass.value = data.data.course
+}
+getTodayCourse()
+
 // diary
-const diaryMsg = ref("尚未登打日誌");
-const diaryData = ref(1);
+let name = ref('Jeff')
+let group = ref('dv102')
+
+let diaryMsg = ref("尚未登打日誌");
+
+const getTodayDiary = async () => {
+  let href = `http://54.186.56.114:8081/status/${group.value}/${name}`
+  let { data } = await axios.get(href)
+  diaryMsg.value = data.data.message
+}
+getTodayDiary()
+
 // job
 const jobData = ref([
   {
-    title: "前端工程師",
-    skillSet: ["JavaScript", "BootStrap", "Node.JS"],
-    location: "台北",
-    platform: "104",
+    "Job": "網頁前端工程師",
+    "Region": "台北市",
+    "Resource": "104人力銀行",
+    "Skill": "GIT,VISUAL STUDIO,HTML,JAVASCRIPT,CSS,SASS,REACTJS,VUEJS",
+    "Url": "https://www.104.com.tw/job/7f8cc?jobsource=jolist_c_relevance"
   },
+  {
+    "Job": "資深雲端系統工程師",
+    "Region": "台北市",
+    "Resource": "104人力銀行",
+    "Skill": "LINUX,SHELL,MYSQL,AWS",
+    "Url": "https://www.104.com.tw/job/7idlx?jobsource=jolist_a_relevance"
+  }
 ]);
+
+const getJob = async () => {
+  let href = `http://54.186.56.114:8081/RecommandCareer/${group.value}/${name}`
+  let { data } = await axios.get(href)
+  // console.log(data)
+}
+getJob()
+
+const title = ref('')
+const content = ref('')
+
 // 彈出視窗-系統反應區
-function systemReaction() {
+const systemReaction = () => {
+
   let btn = document.querySelector("#show");
   let infoModal = document.querySelector("#infoModal");
+  let send = document.querySelector("#send");
   let close = document.querySelector("#close");
   btn.addEventListener("click", function () {
     infoModal.showModal();
   });
-  close.addEventListener("click", function () {
+  send.addEventListener("click", function () {
     infoModal.close();
   });
+  // close.addEventListener("click", function () {
+  //   infoModal.close();
+  // });
 }
+
+let infoModal = document.querySelector("#infoModal");
+
+const close = () => {
+  infoModal.close()
+}
+
+const sendQuestion = async () => {
+  let { data } = await axios.post(
+    `http://54.186.56.114:8081/Message/${group}/${name}`,
+    {
+      Title,
+      Content,
+      Access
+    }
+  )
+}
+
+
+
 </script>
 
 <style lang="scss" scoped>
 .inner {
   height: 90vh;
 }
+.filter-box {
+  height: auto;
+  width: auto;
+  .selectInfo {
+    width: 100px;
+    height: 38px;
+    background-color: #e9f2ff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-height {
+    height: 38px;
+  }
+}
 // 彈出視窗-系統反應區
 .serveIcon {
   position: fixed;
   // margin-top: 80%;
-  margin-left: 80%;
+  z-index: 1;
+  margin-right: 10%;
   button.icon {
     width: 50px;
     height: 50px;
@@ -227,6 +270,12 @@ function systemReaction() {
   dialog::backdrop {
     background-color: rgba(24, 24, 24, 0.228);
   }
+  textarea{
+    resize: none;
+  }
+  .text-primary{
+    width: auto;
+  }
   .dialogTitle input {
     width: 100%;
   }
@@ -234,12 +283,15 @@ function systemReaction() {
     width: 100%;
     height: 20vh;
   }
-}
-
-.title {
-  width: auto;
-}
-.punch-box {
+  .close{
+    margin-top: -50px;
+    float: right;
+    color: #74abdd;
+    cursor: pointer;
+    &:hover{
+      color: #000;
+    }
+  }
 }
 .class-box {
   flex-direction: column;
@@ -304,6 +356,11 @@ function systemReaction() {
 .job-box {
   width: auto;
   height: auto;
-  max-height: 100%;
+  .job-wrapper{
+    height: auto;
+    .job-card{
+      height: auto;
+    }
+  }
 }
 </style>
