@@ -170,7 +170,7 @@
   const currentSidebar = ref()
   const userStatus = ref(
     {
-      access: 2,
+      access: 3,
     }
   )
   const changeSidebar = () => {
