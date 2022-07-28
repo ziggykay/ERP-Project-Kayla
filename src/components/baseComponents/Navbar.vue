@@ -26,12 +26,6 @@ import router from '../../router';
   list-style: none;
   box-sizing: border-box;
 }
-body {
-  background-color: #e4ecf0;
-}
-a {
-  text-decoration: none;
-}
 nav {
   background-color: #fff;
   height: 80px;

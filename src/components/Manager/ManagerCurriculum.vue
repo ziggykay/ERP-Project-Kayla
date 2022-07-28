@@ -186,7 +186,9 @@
 		{field:"hours", title:"課程時數"},
 		{field:"part", title:"課程時段"},
 	])
+	
 	const tableData = ref([])
+
 	const search = async(group, month) => {
 		let href = 'http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/curriculum'
 
@@ -212,7 +214,6 @@
 			console.log(e)
 			alert("資料錯誤")
 		}
-
 	}
 </script>
 
