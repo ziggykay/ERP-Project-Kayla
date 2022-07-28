@@ -131,23 +131,17 @@
 		chosePage.value = number		
 	}
 	const tableData = ref([])
-	// get emit data to choseSelect
-	const totalData = (val)=>{
-		choseSelect.value = {}
-		choseSelect.value = {
-			startdate : val[0][0],
-			stopdate : val[0][1],
-			group : val[1][0]+val[1][1],
-			name : val[1][2],
-			status: val[1][3]
-		}
-	}
-
-	const doAxios = async(group, startdate, stopdate, name, status, page)=>{
-		// get axios data
-		let href = "http://localhost:80/api/punch"
-		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name, status, page}})
+	const search = async()=>{
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/punch"
 		try{
+			let {data} = await axios.get(href, { params: { 
+				group: type.value+number.value, 
+				startdate: date.value[0], 
+				stopdate: date.value[1], 
+				name: name.value, 
+				status: status.value,
+				page: chosePage.value
+			}})	
 			tablePage.value = Number(data.data.pagination[0].totalpages)
 			let axiosData = data.data.punch
 			tableData.value = [] 			// 清空舊的資料再更新
@@ -184,5 +178,3 @@
 	  }
 	}		
 </style>
-
-	
