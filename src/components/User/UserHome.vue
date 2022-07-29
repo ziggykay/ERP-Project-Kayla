@@ -82,9 +82,34 @@
       </div>
     </div>
   </div>
-
+  <!-- 彈出視窗-系統反應區-->
+	<button id="show" class="btn-primary icon" @click="systemReaction">
+		<i class="fa-solid fa-envelopes-bulk text-light"></i>
+	</button>
+	<teleport to="body">
+<!-- 		<div class="back-black" v-if="isDisabled">		
+		</div> -->
+		  <div class="serveIcon" v-if="isDisabled">
+			  <div class="mx-5">
+			    <div class="">
+			      <div class="text-primary my-4">系統反應區</div>
+			      <div id="close" class="close" @click="systemReaction">X</div>
+			    </div>
+			    <div class="dialogTitle mb-3">
+			      <input v-model="title" type="text" placeholder="標題 :" />
+			    </div>
+			    <div class="question mb-3">
+			      <textarea v-model="content" type="text" placeholder="請輸入問題..." />
+			    </div>
+			    <div class="text-end">
+			      <button id="send" @click="sendQuestion" class="btn btn-primary text-light">送出</button>
+			    </div>
+			  </div>
+		  </div>			
+		
+	</teleport>	
   <!-- 彈出視窗-系統反應區 -->
-  <div class="serveIcon">
+<!--   <div class="serveIcon">
     <button id="show" class="btn-primary icon" @click="systemReaction">
       <i class="fa-solid fa-envelopes-bulk text-light"></i>
     </button>
@@ -105,7 +130,7 @@
         </div>
       </div>
     </dialog>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
@@ -188,39 +213,40 @@ getJob()
 const title = ref('')
 const content = ref('')
 
-// 彈出視窗-系統反應區
+//彈出視窗-系統反應區==================================================================== 
+const isDisabled = ref(false)
 const systemReaction = () => {
-
-  let btn = document.querySelector("#show");
-  let infoModal = document.querySelector("#infoModal");
-  let send = document.querySelector("#send");
-  let close = document.querySelector("#close");
-  btn.addEventListener("click", function () {
-    infoModal.showModal();
-  });
-  send.addEventListener("click", function () {
-    infoModal.close();
-  });
+	isDisabled.value = !isDisabled.value
+  // let btn = document.querySelector("#show");
+  // let infoModal = document.querySelector("#infoModal");
+  // let send = document.querySelector("#send");
+  // let close = document.querySelector("#close");
+  // btn.addEventListener("click", function () {
+  //   infoModal.showModal();
+  // });
+  // send.addEventListener("click", function () {
+  //   infoModal.close();
+  // });
   // close.addEventListener("click", function () {
   //   infoModal.close();
   // });
 }
 
-let infoModal = document.querySelector("#infoModal");
+// let infoModal = document.querySelector("#infoModal");
 
-const close = () => {
-  infoModal.close()
-}
+// const close = () => {
+//   infoModal.close()
+// }
 
 const sendQuestion = async () => {
-  let { data } = await axios.post(
-    `http://54.186.56.114:8081/Message/${group}/${name}`,
-    {
-      Title,
-      Content,
-      Access
-    }
-  )
+  // let { data } = await axios.post(
+  //   `http://54.186.56.114:8081/Message/${group}/${name}`,
+  //   {
+  //     Title,
+  //     Content,
+  //     Access
+  //   }
+  // )
 }
 
 
@@ -247,28 +273,32 @@ const sendQuestion = async () => {
   }
 }
 // 彈出視窗-系統反應區
+.back-black{
+	position: fixed;
+	top: 80px;
+	left: 250px;
+	width: 100%;
+	height: 100%;
+	min-height: calc(100vh - 80px); 
+	background:rgba(0, 0, 0, 0.5);
+	z-index: 20;
+}
 .serveIcon {
-  position: fixed;
-  // margin-top: 80%;
-  z-index: 1;
-  margin-right: 10%;
+	// position: absolute;
+	// top: 25%;
+	// left: 25%;
+	background: white;
+  width: 50%;
+  height: 50%;
+  border: none;
+  box-shadow: 0 2px 6px #ccc;
+  border-radius: 10px;
+  z-index: 15;
   button.icon {
     width: 50px;
     height: 50px;
     border: 0 * 9;
     border-radius: 50%;
-  }
-  dialog {
-    width: 50%;
-    height: 50%;
-    border: none;
-    box-shadow: 0 2px 6px #ccc;
-    border-radius: 10px;
-    margin-top: 30vh;
-    margin-left: 30vw;
-  }
-  dialog::backdrop {
-    background-color: rgba(24, 24, 24, 0.228);
   }
   textarea{
     resize: none;
