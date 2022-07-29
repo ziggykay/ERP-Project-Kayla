@@ -1,7 +1,10 @@
 import { createStore } from 'vuex'
-import axios from 'axios'
+import createPersistedState from "vuex-persistedstate";
+
 export default createStore({
     state: {
+        token:'',
+        userInfo:'',
         diary: [
             {
                 // workinghour: "5",
@@ -99,31 +102,24 @@ export default createStore({
         },
         CreatedProject(state, status) {
             state.diary.Project = status;
+        },
+        storeToken(state, token){
+            state.token = token
+        },
+        storeUserInfo(state, info){
+            state.userInfo = info
         }
     },
     actions: {
         updateDiary(context, status) {
             context.commit("CreatedProject", status);
+        },
+        storeToken(context, status){
+            context.commit("storeToken", status);
+        },
+        storeUserInfo(context, status){
+            context.commit("storeUserInfo", status)
         }
-        // GET_REPLIEDS(state, replied) {
-        //     state.replied = replied
-        // }
     },
-    actions: {
-        test() {
-            console.log(getters.unrepliedId)
-        }
-        // loadEndMessage() {
-        //     axios
-        //         .get('http://54.186.56.114:8081/Endmessage')
-        //         .then(data => {
-        //             console.log(data.data)
-        //             let replied = data.data
-        //             commit('GET_REPLIEDS', replied)
-        //         })
-        //         .catch(error => {
-        //             console.log(error)
-        //         })
-        // }
-    }
+    plugins: [createPersistedState()]
 })
