@@ -173,7 +173,8 @@ const empty = ref(true);
 const store = useStore();
 const Workinghour = ref("");
 const Project = ref("");
-
+// const Imgurl = ref("");
+// const Img = getFiles();
 const Content = ref("");
 const AllProject = ref({});
 
@@ -194,11 +195,13 @@ const submitDiary = () => {
       id: uuidv4(),
       Workinghour: Workinghour.value,
       Project: Project.value,
+      // Imgurl: Img,
       Content: Content.value,
     };
     store.dispatch("updateDiary", AllProject.value);
     clearForm();
     ifCreated();
+    // console.log(Img);
   }
 };
 
@@ -271,6 +274,10 @@ function getFiles(e) {
   // console.log(e.target.files[0]);
   console.log(e.target.files[0].name);
 }
+// const getImg = function getFiles(e) {
+//   // console.log(e.target.files[0]);
+//   console.log(e.target.files[0].name);
+// };
 
 // function onFileChange(e) {
 //   var files = e.target.files || e.dataTransfer.files;
