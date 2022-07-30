@@ -332,7 +332,6 @@
   .selectInfo {
     width: 100px;
     height: 38px;
-    background-color: #e9f2ff;
     border-radius: 4px;
     border: none;
     cursor: pointer;
