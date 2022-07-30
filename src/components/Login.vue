@@ -74,6 +74,7 @@ const login = async () => {
 
   let {data} = await axios.post(href, postData)
   try{
+  	console.log(data)
     store.dispatch('storeToken', data.data)
 
     // 解密Token
@@ -94,20 +95,20 @@ const login = async () => {
     console.log(store.state.userInfo)
 
     // 導入頁面
-    // switch (userData.Access) {
-    //   case "1":
-    //     router.push('/user/home')
-    //     break;
-    //   case "2":
-    //     router.push('/manager/home')
-    //     break;
-    //   case "3":
-    //     router.push('/company/home')
-    //     break;
-    //   default:
-    //     router.push('/')
-    //     break;
-    // }
+    switch (userData.Access) {
+      case "1":
+        router.push('/user/home')
+        break;
+      case "2":
+        router.push('/manager/home')
+        break;
+      case "3":
+        router.push('/company/home')
+        break;
+      default:
+        router.push('/')
+        break;
+    }
   }catch{
     console.error();
   }
