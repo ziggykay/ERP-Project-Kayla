@@ -18,11 +18,11 @@
                 <!--  -->
                   <div v-if="tempResponse == ''">
                     <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-                    @click="updateData(data)" >回覆</button>
+                    @click="{responseToTemp: [updateData(data),]}" >回覆</button>
                   </div>
                   <!-- 按了回覆改變狀態為新增結案按鈕 -->
                   <div v-else>
-                    <button type="button" class="btn btn-primary confirm-btn check-res mt-2 me-1" @click="updateData(data)">回覆</button>
+                    <button type="button" class="btn btn-primary confirm-btn check-res mt-2 me-1" @click="{responseForRewrite: [updateData(data), updateTempData(tempData)]}">回覆</button>
                     <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2" @click="{close: [updateRes(),endCase(data)]}">結案</button>
                   </div>
               </div>
@@ -35,7 +35,7 @@
           </div>
           <div>
           <!-- 回覆區 -->
-            <div class="content-box question-box" v-if="selectData.Title!==''">
+            <div class="content-box question-box" v-if="tempResponse!==''">
               <p class="title mb-3 ps-3 fw-bold w-25 text-center">問題</p>
               <p class="q-title">{{selectData.Title}}</p>
               <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
@@ -49,7 +49,7 @@
                   rows="10"
                   placeholder="請輸入回覆內容..."
                   v-model="responseText"
-                  ><span>{{selectData.responseBox}}</span>
+                  ><span>{{tempData}}</span>
                 </textarea>
                 </div>
                 <div v-else >
@@ -57,9 +57,8 @@
                   class="q-content d-block"
                   cols="30"
                   rows="10"
-                  placeholder="請輸入修改回覆內容..."
+                  placeholder="請輸入修改的內容..."
                   v-model="responseText"
-                  v-for="tempData of tempResponse"
                   >{{tempData}}
                 </textarea>
                 </div>
@@ -68,7 +67,7 @@
               <button type="button" class="btn btn-primary confirm-btn check-res mt-2"
                 @click="{send: [changeStatus(),]}" v-if="responseText!==''">送出</button>
               </div>
-              <input type="hidden" v-for="resData of tempResponse">{{resData}}
+              <input type="hidden" v-for="{resData, index} of tempResponse" :key=index>{{resData}}
             </div>
           </div>
         </div>
@@ -93,12 +92,17 @@ const emit = defineEmits(["changeShow"]);
   const unrepliedsDateCount = store.getters.unrepliedsDate.length
   const responseText = ref("")
   const tempResponse = store.getters.tempResponse
+  const tempResponseVal = store.getters.tempResponseVal
   const tempItem = store.getters.tempItem
+  const unrepliedsres = store.getters.unrepliedsres
+  console.log(unrepliedsres)
   console.log(tempItem)
   //回覆至暫存區&&顯示結案按鈕
   function changeStatus() {
-    store.dispatch("toggleTempRes",responseText);
+    store.dispatch("toggleTempRes",responseText.value);
     alert('已回覆');
+    console.log(tempResponse)
+    console.log(responseText.value)
   }
   console.log(unrepliedsid)
   //更新到結案區
@@ -116,16 +120,19 @@ const emit = defineEmits(["changeShow"]);
         this.unreplieds.splice(i,1)
     }
   }
-  // store.dispatch("toggleremove")
-  
+  // store.dispatch("toggleremove") 
  }
   //動態切換顯示資料
   const selectData = ref(unreplieds.value[0]);
   function updateData (data) {
     selectData.value = data;
-    console.log(data)
+    //console.log(data)
   }
-
+  const selectTempData = ref(tempResponse.value);
+  function updateTempData (tempData) {
+    unrepliedsres.value = tempData
+    console.log(responseText)
+}
 </script>
 
 <style lang="scss" scoped>

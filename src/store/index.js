@@ -8,9 +8,8 @@ export default createStore({
                 LeavingTime: '2022-06-06',
                 Name: 'Jay',
                 Title: '電腦螢幕打不開',
-
                 content: '電腦螢幕打不開，請問能幫忙維修嗎',
-                responseBox: "zz"
+                responseBox: ""
 
             },
             {
@@ -18,15 +17,22 @@ export default createStore({
                 LeavingTime: '2022-06-09',
                 Name: 'Jay',
                 Title: '教室冷氣故障',
-
-
                 content: '教室冷氣故障，請問能幫忙維修嗎',
-                responseBox: "cc"
+                responseBox: ""
+
+            },
+            {
+                id: 3,
+                LeavingTime: '2022-06-15',
+                Name: 'Jay',
+                Title: '投影幕故障',
+                content: '投影幕故障，請問能幫忙維修嗎',
+                responseBox: ""
 
             },
         ],
-        replieds: [],
         tempResponse: [],
+        replieds: [],
         tempResponseItem: [],
 
 
@@ -37,6 +43,9 @@ export default createStore({
         unrepliedsid: (state) => {
             return state.unreplieds.filter(u => u.id)
         },
+        unrepliedsidLen: (state, getters) => {
+            return getters.unrepliedsDate.length
+        },
         unrepliedsDate: state => {
             return state.unreplieds.filter(u => u.LeavingTime)
         },
@@ -46,6 +55,9 @@ export default createStore({
         //暫存區
         tempResponse: state => {
             return state.tempResponse
+        },
+        unrepliedsres: state => {
+            return state.unreplieds.filter(u => u.responseBox)
         },
         //replieds
         replieds: state => {
@@ -64,12 +76,17 @@ export default createStore({
             // let target = state.unreplieds.filter(u => u.id)
             // console.log(target)
             // state.replieds.push(data)
-            state.replieds.push({ endAns })
+            state.replieds.push(endAns)
         },
         addTempResponse(state, temp) {
-            state.tempResponse.push({ temp })
+            state.tempResponse.push(temp)
         },
         removeFromTemp(state) {
+            // for (let i = 0; i < unrepliedsid.length; i++) {
+            //     if (this.unreplieds[i] === data) {
+            //         this.unreplieds.splice(i, 1)
+            //     }
+            // }
             // state.unreplieds.forEach(function (data, i) {
             //     data == state.activeData && state.unreplieds.splice(i, 1)
             // })
@@ -95,6 +112,9 @@ export default createStore({
         // toggleremove({ commit }, payload) {
         //     commit('removeFromTemp', payload)
         // },
+        toggleDel({ commit }, payload) {
+            commit("removeFromTemp", payload);
+        },
     }
 })
 
