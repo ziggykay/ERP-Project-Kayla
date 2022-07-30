@@ -1,9 +1,13 @@
 import { createStore } from 'vuex'
-import axios from 'axios'
+import createPersistedState from "vuex-persistedstate";
+
 export default createStore({
     state: {
         diary: [],
-        unreplieds: [
+        token:'',
+        userInfo:[],
+		isLogin: '',
+        unreplied: [
             {
                 id: 1,
                 LeavingTime: '',
@@ -74,6 +78,10 @@ export default createStore({
         }
     },
     mutations: {
+        clearData(state){
+            state.token = ''
+            state.userInfo = []
+        },
         addTempResponse(state, responseText) {
             state.tempResponse.push(responseText)
         },
@@ -102,5 +110,26 @@ export default createStore({
         deleteDiary({ commit }, status) {
             commit("removeProject", status);
         },
+        storeToken(state, token){
+            state.token = token
+        },
+        storeUserInfo(state, info){
+			state.userInfo.push(info)
+            console.log('store info success')
+        },
+        updateDiary(context, status) {
+            context.commit("CreatedProject", status);
+        },
+        storeToken(context, status){
+            context.commit("storeToken", status);
+        },
+        storeUserInfo(context, status){
+			context.commit("storeUserInfo", status);
+            console.log('ready to store info')
+        },
+        clearData(context){
+            context.commit("clearData")            
+        },
     },
-});
+    plugins: [createPersistedState()]
+})

@@ -1,8 +1,8 @@
 <template>
 <div class="container">
   <div class="side-menu">
+
     <li v-for="data of currentSidebar" :key="data">
-    <!-- <li v-for="data of userSideBarData" :key="data"> -->
     	<template v-if="!data.subTitleArr">
     		<router-link :to="data.href" :class="[$route.path == data.href ? 'active' : '' ]">
           <i class="fa-solid" :class="data.iconCss"></i><span>{{ data.title }}</span>
@@ -12,11 +12,11 @@
       <a
         class="collapsed"
         data-bs-toggle="collapse"
-        data-bs-target="#orders-collapse"
+        :data-bs-target="`#${data.id}`"
         aria-expanded="false"
         ><i class="fa-solid" :class="data.iconCss"></i><span>{{ data.title }}</span></a>
-      <div class="collapse" id="orders-collapse">
-        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+      <div class="collapse" :id="data.id">
+        <ul class="btn-toggle-nav list-unstyled sub-btn-wrapper">
           <router-link 
           	v-for="subData of data.subTitleArr" :key="subData"
             :class="[$route.path == subData.href ? 'active' : '' ]"
@@ -38,6 +38,8 @@
 
 <script setup>
 	import { onMounted, ref, watch } from 'vue'
+  import store from "../../store";
+
 	
 	//props 
 	const props = defineProps({
@@ -68,6 +70,7 @@
 			title: '日誌',
 			href: "/log",
 			iconCss: 'fa-book-open',
+      id: 'user-diary',
 			subTitleArr: [
 				{
 					subTitle: '登打日誌',
@@ -97,6 +100,7 @@
       title: '學員出勤紀錄',
       href: "/manager/punch" ,
       iconCss: 'fa-chart-column',
+      id: 'order-punch',
       subTitleArr: [
         {
           subTitle: '出勤圖表',
@@ -121,6 +125,7 @@
       title: '學員資訊',
       href: "/manager/curriculum",
       iconCss: 'fa-book-open',
+      id: 'order-user-info',
       subTitleArr: [
         {
           subTitle: '課表資訊',
@@ -163,22 +168,18 @@
 		}		 		  		 		
 	])
 
-  // 模擬使用者權限
+  // 使用者權限
   const currentSidebar = ref()
-  const userStatus = ref(
-    {
-      access: 1,
-    }
-  )
+  const userStatus = store.state.userInfo[0].Access
   const changeSidebar = () => {
-    switch (userStatus.value.access) {
-      case 1 :
+    switch (userStatus) {
+      case "1" :
         currentSidebar.value = userSideBarData.value
         break;
-      case 2 :
+      case "2" :
         currentSidebar.value = managerSideBarData.value
         break;
-      case 3 :
+      case "3" :
         currentSidebar.value = companySideBarData.value
         break; 
       default:
@@ -200,56 +201,75 @@
 </script>
 
 <style lang="scss" scoped>
-a {
-  text-decoration: none;
-}
 .container{
   width: auto;
   height: 100;
 }
-.side-menu {
-  background-color: #fff;
-  width: 250px;
-  /* min-height: auto; */
-  height: 100%;
-  /*margin-top: 80px;*/
-}
-.side-menu li a.dropdown:hover {
-  background-color: rgb(118, 118, 118);
-}
-.side-menu a {
-  padding: 10px;
-  display: block;
-  line-height: 60px;
-  transition: 0.5s;
-  color: rgb(52, 52, 52);
-}
-.side-menu a:hover {
+
+// 懸浮效果參數
+@mixin hover{
   background-color: #558aba;
   padding-left: 20px;
   color: #fff;
 }
-.side-menu span {
-  font-size: 14px;
-  margin-left: 10px;
+.side-menu {
+  background-color: #fff;
+  width: 250px;
+  min-height: calc(100vh - 80px); 
+  height: 100%;
+  color: rgb(52, 52, 52);
+  i {
+    font-size: 20px;
+    margin-left: 20px;
+  }
+  a{
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    display: block;
+    line-height: 60px;
+    transition: 0.5s;
+    &:hover{
+      @include hover;
+      span{
+        color: #fff;
+      }
+    }
+  }
+  span{
+    font-size: 14px;
+    margin-left: 15px;
+    color: rgb(52, 52, 52);
+    transition: 0.5s;
+  }
+  .Logout {
+    display: none;
+  }
 }
-.side-menu i {
-  font-size: 20px;
-  margin-left: 20px;
+.sub-btn-wrapper{
+  margin-bottom: 0;
+  .sub-btn{
+    font-size: 14px;
+    &:hover{
+      background-color: rgb(118, 118, 118);
+    }
+  }
 }
 #menu {
   display: none;
 }
-.side-menu .Logout {
-  display: none;
-}
+// 當前頁面
 .active{
   background-color: #558aba;
   padding-left: 20px;
+  color: #fff;
   i{
     color: #fff;
   }
   span{
+    color: #fff;
+  }
+  a{
     color: #fff;
   }
 }

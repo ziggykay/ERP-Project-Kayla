@@ -17,6 +17,7 @@
     "vue-echarts": "^6.2.2",
     "vue-router": "^4.0.13",
     "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.1.0",
     "vxe-table": "^4.2.8",
     "xe-utils": "^3.5.4"
   },

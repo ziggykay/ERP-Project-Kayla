@@ -7,24 +7,24 @@
 	  		<option value="">請選擇班別</option>
 				<option v-for="(data, index) of selectType" :value="data.item">
 					{{ data.name}}
-				</option>	    	 	
+				</option>
 	  	</select>
 	  	<select class="selectInfo me-2" v-model="number" @change="axiosName">
 	  		<option value="">請選擇班級</option>
 				<option v-for="(data, index) of selectNumber" :value="data.item">
 					{{ data.name }}
-				</option>	      	 	
+				</option>
 	  	</select>		  
 	  	<select class="selectInfo me-2" v-model="name">
 	  		<option value="">請選擇學生</option>
 				<option v-for="(data, index) of selectName" :value="data.item">
 					{{ data.name }}
-				</option>	      	 	
-	  	</select>	
+				</option>
+	  	</select>
 	  	<select class="selectInfo me-2"  v-model="status">
 				<option v-for="(data, index) of selectStatus" :value="data.item">
 					{{ data.name }}
-				</option>	      	 	
+				</option>
 	  	</select>			 	  	
 <!-- 	  	<select class="selectInfo me-2">
 				<option v-for="(data, index) of selectDate" :value="data.item">
@@ -38,25 +38,21 @@
 		</div>
 	</div>	
 
-  <!--table -->
+   <!--table -->
   <div class="content-box tableContainer">
-    <p class="title"><strong>出勤情況總覽</strong></p>
-    <hr />
-    <vxe-table :data="tableData" class="tableInfo" emptyText="no data">
-      <vxe-column
-        v-for="(data, index) of tableTitle"
-        :field="data.field"
-        :title="data.title"
-      ></vxe-column>
-    </vxe-table>
-    <nav aria-label="Page navigation example" class="mt-2">
-      <ul class="pagination justify-content-center">
-        <li class="page-item" v-for="n in tablePage">
-          <button class="page-link" @click="changePage(n)">{{ n }}</button>
-        </li>
-      </ul>
-    </nav>
-  </div>
+  	<p class="title"><strong>出勤情況總覽</strong></p>  	  	
+		<hr/>
+	  <vxe-table :data="tableData" class="tableInfo" emptyText="no data">
+	    <vxe-column v-for="(data, index) of tableTitle "  :field="data.field" :title="data.title"></vxe-column>
+	  </vxe-table>
+	  <nav aria-label="Page navigation example" class="mt-2">
+			<ul class="pagination justify-content-center">
+			  <li class="page-item" v-for="n in tablePage">
+			  	<button class="page-link" @click="changePage(n)">{{ n }}</button>
+			  </li>
+			</ul>
+		</nav>
+  </div> 
 </template>
 <script setup>
 	import	{ref, watch, onMounted} from "vue"
@@ -179,9 +175,9 @@
 	}
 
 	const axiosName = async() =>{
-		// clear  option valeu
+		// clear option value
 		selectName.value = []
-		name.value = ''		
+		name.value = ''
 		let href = 'http://54.186.56.114:8081/Getdatalist'
 		if(number.value !== ""){
 			try{
@@ -200,7 +196,7 @@
 			}
 			catch{
 				alert("資料錯誤")
-			}		
+			}
 		}
 		else{
 			alert("請選擇資料")
@@ -219,8 +215,8 @@
 	const tablePage = ref()
 	const chosePage = ref(1)
 	const changePage = (number)=>{
-		chosePage.value = number	
-		search()	
+		chosePage.value = number
+		search()
 	}
 	const tableData = ref([])
 	const search = async()=>{
@@ -228,19 +224,18 @@
 		try{
 			let {data} = await axios.get(href, { params: { 
 				group: type.value+number.value, 
-				startdate: date[0], 
-				stopdate: date[1], 
+				startdate: date.value[0], 
+				stopdate: date.value[1],
 				name: name.value, 
 				status: status.value,
 				page: chosePage.value
-			}})	
-
+			}})
 			tablePage.value = Number(data.data.pagination[0].totalpages)
 			let axiosData = data.data.punch
 			tableData.value = [] 			// 清空舊的資料再更新
 
 			for(let i = 0; i <= axiosData.length - 1; i ++){
-				tableData.value.push({ 
+				tableData.value.push({
 					date: axiosData[i].date, 
 					grade: type.value+number.value, 
 					name: axiosData[i].name, 
@@ -283,3 +278,5 @@
   }
 }		
 </style>
+
+	

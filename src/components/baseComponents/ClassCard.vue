@@ -54,7 +54,6 @@
       }
     ).then(res => {
       classResources.value = res.data.data
-      console.log(classResources.value)
       sendData()
     })
   }
