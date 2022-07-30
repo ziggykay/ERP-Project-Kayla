@@ -9,7 +9,8 @@ export default createStore({
                 Name: 'Jay',
                 Title: '電腦螢幕打不開',
                 content: '電腦螢幕打不開，請問能幫忙維修嗎',
-                responseBox: ""
+                responseBox: "",
+                status: 0
 
             },
             {
@@ -18,7 +19,8 @@ export default createStore({
                 Name: 'Jay',
                 Title: '教室冷氣故障',
                 content: '教室冷氣故障，請問能幫忙維修嗎',
-                responseBox: ""
+                responseBox: "",
+                status: 0
 
             },
             {
@@ -27,7 +29,8 @@ export default createStore({
                 Name: 'Jay',
                 Title: '投影幕故障',
                 content: '投影幕故障，請問能幫忙維修嗎',
-                responseBox: ""
+                responseBox: "",
+                status: 0
 
             },
         ],
@@ -100,12 +103,12 @@ export default createStore({
             // }
         },
         test(state, payload) {
-            for (let i = 0; i < state.unreplieds.responseBox; i++) {
+            for (let i = 0; i < state.unreplieds.length; i++) {
                 if (state.unreplieds[i].id == payload.id) {
                     state.unreplieds[i].responseBox = payload.responseBox
+                    state.unreplieds[i].status = 1
                 }
             }
-            console.log(state.unreplieds)
         }
     },
     actions: {
