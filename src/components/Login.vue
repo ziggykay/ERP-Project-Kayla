@@ -63,8 +63,8 @@ let nameErr = ref('');
 const login = async () => {
 	let href = "http://54.186.56.114:8081/login"
 	let postData = {
-		Class: 'dv102',
-		// Class: 'manager',
+		// Class: 'dv102',
+		Class: 'manager',
 		// Class: group.value,
 		Name: name.value,
 		Password: password.value
