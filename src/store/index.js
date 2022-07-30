@@ -33,7 +33,7 @@ export default createStore({
         ],
         tempResponse: [],
         replieds: [],
-        tempResponseItem: [],
+        // tempResponseItem: [],
 
 
 
@@ -99,6 +99,14 @@ export default createStore({
             //     }
             // }
         },
+        test(state, payload) {
+            for (let i = 0; i < state.unreplieds.responseBox; i++) {
+                if (state.unreplieds[i].id == payload.id) {
+                    state.unreplieds[i].responseBox = payload.responseBox
+                }
+            }
+            console.log(state.unreplieds)
+        }
     },
     actions: {
         //更新到結案區
@@ -114,6 +122,9 @@ export default createStore({
         // },
         toggleDel({ commit }, payload) {
             commit("removeFromTemp", payload);
+        },
+        toggleTest({ commit }, payload) {
+            commit("test", payload);
         },
     }
 })

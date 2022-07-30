@@ -22,8 +22,10 @@
                   </div>
                   <!-- 按了回覆改變狀態為新增結案按鈕 -->
                   <div v-else>
-                    <button type="button" class="btn btn-primary confirm-btn check-res mt-2 me-1" @click="{responseForRewrite: [updateData(data), updateTempData(tempData)]}">回覆</button>
-                    <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2" @click="{close: [updateRes(),endCase(data)]}">結案</button>
+                    <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
+                    @click="{responseToTemp: [updateData(data),endCase(data)]}" >回覆</button>
+                    <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2"
+                    @click="{close: [updateRes(),]}">結案</button>
                   </div>
               </div>
               <div class="d-flex justify-content-between w-50 date-and-title-content ms-5">
@@ -48,8 +50,7 @@
                   cols="30"
                   rows="10"
                   placeholder="請輸入回覆內容..."
-                  v-model="responseText"
-                  ><span>{{tempData}}</span>
+                  v-model="selectData.responseBox">
                 </textarea>
                 </div>
                 <div v-else >
@@ -65,9 +66,9 @@
               </div>
               <div class=" text-end">
               <button type="button" class="btn btn-primary confirm-btn check-res mt-2"
-                @click="{send: [changeStatus(),]}" v-if="responseText!==''">送出</button>
+                @click="{send: [changeStatus(),]}" >送出</button>
               </div>
-              <input type="hidden" v-for="{resData, index} of tempResponse" :key=index>{{resData}}
+              <!-- <input type="hidden" v-for="{resData, index} of tempResponse" :key=index>{{resData}} -->
             </div>
           </div>
         </div>
@@ -99,12 +100,9 @@ const emit = defineEmits(["changeShow"]);
   console.log(tempItem)
   //回覆至暫存區&&顯示結案按鈕
   function changeStatus() {
-    store.dispatch("toggleTempRes",responseText.value);
+    store.dispatch("toggleTempRes",selectData.responseBox);
     alert('已回覆');
-    console.log(tempResponse)
-    console.log(responseText.value)
   }
-  console.log(unrepliedsid)
   //更新到結案區
  function updateRes(){
   store.dispatch('toggleRes',unrepliedsid)
@@ -113,21 +111,27 @@ const emit = defineEmits(["changeShow"]);
  }
  console.log(unrepliedsid.length)
  //從暫存區消失
+//  function endCase(data){
+//   console.log(data)
+//   for(let i=0; i<unrepliedsid.length;i++){
+//     if (this.unreplieds[i] === data){
+//         // this.unreplieds.splice(i,1)
+//     }
+//   }
+//  }
+
+//test
  function endCase(data){
-  console.log(data)
-  for(let i=0; i<unrepliedsid.length;i++){
-    if (this.unreplieds[i] === data){
-        this.unreplieds.splice(i,1)
-    }
-  }
-  // store.dispatch("toggleremove") 
+  store.dispatch('toggleTest',data)  
  }
+
   //動態切換顯示資料
   const selectData = ref(unreplieds.value[0]);
   function updateData (data) {
     selectData.value = data;
     //console.log(data)
   }
+  console.log(selectData.value)
   const selectTempData = ref(tempResponse.value);
   function updateTempData (tempData) {
     unrepliedsres.value = tempData
