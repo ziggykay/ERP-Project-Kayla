@@ -16,16 +16,16 @@
                   <p class="">問題</p>
                 </div>
                 <!--  -->
-                  <div v-if="tempResponse == ''">
+                  <div v-if="data.status == 0">
                     <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
                     @click="{responseToTemp: [updateData(data),]}" >回覆</button>
                   </div>
                   <!-- 按了回覆改變狀態為新增結案按鈕 -->
-                  <div v-else>
+                  <div v-if="data.status == 1">
                     <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-                    @click="{responseToTemp: [updateData(data),endCase(data)]}" >回覆</button>
+                    @click="{responseToTemp: [updateData(data),endCase1(data)]}" >回覆</button>
                     <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2"
-                    @click="{close: [updateRes(),]}">結案</button>
+                    @click="{close: [updateRes(),endCase(data)]}">結案</button>
                   </div>
               </div>
               <div class="d-flex justify-content-between w-50 date-and-title-content ms-5">
@@ -37,14 +37,14 @@
           </div>
           <div>
           <!-- 回覆區 -->
-            <div class="content-box question-box" v-if="tempResponse!==''">
+            <div class="content-box question-box">
               <p class="title mb-3 ps-3 fw-bold w-25 text-center">問題</p>
               <p class="q-title">{{selectData.Title}}</p>
               <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
               <div class="q-content">{{selectData.content}}</div>
               <div>
                 <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-                <div v-if="tempResponse == ''">
+                <div>
                   <textarea
                   class="q-content d-block"
                   cols="30"
@@ -53,7 +53,7 @@
                   v-model="selectData.responseBox">
                 </textarea>
                 </div>
-                <div v-else >
+                <!-- <div v-else >
                   <textarea
                   class="q-content d-block"
                   cols="30"
@@ -62,11 +62,11 @@
                   v-model="responseText"
                   >{{tempData}}
                 </textarea>
-                </div>
+                </div> -->
               </div>
               <div class=" text-end">
               <button type="button" class="btn btn-primary confirm-btn check-res mt-2"
-                @click="{send: [changeStatus(),]}" >送出</button>
+                @click="{send: [endCase2(selectData)]}" >送出</button>
               </div>
               <!-- <input type="hidden" v-for="{resData, index} of tempResponse" :key=index>{{resData}} -->
             </div>
@@ -99,10 +99,10 @@ const emit = defineEmits(["changeShow"]);
   console.log(unrepliedsres)
   console.log(tempItem)
   //回覆至暫存區&&顯示結案按鈕
-  function changeStatus() {
-    store.dispatch("toggleTempRes",selectData.responseBox);
-    alert('已回覆');
-  }
+  // function changeStatus() {
+  //   store.dispatch("toggleTempRes",selectData.responseBox);
+  //   alert('已回覆');
+  // }
   //更新到結案區
  function updateRes(){
   store.dispatch('toggleRes',unrepliedsid)
@@ -111,32 +111,33 @@ const emit = defineEmits(["changeShow"]);
  }
  console.log(unrepliedsid.length)
  //從暫存區消失
-//  function endCase(data){
-//   console.log(data)
-//   for(let i=0; i<unrepliedsid.length;i++){
-//     if (this.unreplieds[i] === data){
-//         // this.unreplieds.splice(i,1)
-//     }
-//   }
-//  }
+ function endCase(data){
+  console.log(data)
+  for(let i=0; i<unrepliedsid.length;i++){
+    if (this.unreplieds[i] === data){
+        this.unreplieds.splice(i,1)
+    }
+  }
+ }
 
 //test
- function endCase(data){
+ function endCase1(data){
   store.dispatch('toggleTest',data)  
+ }
+
+//送出
+ function endCase2(selectData){
+  store.dispatch('toggleTest',selectData) 
+  console.log(selectData) 
  }
 
   //動態切換顯示資料
   const selectData = ref(unreplieds.value[0]);
   function updateData (data) {
     selectData.value = data;
-    //console.log(data)
+    // console.log(data)
   }
-  console.log(selectData.value)
-  const selectTempData = ref(tempResponse.value);
-  function updateTempData (tempData) {
-    unrepliedsres.value = tempData
-    console.log(responseText)
-}
+ 
 </script>
 
 <style lang="scss" scoped>

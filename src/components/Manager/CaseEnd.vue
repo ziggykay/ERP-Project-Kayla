@@ -77,7 +77,7 @@ onMounted(() => {
   //store
   const store = useStore()
   const replieds = computed(()=> store.state.replieds)
-  console.log(replieds)
+  // console.log(replieds)
   const repliedsItem = computed(()=> store.getters.repliedsItem)
   const repliedsDateCount = store.getters.repliedsDate.length
   //想要取特定Data但失敗
