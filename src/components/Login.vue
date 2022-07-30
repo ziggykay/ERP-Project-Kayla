@@ -46,24 +46,25 @@ import store from "../store";
 const router = useRouter()
 const route = useRoute()
 
-// const loginAuth = ref(
-//   {
-//     access: 1
-//   }
-// )
-
 let name = ref('Jeff')
 let password = ref('jeff123')
 let group = ref('')
+
+// user:
 // dv102
 // Jeff 
 // jeff123
-let nameErr = ref('');
 
+// manager:
+// KJH
+// 8743
+
+let nameErr = ref('');
 const login = async () => {
 	let href = "http://54.186.56.114:8081/login"
 	let postData = {
 		Class: 'dv102',
+		// Class: 'manager',
 		// Class: group.value,
 		Name: name.value,
 		Password: password.value
@@ -71,12 +72,12 @@ const login = async () => {
   // if(name.value == '' || password.value == '' || password.value == ''){
   //    nameErr.value = '請輸入完整資料'
   // }
-
   let {data} = await axios.post(href, postData)
   try{
-    store.dispatch('storeToken', data.data)
 
-    // 解密Token
+    // 儲存Token
+    store.dispatch('storeToken', data.data)
+    // 解密Token取得使用者資料
     const parseJwt = (token)=> {
       if (!token) {
         return
@@ -86,32 +87,31 @@ const login = async () => {
         return JSON.parse(window.atob(base64))
       }
     }
+    let { sub } = await parseJwt(data.data)
 
     // 儲存使用者資料
-    let { sub } = parseJwt(data.data)
     let userData = sub
     store.dispatch('storeUserInfo', userData)
-    console.log(store.state.userInfo)
+    const userStatus = store.state.userInfo[0].Access
 
-    // 導入頁面
-    // switch (userData.Access) {
-    //   case "1":
-    //     router.push('/user/home')
-    //     break;
-    //   case "2":
-    //     router.push('/manager/home')
-    //     break;
-    //   case "3":
-    //     router.push('/company/home')
-    //     break;
-    //   default:
-    //     router.push('/')
-    //     break;
-    // }
+    // 導至對應頁面
+    switch (userStatus) {
+      case '1':
+        router.push('/user/home')
+        break;
+      case '2':
+        router.push('/manager/home')
+        break;
+      case '3':
+        router.push('/company/home')
+        break;
+      default:
+        router.push('/')
+        break;
+    }
   }catch{
     console.error();
   }
-
 }
 
 </script>

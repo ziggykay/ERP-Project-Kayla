@@ -124,7 +124,7 @@
 	]);		
 
 	const axiosType = async() =>{
-		// clear  option valeu
+		// clear option valeu
 		selectType.value = []
 		selectNumber.value = []
 		type.value = ''
@@ -150,7 +150,7 @@
 	axiosType()
 
 	const axiosNumber = async() =>{
-		// clear  option valeu
+		// clear  option value
 		selectNumber.value = []
 		number.value = ''	
 		let href = 'http://54.186.56.114:8081/Getdatalist'

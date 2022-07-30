@@ -4,7 +4,8 @@ import createPersistedState from "vuex-persistedstate";
 export default createStore({
     state: {
         token:'',
-        userInfo:'',
+        userInfo:[],
+		isLogin: '',
         diary: [
             {
                 // workinghour: "5",
@@ -64,9 +65,6 @@ export default createStore({
         tempResponse: [],
         tempResponseItem: [],
         response: []
-
-
-
     },
     getters: {
         unrepliedsDate: state => {
@@ -90,6 +88,10 @@ export default createStore({
         }
     },
     mutations: {
+        clearData(state){
+            state.token = ''
+            state.userInfo = []
+        },
         addTempResponse(state, responseText) {
             state.tempResponse.push(responseText)
         },
@@ -107,7 +109,8 @@ export default createStore({
             state.token = token
         },
         storeUserInfo(state, info){
-            state.userInfo = info
+			state.userInfo.push(info)
+            console.log('store info success')
         }
     },
     actions: {
@@ -118,8 +121,12 @@ export default createStore({
             context.commit("storeToken", status);
         },
         storeUserInfo(context, status){
-            context.commit("storeUserInfo", status)
-        }
+			context.commit("storeUserInfo", status);
+            console.log('ready to store info')
+        },
+        clearData(context){
+            context.commit("clearData")            
+        },
     },
     plugins: [createPersistedState()]
 })

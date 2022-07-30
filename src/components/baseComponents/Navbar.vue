@@ -11,8 +11,10 @@
 
 <script setup>
 import router from '../../router';
+import store from '../../store'
 
   function logOut () {
+    store.dispatch('clearData')
     router.push('/')
   }
 

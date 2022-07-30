@@ -38,6 +38,8 @@
 
 <script setup>
 	import { onMounted, ref, watch } from 'vue'
+  import store from "../../store";
+
 	
 	//props 
 	const props = defineProps({
@@ -166,22 +168,18 @@
 		}		 		  		 		
 	])
 
-  // 模擬使用者權限
+  // 使用者權限
   const currentSidebar = ref()
-  const userStatus = ref(
-    {
-      access: 1,
-    }
-  )
+  const userStatus = store.state.userInfo[0].Access
   const changeSidebar = () => {
-    switch (userStatus.value.access) {
-      case 1 :
+    switch (userStatus) {
+      case "1" :
         currentSidebar.value = userSideBarData.value
         break;
-      case 2 :
+      case "2" :
         currentSidebar.value = managerSideBarData.value
         break;
-      case 3 :
+      case "3" :
         currentSidebar.value = companySideBarData.value
         break; 
       default:
