@@ -62,6 +62,10 @@
 	const selectArr = ref([
 		[
 			{
+				name: "請選擇日期",
+				item: ""
+			},		
+			{
 				name: "今日",
 				item: "today"
 			},
@@ -78,7 +82,8 @@
 		choseSelect.value = {}
 		choseSelect.value = {
 			startdate: val[0][0],
-			stopdate: val[0][1]
+			stopdate: val[0][1],
+			cur :val[1][0]
 		}
 	}
 
@@ -95,12 +100,12 @@
 			color: "#1AAF68"
 		},
 		{
-			title: "遲到次數",
+			title: "缺席率",
 			number: "",
 			color: "#1AAF68"
 		},
 		{
-			title: "遲到時數",
+			title: "早退率",
 			number: "",
 			color: "#1AAF68"
 		}
@@ -119,7 +124,7 @@
     	left: "right",
     },
     xAxis: {
-      data: ['1110701', '1110701', '1110701', '1110701', '1110701'],
+      data: [],
       nameTextStyle: {
       	fontWeight: "bolder"
       }
@@ -132,7 +137,7 @@
 	  series: [
 	    {
 	    	name: '到班時數',
-	      data: [5, 2, 7, 5, 5],
+	      data: [],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
@@ -143,7 +148,7 @@
 	    },
 	    {
 	    	name: '課程時數',
-	      data: [0, 5, 0, 2, 0],
+	      data: [],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
@@ -153,21 +158,39 @@
 	  ],	  		
 	})
 	// get axios data
-	const doAxios = async(group, startdate, stopdate, name)=>{
-		let href = "http://localhost:80/api/count/"
-		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})
+	const doAxios = async(group, startdate, stopdate, cur, name)=>{
+		// console.log(cur)
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
+		let axiosData = ""
+
 		try{
-			let axiosData = data.data[0]
-			let sum = 0;
-			for (let key in axiosData) {
-	    	sum = sum + axiosData[key]
+			if(cur == ''){
+				let {data} = await axios.get(href, { params: { group, startdate, stopdate, name}})	
+				axiosData = data.data
 			}
+			else{
+				let {data} = await axios.get(href, { params: { group, cur, name}})	
+				axiosData = data.data				
+			}					
+			// console.log(axiosData)
+			
 			// over all
-			AttendanceData.value[0].number = `${Math.round((axiosData.present+axiosData.late)/sum*100)}%`
-			AttendanceData.value[1].number = `${Math.round(axiosData.late/sum*100)}%`
-			AttendanceData.value[2].number = `${Math.round((axiosData.absent+axiosData.excused)/sum*100)}%`
-			AttendanceData.value[3].number = `${Math.round(axiosData.excused/sum*100)}%`
+			AttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			AttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			AttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			AttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].excused/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`		
+			
 			//barcart
+			// 清空資料再更新
+			barchart.value.xAxis.data = []
+			barchart.value.series[0].data = []
+			barchart.value.series[1].data = []	
+
+			for(let i = 0; i < axiosData.length - 1; i++){
+				barchart.value.xAxis.data.push(axiosData[i].day)
+				barchart.value.series[0].data.push(axiosData[i].attendancehours)
+				barchart.value.series[1].data.push(axiosData[i].lackhours)
+			}
 	
 		}
 		catch{
@@ -177,7 +200,8 @@
 	watch(choseSelect, (newVal, oldVal)=>{
 		let group = 'fn101'
 		let name = 'Rossen' 		
-		doAxios(group, newVal.startdate, newVal.stopdate, name)
+		// console.log(newVal)
+		doAxios(group, newVal.startdate, newVal.stopdate, newVal.cur, name)
 	})
 
 
@@ -194,25 +218,36 @@
 		let type = "fn"
 		let number = '101'
 
-		let { data } = await axios.get(href, { params: { type, number}})
-
 		try{
+			// let { data } = await axios.get(href, { params: { type, number}})			
 			selectTabelArr.value = [
 				[
 		  		{
-		  			name: "all",
-		  			item: "all"
+		  			name: "全部出勤狀態",
+		  			item: ""
 		  		},
 		  		{
-		  			name: "present",
-		  			item: "present"
+		  			name: "出勤",
+		  			item: "regular"
 		  		},	
 		  		{
-		  			name: "late",
+		  			name: "遲到",
 		  			item: "late"
-		  		}					  				 		
+		  		},			  		
+		  		{
+		  			name: "早退",
+		  			item: "excused"
+		  		},				  			
+		  		{
+		  			name: "缺勤",
+		  			item: "absent"
+		  		}			  						  				 		
 				],		  		
 				[
+					{
+						name: "請選擇日期",
+						item: ""
+					},						
 		  		{
 		  			name: "今日",
 		  			item: "today"
@@ -221,7 +256,7 @@
 		  			name: "本月",
 		  			item: "month"
 		  		}				 		
-				]	
+				]		
 			]	  			
 		}
 		catch{
@@ -255,24 +290,26 @@
 			stopdate : val[0][1],
 			group : 'fn101',
 			name : 'Rossen',
-			status: val[1][0]
+			status: val[1][0],
+			cur: val[1][0]
 		}
 	}
 
-	const doAxios2 = async(group, startdate, stopdate, name, status, page)=>{
+	const doAxios2 = async(group, startdate, stopdate, name, status, cur, page)=>{
 		// get axios data
-		let href = "http://localhost:80/api/punch"
-		let {data} = await axios.get(href, { params: { group, startdate, stopdate, name, status, page}})
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/punch"
+
 		try{
+			let {data} = await axios.get(href, { params: { group, startdate, stopdate, name, status, cur, page}})		
 			tablePage.value = Number(data.data.pagination[0].totalpages)
 			let axiosData = data.data.punch
 			tableData.value = [] 			// 清空舊的資料再更新
 
 			for(let i = 0; i <= axiosData.length - 1; i ++){
 				tableData.value.push({ 
-					date: axiosData[i].classdate, 
+					date: axiosData[i].date, 
 					grade: group, 
-					name: axiosData[i].student, 
+					name: axiosData[i].name, 
 					signin: axiosData[i].intime, 
 					signout: axiosData[i].outtime, 
 					inip: axiosData[i].inip
@@ -281,10 +318,10 @@
 		}
 		catch{
 			alert("資料錯誤")
-		}		
+		}			
 	}
   watch([chosePage, choseSelect2], ([newA, newB], [prevA, prevB]) => {
-		doAxios2(newB.group, newB.startdate, newB.stopdate, newB.name, newB.status, newA)
+		doAxios2(newB.group, newB.startdate, newB.stopdate, newB.name, newB.status, newB.cur, newA)
   },{deep: true});	
 	
 </script>

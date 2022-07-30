@@ -5,109 +5,132 @@ export default createStore({
         unreplieds: [
             {
                 id: 1,
-                LeavingTime: '',
+                LeavingTime: '2022-06-06',
                 Name: 'Jay',
                 Title: '電腦螢幕打不開',
-                question:
-                {
-                    content: '電腦螢幕打不開，請問能幫忙維修嗎',
-                    responseBox: ""
-                },
+                content: '電腦螢幕打不開，請問能幫忙維修嗎',
+                responseBox: ""
+
             },
             {
                 id: 2,
-                LeavingTime: '',
+                LeavingTime: '2022-06-09',
                 Name: 'Jay',
                 Title: '教室冷氣故障',
-                question:
-                {
-                    content: '教室冷氣故障，請問能幫忙維修嗎',
-                    responseBox: ""
-                },
+                content: '教室冷氣故障，請問能幫忙維修嗎',
+                responseBox: ""
+
             },
-        ],
-        replieds: [
             {
                 id: 3,
-                LeavingTime: '',
-                Name: 'May',
-                Title: '電腦螢幕有殘影',
-                question:
-                {
-                    content: '電腦螢幕有殘影，請問能幫忙維修嗎',
-                    responseBox: "我們會盡快找人去修理，請您耐心等候。"
-                },
-            },
-            {
-                id: 4,
-                LeavingTime: '',
-                Name: 'Penny',
-                Title: '教室冷氣故障',
-                question:
-                {
-                    content: '教室冷氣故障，請問能幫忙維修嗎',
-                    responseBox: "我們收到您的問題了，這周我們會找人去修理。"
-                },
+                LeavingTime: '2022-06-15',
+                Name: 'Jay',
+                Title: '投影幕故障',
+                content: '投影幕故障，請問能幫忙維修嗎',
+                responseBox: ""
+
             },
         ],
         tempResponse: [],
-        tempResponseItem: [],
-        response: []
+        replieds: [],
+        // tempResponseItem: [],
 
 
 
     },
     getters: {
+        // unreplieds
+        unrepliedsid: (state) => {
+            return state.unreplieds.filter(u => u.id)
+        },
+        unrepliedsidLen: (state, getters) => {
+            return getters.unrepliedsDate.length
+        },
         unrepliedsDate: state => {
             return state.unreplieds.filter(u => u.LeavingTime)
         },
         unrepliedsDateCount: (state, getters) => {
             return getters.unrepliedsDate.length
         },
+        //暫存區
+        tempResponse: state => {
+            return state.tempResponse
+        },
+        unrepliedsres: state => {
+            return state.unreplieds.filter(u => u.responseBox)
+        },
+        //replieds
+        replieds: state => {
+            return state.replieds
+        },
         repliedsDate: state => {
             return state.replieds.filter(r => r.LeavingTime)
         },
-        unrepliedsDateCount: (state, getters) => {
-            return getters.repliedsDate.length
-        },
-        tempResponseItem: (state) => {
-            return state.tempResponse.map(
-                itemId => state.unreplieds.find(
-                    unreplied => unreplied.id === itemId
-                )
-            )
+        tempItem: (state) => {
+            return state.unreplieds.map(u => u.id)
         }
     },
     mutations: {
-        addTempResponse(state, responseText) {
-            state.tempResponse.push(responseText)
+        //抓取unreplieds裡的值
+        updateRes(state, endAns) {
+            // let target = state.unreplieds.filter(u => u.id)
+            // console.log(target)
+            // state.replieds.push(data)
+            state.replieds.push(endAns)
         },
-        addResponse(state, responseText) {
-            state.response.push(responseText)
+        addTempResponse(state, temp) {
+            state.tempResponse.push(temp)
         },
-        removeFromTemp(state, payload) {
-            let indexToDelete = state.tempResponse.indexOf(Number(payload));
-            state.tempResponse.splice(indexToDelete, 1)
+        removeFromTemp(state) {
+            // for (let i = 0; i < unrepliedsid.length; i++) {
+            //     if (this.unreplieds[i] === data) {
+            //         this.unreplieds.splice(i, 1)
+            //     }
+            // }
+            // state.unreplieds.forEach(function (data, i) {
+            //     data == state.activeData && state.unreplieds.splice(i, 1)
+            // })
+            // let indexToDelete = state.unreplieds.indexOf(state.unreplieds);
+            // state.unreplieds.splice(indexToDelete, 1)
+            // state.payload = state.unreplieds[0] || {}
+            // for (let i in state.unreplieds) {
+            //     if (state.unreplieds[i] === state.activeUnreplied) {
+            //         state.unreplieds.splice(i, 1)
+            //     }
+            // }
         },
-        // GET_REPLIEDS(state, replied) {
-        //     state.replied = replied
-        // }
+        test(state, payload) {
+            for (let i = 0; i < state.unreplieds.responseBox; i++) {
+                if (state.unreplieds[i].id == payload.id) {
+                    state.unreplieds[i].responseBox = payload.responseBox
+                }
+            }
+            console.log(state.unreplieds)
+        }
     },
     actions: {
-        test() {
-            console.log(getters.unrepliedId)
-        }
-        // loadEndMessage() {
-        //     axios
-        //         .get('http://54.186.56.114:8081/Endmessage')
-        //         .then(data => {
-        //             console.log(data.data)
-        //             let replied = data.data
-        //             commit('GET_REPLIEDS', replied)
-        //         })
-        //         .catch(error => {
-        //             console.log(error)
-        //         })
-        // }
+        //更新到結案區
+        toggleRes({ commit }, payload) {
+            commit("updateRes", payload);
+        },
+        //加到暫存
+        toggleTempRes({ commit }, payload) {
+            commit("addTempResponse", payload);
+        },
+        // toggleremove({ commit }, payload) {
+        //     commit('removeFromTemp', payload)
+        // },
+        toggleDel({ commit }, payload) {
+            commit("removeFromTemp", payload);
+        },
+        toggleTest({ commit }, payload) {
+            commit("test", payload);
+        },
     }
 })
+
+
+
+
+
+

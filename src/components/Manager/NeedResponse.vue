@@ -5,24 +5,27 @@
   <div class="content-box main-outter">
     <div class="title p-3 fw-bold">待回覆區</div>
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
-        <div class="d-flex justify-content-evenly" v-if="unrepliedsDateCount!==0">
+        <div class="d-flex justify-content-evenly" v-if="unrepliedsDateCount!=0">
           <div class="resbox-outter">
-             <!-- 尚未按回覆 -->
-            <div class="content-box resbox res-box-hover ps-2" v-for="data of unreplieds" >
+            <!-- 尚未按回覆 -->
+            <div class="content-box resbox res-box-hover ps-2" v-for="(data,index) of unreplieds" :key="index" >
               <div class="d-flex justify-content-between">
                 <div class="d-flex date-and-title w-50 justify-content-evenly ms-3">
                   <p class="">日期</p>
                   <p class="">姓名</p>
                   <p class="">問題</p>
                 </div>
+                <!--  -->
                   <div v-if="tempResponse == ''">
                     <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-                    @click="updateData(data)" >回覆</button>
+                    @click="{responseToTemp: [updateData(data),]}" >回覆</button>
                   </div>
                   <!-- 按了回覆改變狀態為新增結案按鈕 -->
                   <div v-else>
-                    <button type="button" class="btn btn-primary confirm-btn check-res mt-2 me-1">回覆</button>
-                    <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2" @click="save()">結案</button>
+                    <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
+                    @click="{responseToTemp: [updateData(data),endCase(data)]}" >回覆</button>
+                    <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2"
+                    @click="{close: [updateRes(),]}">結案</button>
                   </div>
               </div>
               <div class="d-flex justify-content-between w-50 date-and-title-content ms-5">
@@ -34,100 +37,106 @@
           </div>
           <div>
           <!-- 回覆區 -->
-            <div class="content-box question-box" v-if="selectData.Title!==''">
+            <div class="content-box question-box" v-if="tempResponse!==''">
               <p class="title mb-3 ps-3 fw-bold w-25 text-center">問題</p>
               <p class="q-title">{{selectData.Title}}</p>
               <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
-              <div class="q-content">{{selectData.question.content}}</div>
+              <div class="q-content">{{selectData.content}}</div>
               <div>
                 <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-                <textarea
+                <div v-if="tempResponse == ''">
+                  <textarea
                   class="q-content d-block"
-                  name=""
-                  id=""
                   cols="30"
                   rows="10"
                   placeholder="請輸入回覆內容..."
-                  v-model="responseText">
+                  v-model="selectData.responseBox">
                 </textarea>
+                </div>
+                <div v-else >
+                  <textarea
+                  class="q-content d-block"
+                  cols="30"
+                  rows="10"
+                  placeholder="請輸入修改的內容..."
+                  v-model="responseText"
+                  >{{tempData}}
+                </textarea>
+                </div>
               </div>
               <div class=" text-end">
               <button type="button" class="btn btn-primary confirm-btn check-res mt-2"
-                @click="changeStatus(); removeFromTemp(selectData.id)">送出</button>
+                @click="{send: [changeStatus(),]}" >送出</button>
               </div>
-              <input type="hidden" v-for="resData of tempResponse">{{resData}}
+              <!-- <input type="hidden" v-for="{resData, index} of tempResponse" :key=index>{{resData}} -->
             </div>
           </div>
         </div>
-        <div v-if="unrepliedsDateCount===0"><p class="text-center fs-5">尚無待回覆問題</p></div>
+      <div v-if="unrepliedsDateCount===0"><p class="text-center fs-5">尚無待回覆問題</p></div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useStore,mapActions } from "vuex";
+import { useStore } from "vuex";
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
 const emit = defineEmits(["changeShow"]);
-const isResponse = false
 //store
   const store = useStore()
-  const unreplieds = computed(()=> store.state.unreplieds)
-  const selectData = ref(unreplieds.value[0]);
-  function updateData (data) {
-    selectData.value = data
-    console.log(selectData.value)
-  }
-  const test = store.getters.unrepliedId
+  const replieds = computed(()=> store.state.replieds)
+  console.log(replieds)
+  const unreplieds = computed(()=>  store.state.unreplieds)
+  const unrepliedsid = store.getters.unrepliedsid
+  const unrepliedsLength = store.getters.unrepliedsLength
+  console.log(unrepliedsLength)
   const unrepliedsDateCount = store.getters.unrepliedsDate.length
   const responseText = ref("")
-  const tempResponse = computed(()=> store.state.tempResponse)
-  //顯示結案按鈕
+  const tempResponse = store.getters.tempResponse
+  const tempResponseVal = store.getters.tempResponseVal
+  const tempItem = store.getters.tempItem
+  const unrepliedsres = store.getters.unrepliedsres
+  console.log(unrepliedsres)
+  console.log(tempItem)
+  //回覆至暫存區&&顯示結案按鈕
   function changeStatus() {
-    store.commit("addTempResponse", responseText.value);
-    alert('已回覆')
+    store.dispatch("toggleTempRes",selectData.responseBox);
+    alert('已回覆');
   }
-  //目前尚未將所有data傳送到結案區，只有將回覆的data傳過去
-  function save() {
-    store.commit("addResponse", responseText.value);
-    alert('已結案')
-  }
-  //暫存區資料消失尚未完成
-  function removeFromTemp(itemId){
-    this.$store.dispatch('removeFromTemp', itemId)
-  }
+  //更新到結案區
+ function updateRes(){
+  store.dispatch('toggleRes',unrepliedsid)
+   alert('已結案')
+   console.log(unrepliedsid)
+ }
+ console.log(unrepliedsid.length)
+ //從暫存區消失
+//  function endCase(data){
+//   console.log(data)
+//   for(let i=0; i<unrepliedsid.length;i++){
+//     if (this.unreplieds[i] === data){
+//         // this.unreplieds.splice(i,1)
+//     }
+//   }
+//  }
 
-  //測試
-  // onMounted(()=> {
-  //   store.dispatch('loadEndMessage')
-  // })
-  
-//data
-  // const unreplieds = ref([
-	//   		{
-  //         id:1,
-	//   			LeavingTime: '2022-07-09',
-  //         Name: 'Jay',
-	//   			Title: '電腦螢幕打不開',
-  //         status: 'notResponsed',
-  //         question: 
-  //         {
-  //           content: '教室冷氣故障，請問能幫忙維修嗎',
-           
-  //         }
-	//   		},
-  //       {
-  //         id:2,
-	//   			LeavingTime: '2022-07-13',
-  //         Name: 'Jay',
-	//   			Title: '教室冷氣故障',
-  //         status: 'notResponsed',
-  //         question: 
-  //         {
-  //           content: '教室冷氣故障，請問能幫忙維修嗎',
-  //         }
-	//   		},
-	// ]);
+//test
+ function endCase(data){
+  store.dispatch('toggleTest',data)  
+ }
+
+  //動態切換顯示資料
+  const selectData = ref(unreplieds.value[0]);
+  function updateData (data) {
+    selectData.value = data;
+    //console.log(data)
+  }
+  console.log(selectData.value)
+  const selectTempData = ref(tempResponse.value);
+  function updateTempData (tempData) {
+    unrepliedsres.value = tempData
+    console.log(responseText)
+}
 </script>
 
 <style lang="scss" scoped>

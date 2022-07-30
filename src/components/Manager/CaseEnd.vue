@@ -5,7 +5,7 @@
   <div class="d-flex justify-content-center" >
     <div class="content-box main-outter">
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
-        <div class="d-flex justify-content-evenly" v-if="repliedsDateCount!==0">
+        <div class="d-flex justify-content-evenly" >
           <div class="resbox-outter">
             <div class="content-box resbox ps-2" v-for="data of replieds">
               <div class="d-flex justify-content-between" >
@@ -14,11 +14,11 @@
                 <p>姓名</p>
                 <p>問題</p>
                 </div>
-              <div>
-                <button
-                  type="button"
-                  class="btn btn-primary confirm-btn check-res mt-2 ms-3" @click="updateData(data)">查看</button>
-              </div>
+                  <div>
+                    <button
+                      type="button"
+                      class="btn btn-primary confirm-btn check-res mt-2 ms-3" @click="updateData(data)">查看</button>
+                  </div>
             </div>
             <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
               <p class="ps-4">{{data.LeavingTime}}</p>
@@ -29,18 +29,18 @@
         </div>
           <div class="content-box question-box">
             <p class="title mb-3 ps-3 fw-bold w-25 text-center">提問</p>
-            <p class="q-title">{{selectData.Title}}</p>
+            <p class="q-title"></p>
             <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
-            <div class="q-content">{{selectData.question.content}}</div>
+            <div class="q-content"></div>
             <div >
               <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
               <div class="res-content">
-                <p v-for="resData of response">{{resData}}</p>
+                <p ></p>
               </div>
             </div>
           </div>
       </div>
-      <div v-else><p class="text-center fs-5">尚無結案資料</p></div>
+      <!-- <div ><p class="text-center fs-5">尚無結案資料</p></div> -->
     </div>
   </div>
 </template>
@@ -77,7 +77,8 @@ onMounted(() => {
   //store
   const store = useStore()
   const replieds = computed(()=> store.state.replieds)
-  const response = computed(()=> store.state.response)
+  console.log(replieds)
+  const repliedsItem = computed(()=> store.getters.repliedsItem)
   const repliedsDateCount = store.getters.repliedsDate.length
   //想要取特定Data但失敗
   // const selectResData = ref(response.value[0]);

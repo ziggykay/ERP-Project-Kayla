@@ -1,7 +1,10 @@
 <template>
 	<template v-if="selectArr[0]">
 		<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="totalData">
-			<button class="btn confirm-btn">匯入</button>
+			<label class="btn confirm-btn upload">
+				<input style="display:none;" ref="uploadFile" v-on:change="handleFileUpload()"  accept=".csv" type="file">
+				上傳CSV檔
+			</label>			
 		</FilterSelect>		
 	</template>
 	<template v-else>
@@ -34,9 +37,8 @@
 			let type = "fn"
 			let number = '101'
 
-			let { data } = await axios.get(href, { params: { type, number}})
-
 			try{
+							// let { data } = await axios.get(href, { params: { type, number}})
 				selectArr.value = [
 					[
 						{
@@ -65,7 +67,7 @@
 					[
 						{
 							name: "全部學生",
-							item: ""
+							// item: ""
 						},		
 						{
 							name: "Rossen",
@@ -121,9 +123,35 @@
 			}
 	}		
 	getSelectArr()
-
 	const title = ref("學員請假資訊");
-	
+ 	
+ 	// upload file
+  const uploadFile = ref(null)
+  const handleFileUpload = async() => {
+		const formData = new FormData();
+
+	 	// debugger;
+	  // console.log("selected file",uploadFile.value.files[0])
+	  //Upload to server
+	  formData.append('group', choseSelect.value.group)
+	  formData.append('file', uploadFile.value.files[0])
+
+	  const href = 'http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/leave'
+		const headers = {
+		  'Content-Type': 'multipart/form-data'
+		}
+		try{
+		let {data} = await axios.post(href, formData, {headers})
+			console.log(data)
+		}
+		catch(e){
+			alert(e.response.data.message)
+			console.log(e)
+
+		}
+
+  }
+
 	// table
 	const tableTitle = ref([
 		{field:"name", title:"姓名"},
@@ -148,10 +176,9 @@
 
 	const doAxios = async(group, name, startdate, stopdate, leavetype)=>{
 		// get axios data
-		let href = "http://localhost:80/api/leave"
-		let {data} = await axios.get(href, { params: { group, name, startdate, stopdate, leavetype}})
-		
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/leave"
 		try{
+			let {data} = await axios.get(href, { params: { group, name, startdate, stopdate, leavetype}})			
 			let axiosData = data.data
 			tableData.value = [] 			// 清空舊的資料再更新
 
@@ -184,5 +211,8 @@
 	  	height: 80%;
 	  	overflow-y: auto;
 	  }
-	}		
+	}
+.upload{
+	height: 38px;
+}
 </style>
