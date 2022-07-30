@@ -54,6 +54,9 @@ export default createStore({
         tempResponse: [],
         tempResponseItem: [],
         response: []
+
+
+
     },
     getters: {
         unrepliedsDate: state => {
@@ -88,11 +91,17 @@ export default createStore({
             state.diary.push(status);
         },
         removeProject(state, status) {
-            for (let i = 0; i < state.diary.length; i++) {
-                if (state.diary[i].id === status.id) {
-                    state.diary.splice(i, 1);
-                }
-            }
+            state.diary.splice(state.diary.indexOf(Number(status)), 1);
+            // for (let i = 0; i < state.diary.length; i++) {
+            //     if (state.diary.id[i] === status) {
+            //         state.diary.splice(i, 1);
+            //     }
+            // }
+            // const i = state.diary.findIndex((x) => x.id == id);
+            // if (i !== -1) {
+            //     state.diary.splice(i, 1)
+            // }
+            // state.diary.filter((diary) => diary.id !== status);
         },
     },
     actions: {
