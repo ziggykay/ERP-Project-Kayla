@@ -158,7 +158,7 @@
 		},
 		{
 			title: '查看問題回覆',
-			href: "/company/userdiaryfeedback",
+			href: "/company/checkdiarylist",
 			iconCss: 'fa-chalkboard-user'
 		}		 		  		 		
 	])

@@ -34,75 +34,25 @@ export default createStore({
 
             },
         ],
-        tempResponse: [],
-        replieds: [],
-        // tempResponseItem: [],
-
-
-
     },
     getters: {
         // unreplieds
         unrepliedsid: (state) => {
             return state.unreplieds.filter(u => u.id)
         },
-        unrepliedsidLen: (state, getters) => {
-            return getters.unrepliedsDate.length
-        },
-        unrepliedsDate: state => {
-            return state.unreplieds.filter(u => u.LeavingTime)
-        },
-        unrepliedsDateCount: (state, getters) => {
-            return getters.unrepliedsDate.length
-        },
-        //暫存區
-        tempResponse: state => {
-            return state.tempResponse
-        },
-        unrepliedsres: state => {
-            return state.unreplieds.filter(u => u.responseBox)
-        },
-        //replieds
-        replieds: state => {
-            return state.replieds
-        },
-        repliedsDate: state => {
-            return state.replieds.filter(r => r.LeavingTime)
-        },
-        tempItem: (state) => {
-            return state.unreplieds.map(u => u.id)
-        }
     },
     mutations: {
-        //抓取unreplieds裡的值
-        updateRes(state, endAns) {
-            // let target = state.unreplieds.filter(u => u.id)
-            // console.log(target)
-            // state.replieds.push(data)
-            state.replieds.push(endAns)
-        },
         addTempResponse(state, temp) {
             state.tempResponse.push(temp)
         },
-        removeFromTemp(state) {
-            // for (let i = 0; i < unrepliedsid.length; i++) {
-            //     if (this.unreplieds[i] === data) {
-            //         this.unreplieds.splice(i, 1)
-            //     }
-            // }
-            // state.unreplieds.forEach(function (data, i) {
-            //     data == state.activeData && state.unreplieds.splice(i, 1)
-            // })
-            // let indexToDelete = state.unreplieds.indexOf(state.unreplieds);
-            // state.unreplieds.splice(indexToDelete, 1)
-            // state.payload = state.unreplieds[0] || {}
-            // for (let i in state.unreplieds) {
-            //     if (state.unreplieds[i] === state.activeUnreplied) {
-            //         state.unreplieds.splice(i, 1)
-            //     }
-            // }
+        removeFromTemp(state, payload) {
+            for (let i = 0; i < state.unreplieds.length; i++) {
+                if (state.unreplieds[i] === payload) {
+                    state.unreplieds.splice(i, 1)
+                }
+            }
         },
-        test(state, payload) {
+        checkHasResponse(state, payload) {
             for (let i = 0; i < state.unreplieds.length; i++) {
                 if (state.unreplieds[i].id == payload.id) {
                     state.unreplieds[i].responseBox = payload.responseBox
@@ -113,21 +63,11 @@ export default createStore({
     },
     actions: {
         //更新到結案區
-        toggleRes({ commit }, payload) {
-            commit("updateRes", payload);
-        },
-        //加到暫存
-        toggleTempRes({ commit }, payload) {
-            commit("addTempResponse", payload);
-        },
-        // toggleremove({ commit }, payload) {
-        //     commit('removeFromTemp', payload)
-        // },
         toggleDel({ commit }, payload) {
             commit("removeFromTemp", payload);
         },
-        toggleTest({ commit }, payload) {
-            commit("test", payload);
+        toggleHasRes({ commit }, payload) {
+            commit("checkHasResponse", payload);
         },
     }
 })
