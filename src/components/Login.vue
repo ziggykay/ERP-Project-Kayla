@@ -1,13 +1,5 @@
 <template>
   <div class="container text-center">
-    <div class="">
-      <label for="">選擇身分</label>
-      <select v-model="Class">
-          <option>學生</option>
-          <option>管理員</option>
-          <option>企業</option>
-      </select>
-    </div>
     <br/>
     <div class="">
       <label for="name">姓名</label>
@@ -19,6 +11,7 @@
       <input v-model="password" type="password"/>
     </div>
     <br/>
+    <div class="err">{{ errMsg }}</div>
     <button class="btn btn-primary text-light" @click="login">登入</button>
     <div class="">{{name}}</div>
     <div class="">{{password}}</div>
@@ -36,13 +29,24 @@ import store from "../store";
 const router = useRouter()
 const route = useRoute()
 
-let name = ref('WWW')
-let password = ref('1202')
-let group = ref('8743')
-
 // user:
 // fn211
 // WWW 
+const selectType = ref([])
+const selectNumber = ref([])
+const type = ref('')
+const number = ref('')
+
+let errMsg = ref('')
+
+
+let name = ref('KJH')
+let password = ref('8743')
+let group = ref('')
+
+// user:
+// fn211
+// WWW
 // 1202
 
 // manager:
@@ -50,60 +54,68 @@ let group = ref('8743')
 // 8743
 
 let nameErr = ref('');
+
 const login = async () => {
-	let href = "http://54.186.56.114/diary/login"
+	let href = "http://54.186.56.114/login"
 	let postData = {
-		Class: 'fn211',
-		// Class: 'manager',
+		// group: 'dv102',
+		group: 'manager',
 		// Class: group.value,
-		Name: name.value,
-		Password: password.value
+		account: name.value,
+		password: password.value
 	}
   // if(name.value == '' || password.value == '' || password.value == ''){
   //    nameErr.value = '請輸入完整資料'
   // }
   let {data} = await axios.post(href, postData)
-  try{
-
-    // 儲存Token
-    store.dispatch('storeToken', data.data)
-    // 解密Token取得使用者資料
-    const parseJwt = (token)=> {
-      if (!token) {
-        return
-      }else{
-        const base64Url = token.split(".")[1]
-        const base64 = base64Url.replace("-", "+").replace("_", "/")
-        return JSON.parse(window.atob(base64))
+  console.log(data)
+  if(data.message == 'failure'){
+    console.error(data.data)
+    errMsg.value = data.data
+    return
+  } else if (data.message == 'success'){
+    try{
+      // 儲存Token
+      store.dispatch('storeToken', data.data.access_token)
+      // 解密Token取得使用者資料
+      const parseJwt = (token)=> {
+        if (!token) {
+          return
+        }else{
+          const base64Url = token.split(".")[1]
+          const base64 = base64Url.replace("-", "+").replace("_", "/")
+          return JSON.parse(window.atob(base64))
+        }
       }
-    }
-    let { sub } = await parseJwt(data.data)
+      let { sub } = await parseJwt(data.data.access_token)
 
-    // 儲存使用者資料
-    let userData = sub
-    store.dispatch('storeUserInfo', userData)
-    const userStatus = store.state.userInfo[0].Access
-    console.log(userStatus)
-
-    // 導至對應頁面
-    switch (userStatus) {
-      case '1':
-        router.push('/user/home')
-        break;
-      case '2':
-        router.push('/manager/home')
-        break;
-      case '3':
-        router.push('/company/home')
-        break;
-      default:
-        router.push('/')
-        break;
+      // 儲存使用者資料
+      let userData = sub
+      store.dispatch('storeUserInfo', userData)
+      console.log(store.state.userInfo)
+      const userStatus = store.state.userInfo[0].Access
+      // 導至對應頁面
+      switch (userStatus) {
+        case '1':
+          router.push('/user/home')
+          break;
+        case '2':
+          router.push('/manager/home')
+          break;
+        case '3':
+          router.push('/company/home')
+          break;
+        default:
+          router.push('/')
+          break;
+      }
+    }catch(e){
+      console.error(e);
+      errMsg.value = '抱歉，伺服器發生錯誤'
     }
-  }catch{
-    console.error();
   }
 }
+  
 
 </script>
 
@@ -112,6 +124,8 @@ const login = async () => {
   width: auto;
   height: auto;
   background: rgb(255, 255, 255);
-  
+}
+.err{
+  color: red;
 }
 </style>

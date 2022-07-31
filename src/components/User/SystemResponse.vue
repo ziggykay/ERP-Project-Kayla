@@ -81,16 +81,16 @@ const search = async()=>{
 	try{
 		questionList.value = []
 		let { data } = await axios.get(href, {headers: {'authorization': `Bearer ${store.state.token}`}})
-		console.log(data.data)
-		for(let i = 0; i < data.data.length; i++){
-			questionList.value.push({
-			  Content: data.data[i].Content,
-			  LeavingTime: data.data[i].LeavingTime,
-			  ReplyContent: data.data[i].ReplyContent,
-			  ReplyingTime: data.data[i].ReplyingTime,
-			  Title: data.data[i].Title	
-			})
-		}
+		console.log(data)
+		// for(let i = 0; i < data.data.length; i++){
+		// 	questionList.value.push({
+		// 	  Content: data.data[i].Content,
+		// 	  LeavingTime: data.data[i].LeavingTime,
+		// 	  ReplyContent: data.data[i].ReplyContent,
+		// 	  ReplyingTime: data.data[i].ReplyingTime,
+		// 	  Title: data.data[i].Title	
+		// 	})
+		// }
 	}
 	catch(e){
 		console.log(e)

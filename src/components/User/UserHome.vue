@@ -72,7 +72,7 @@
   <div class="content-box job-box">
     <p class="title"><strong>推薦職缺</strong></p>
     <hr/>
-    <div class="container d-flex job-wrapper">
+    <div class="container d-flex job-wrapper" v-if="jobData.length != 0">
       <div class="content-box-border job-card" v-for="data of jobData" :key="data">
         <p>{{ data.Job }}</p>
         <hr/>
@@ -81,6 +81,7 @@
         <a :href="data.Url">{{data.Resource}}</a>
       </div>
     </div>
+    <div v-else class="">暫無資料</div>
   </div>
   <!-- 彈出視窗-系統反應區-->
 	<button id="show" class="btn-primary icon" @click="systemReaction">
@@ -117,16 +118,19 @@ import axios from "axios";
 const punchData = ref([]);
 
 const getTodayPunch = async () => {
-  let href = "http://54.186.56.114:8080/punch";
+  let href = "http://54.186.56.114/punch";
   let group = 'dv102';
   let name = 'Jeff';
-
-  let { data } = await axios.get(href, { params: {
-    group: group,
-    cur: 'today',
-    name: name
-  }});
-  punchData.value = data.punch
+  try{
+    let { data } = await axios.get(href, { params: {
+      group: group,
+      cur: 'today',
+      name: name
+    }});
+    punchData.value = data.punch
+  }catch(e){
+    console.error(e)
+  }
 };
 getTodayPunch();
 
@@ -136,53 +140,47 @@ const todayClass = ref([]);
 const getTodayCourse = async () => {
   let group = 'fn101'
   let name = 'Rossen'
-  let href = 'http://54.186.56.114:8080/course'
-  let { data } = await axios.get(href, {params:{
-    group: group,
-    // cur:'today',
-    startdate: '2022-01-12',
-    stopdate: '2022-01-12',
-    name: name
-  }})
-  todayClass.value = data.data.course
+  let href = 'http://54.186.56.114/course'
+  try{
+    let { data } = await axios.get(href, {params:{
+      group: group,
+      // cur:'today',
+      startdate: '2022-01-12',
+      stopdate: '2022-01-12',
+      name: name
+    }})
+    todayClass.value = data.data.course
+  }catch(e){
+    console.error(e)
+  }
 }
 getTodayCourse()
 
 // diary
-let name = ref('Jeff')
-let group = ref('dv102')
-
-let diaryMsg = ref("尚未登打日誌");
+let diaryMsg = ref("暫無資料");
 
 const getTodayDiary = async () => {
-  let href = `http://54.186.56.114:8081/status/${group.value}/${name}`
-  let { data } = await axios.get(href)
-  diaryMsg.value = data.data.message
+  try{
+    let href = `http://54.186.56.114/diary/status`
+    let { data } = await axios.get(href, { headers:{ 'authorization': `Bearer ${store.state.token}` }})
+    diaryMsg.value = data.data.message
+  }catch(e){
+    console.error(e)
+  }
 }
 getTodayDiary()
 
 // job
-const jobData = ref([
-  {
-    "Job": "網頁前端工程師",
-    "Region": "台北市",
-    "Resource": "104人力銀行",
-    "Skill": "GIT,VISUAL STUDIO,HTML,JAVASCRIPT,CSS,SASS,REACTJS,VUEJS",
-    "Url": "https://www.104.com.tw/job/7f8cc?jobsource=jolist_c_relevance"
-  },
-  {
-    "Job": "資深雲端系統工程師",
-    "Region": "台北市",
-    "Resource": "104人力銀行",
-    "Skill": "LINUX,SHELL,MYSQL,AWS",
-    "Url": "https://www.104.com.tw/job/7idlx?jobsource=jolist_a_relevance"
-  }
-]);
+const jobData = ref([]);
 
 const getJob = async () => {
-  let href = `http://54.186.56.114:8081/RecommandCareer/${group.value}/${name}`
-  let { data } = await axios.get(href)
-  // console.log(data)
+  let href = `http://54.186.56.114/diary/RecommandCareer`
+  try{
+    let { data } = await axios.get(href, { headers:{ 'authorization': `Bearer ${store.state.token}` }})
+    jobData.value = data.data
+  }catch(e){
+    console.error(e)
+  }
 }
 getJob()
 

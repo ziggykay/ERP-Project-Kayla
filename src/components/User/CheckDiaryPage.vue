@@ -17,7 +17,7 @@
 				</option>	      	 	
 	  	</select>
 	    <div class="py-1">
-	      <input class="mx-1" type="checkbox" /><span>企業已回覆</span>
+	      <input class="mx-1" type="checkbox" id="checkbox" v-model="checked"/><span>企業已回覆</span>
 	    </div>	  		  		 	  	  	
 		</div> 		 	
 		<div class="d-flex mt-2 flex-wrap">
@@ -30,7 +30,7 @@
   <!-- chart -->
   <div class="content-box overall-box">
     <div class="py-2 checkBoxInner">
-      <div v-for="(data, index) of diaryData" class="content-box-border checkDiv d-flex">
+      <div v-for="(data, index) of changeData" class="content-box-border checkDiv d-flex">
         <div class="d-flex bigText">
           <div class="text align-self-center">
             <div>
@@ -139,6 +139,8 @@ const axiosProject = async() =>{
 // ======================================================================
 // diary data
 const diaryData = ref([])
+const changeData = ref([]) //企業回復狀態陣列
+const checked = ref(false) //企業回復狀態判斷
 const search = async() =>{
 	let href = 'http://54.186.56.114/diary/ReadDiaryLog'
 	let postData = {
@@ -149,16 +151,31 @@ const search = async() =>{
 	try{
 		diaryData.value = []
 		let { data } = await axios.post(href, postData, {headers: {'authorization': `Bearer ${store.state.token}`}})
-		console.log(data)
+		// console.log(data)
 		data.data.forEach(function(item, index){
 			diaryData.value.push(item)
 		})
+		changeData.value = diaryData.value
 	}
 	catch(e){
 		console.log(e)
 		alert("資料錯誤")
 	}
 }
+
+
+// entReply
+watch(checked, (newVal, oldVal) => { //  set date to yyyy-mm-dd
+	if(newVal == true){
+		changeData.value =  diaryData.value.filter((item)=>{
+		 	return item.Ent_reply !== null
+		})
+	}
+	else{
+		changeData.value = diaryData.value
+	} 
+});
+
 // =========================================================
 // to  /user/checkSelfDiary"
 function checkUserInfo(data) {

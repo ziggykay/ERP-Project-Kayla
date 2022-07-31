@@ -42,6 +42,8 @@
 	import VChart from "vue-echarts";
 	import	{ref, watch, onMounted} from "vue"
 	import axios from 'axios'
+	import store from "../../store"
+	
 	
 	// date
 	const date = ref("");
@@ -90,7 +92,7 @@
 		type.value = ''
 		number.value = ''
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		try{
 			let { data } = await axios.post(href)
 			let type = data.data.type
@@ -115,7 +117,7 @@
 		selectName.value = []
 		number.value = ''
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 
 		if(type.value !== ""){
 			try{
@@ -145,7 +147,7 @@
 		// clear  option valeu
 		selectName.value = []
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		if(number.value !== ""){
 			try{
 				let postData = {
@@ -217,15 +219,21 @@
 	})	 
   //search bar chart axios data
 	const search = async()=>{
-		try{
-			let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/course"
-			let axiosData = ''
-			let { data } = await axios.get(href, { params: { 
+		let href = "http://54.186.56.114/course"
+		let config = {
+		  headers:{
+		  	'authorization': `Bearer ${store.state.token}`
+		  },
+		  params: {
 				group: type.value+number.value,
 				name: name.value,				 
 				startdate: date.value[0], 
-				stopdate: date.value[1] 
-			}})			
+				stopdate: date.value[1] 		  	
+		  },
+		}		
+		let axiosData = ''		
+		try{
+			let { data } = await axios.get(href, config)			
 			axiosData = data.data.course			
 
 			// 清空舊的資料再更新
@@ -238,8 +246,9 @@
 				barchart.value.series[1].data.push(axiosData[i].present)
 			}
 		}
-		catch{
-			alert("資料錯誤")
+		catch(e){
+			console.log(e)
+			alert("沒有該筆資料")
 		}
 	} 
 

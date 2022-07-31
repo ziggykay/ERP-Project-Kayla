@@ -54,6 +54,7 @@
 <script setup>
 	import	{ref, watch, onMounted} from "vue"
 	import axios from 'axios'
+	import store from "../../store"	
 	
 	const date = ref(""); 	// date
 	onMounted(() => {
@@ -120,7 +121,7 @@
 		type.value = ''
 		number.value = ''
 		name.value = ''
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		try{
 			let { data } = await axios.post(href)
 			let type = data.data.type
@@ -145,7 +146,7 @@
 		selectName.value = []
 		number.value = ''
 		name.value = ''			
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 
 		if(type.value !== ""){
 			try{
@@ -175,7 +176,7 @@
 		// clear  option valeu
 		selectName.value = []
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		if(number.value !== ""){
 			try{
 				let postData = {
@@ -208,9 +209,10 @@
 	  formData.append('group', type.value+number.value)
 	  formData.append('file', uploadFile.value.files[0])
 
-	  const href = 'http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/leave'
+	  const href = 'http://54.186.56.114/leave'
 		const headers = {
-		  'Content-Type': 'multipart/form-data'
+		  'Content-Type': 'multipart/form-data',
+		  'authorization': `Bearer ${store.state.token}`
 		}
 		try{
 		let {data} = await axios.post(href, formData, {headers}) 	  //Upload to server
@@ -233,15 +235,21 @@
 	const tableData = ref([])
 	const search = async()=>{
 		// get axios data
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/leave"
-		try{
-			let {data} = await axios.get(href, { params: { 
-				group: type.value+number.value, 
+		let href = "http://54.186.56.114/leave"
+		let config = {
+		  headers:{
+		  	'authorization': `Bearer ${store.state.token}`
+		  },
+		  params: {				
+		  	group: type.value+number.value, 
 				name: name.value, 
 				startdate: date.value[0], 
 				stopdate: date.value[1], 
 				leavetype: leavetype.value
-			}})			
+			},
+		}		
+		try{
+			let {data} = await axios.get(href, config)			
 			let axiosData = data.data
 			tableData.value = [] 			// 清空舊的資料再更新
 
@@ -255,7 +263,8 @@
 				})
 			} 
 		}
-		catch{
+		catch(e){
+			console.log(e)
 			alert("資料錯誤")
 		}		
 	}	

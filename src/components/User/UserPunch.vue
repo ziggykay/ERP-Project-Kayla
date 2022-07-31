@@ -46,7 +46,7 @@
 		  	</select>			  	
 			</div>  	
 			<div class="d-flex mt-2 flex-wrap">
-		  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+		  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="tableDate" range/>
 		  	<button class="confirm-btn btn btn-height" @click="searchTable">搜尋</button>
 			</div>
 		</div>	
@@ -75,7 +75,8 @@
 	import Overall from "../baseComponents/overall.vue";
 	import {ref, onMounted, computed, watch} from "vue"
 	import axios from "axios"
-	import store from  "../../store";
+	import store from "../../store"
+
 
 	// chartCopmponent
 	// filter-data
@@ -90,10 +91,8 @@
 			date.value[i] = newVal[i].toISOString().split('T')[0] 
 		}
 	});
-	const type = ref("fn")
-	const number = ref('101')	
-	const group = ref('fn101')
-	const	name = ref('Rossen') 	
+
+	const group = store.state.userInfo[0].Class
 	const selectDate = ref([
 		{
 			name: "請選擇日期範圍",
@@ -127,7 +126,7 @@
 			color: "#1AAF68"
 		},
 		{
-			title: "早退率",
+			title: "遲到率",
 			number: "",
 			color: "#1AAF68"
 		}
@@ -180,20 +179,14 @@
 	})
 	const search = async()=>{
 		// console.log(cur)
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com/count"	
+		let href = "http://54.186.56.114/count"	
 		let axiosData = ""
-
+		let config = {
+		  headers:{'authorization': `Bearer ${store.state.token}`},
+		  params: {startdate: date.value[0], stopdate: date.value[1]},
+		}
 		try{
-			let {data} = await axios.get(
-				href, 
-				{ params: { 
-				// group: type.value+number.value, 
-				startdate: date.value[0], 
-				stopdate: date.value[1], 
-				// name: name.value
-				}},
-				{headers: {'authorization': `Bearer ${store.state.token}`}}
-			)	
+			let {data} = await axios.get(href, config)	
 			axiosData = data.data			
 			// console.log(axiosData)
 			
@@ -201,7 +194,7 @@
 			AttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			AttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			AttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
-			AttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].excused/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`		
+			AttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].leave/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`		
 			
 			//barcart
 			// 清空資料再更新
@@ -298,21 +291,20 @@
 	}
 
 	const searchTable = async()=>{
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com/punch"
-
+		let href = "http://54.186.56.114/punch"
+		let config = {
+			headers: {
+				'authorization': `Bearer ${store.state.token}`
+			},
+			params: { 
+				startdate: tableDate.value[0], 
+				stopdate: tableDate.value[1], 
+				status: status.value,
+				page: chosePage.value
+			}			
+		}
 		try{
-			let {data} = await axios.get(
-				href, 
-				{ params: { 
-					group: group.value, 
-					startdate: tableDate.value[0], 
-					stopdate: tableDate.value[1], 
-					name: name.value, 
-					status: status.value,
-					page: chosePage.value
-				}},
-				{headers: {'authorization': `Bearer ${store.state.token}`}}
-			)		
+			let {data} = await axios.get(href, config)
 			tablePage.value = Number(data.data.pagination[0].totalpages)
 			let axiosData = data.data.punch
 			tableData.value = [] 			// 清空舊的資料再更新
@@ -328,7 +320,9 @@
 				})
 			} 
 		}
-		catch{
+		catch(e)
+		{
+			console.error(e)
 			alert("資料錯誤")
 		}			
 	}

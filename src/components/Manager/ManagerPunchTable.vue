@@ -57,6 +57,7 @@
 <script setup>
 	import	{ref, watch, onMounted} from "vue"
 	import axios from 'axios'
+	import store from "../../store"
 
 	const date = ref(""); 	// date
 	onMounted(() => {
@@ -123,7 +124,7 @@
 		type.value = ''
 		number.value = ''
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		try{
 			let { data } = await axios.post(href)
 			let type = data.data.type
@@ -148,7 +149,7 @@
 		selectName.value = []
 		number.value = ''
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 
 		if(type.value !== ""){
 			try{
@@ -178,7 +179,7 @@
 		// clear option value
 		selectName.value = []
 		name.value = ''
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		if(number.value !== ""){
 			try{
 				let postData = {
@@ -220,16 +221,22 @@
 	}
 	const tableData = ref([])
 	const search = async()=>{
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/punch"
-		try{
-			let {data} = await axios.get(href, { params: { 
-				group: type.value+number.value, 
+		let href = "http://54.186.56.114/punch"
+		let config = {
+		  headers:{
+		  	'authorization': `Bearer ${store.state.token}`
+		  },
+		  params: {				
+		  	group: type.value+number.value, 
 				startdate: date.value[0], 
 				stopdate: date.value[1],
 				name: name.value, 
 				status: status.value,
 				page: chosePage.value
-			}})
+			}
+		}		
+		try{
+			let {data} = await axios.get(href, config)
 			tablePage.value = Number(data.data.pagination[0].totalpages)
 			let axiosData = data.data.punch
 			tableData.value = [] 			// 清空舊的資料再更新
@@ -247,7 +254,7 @@
 		}
 		catch(e){
 			console.log(e)
-			alert("資料錯誤")
+			alert("沒有該筆資料")
 		}		
 	}
 

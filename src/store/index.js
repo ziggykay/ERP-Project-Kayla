@@ -101,7 +101,7 @@ export default createStore({
             state.token = token
         },
         storeUserInfo(state, info){
-			state.userInfo.push(info)
+			state.userInfo = info
         },
         removeProject(state, status) {
             for (let i = 0; i < state.diary.length; i++) {
