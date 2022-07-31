@@ -19,7 +19,6 @@
           <div class="container-fluid p-2">
             <p class="text-primary InfoTitle"><strong>已編輯日誌</strong></p>
             <hr />
-            <!-- <div class=""> -->
             <div v-if="isCreated" class="d-flex completeDiary">
               <div
                 v-for="item of diary"
@@ -30,7 +29,7 @@
                   {{ item.Project }}
                 </div>
                 <div class="align-self-end mt-3">
-                  <span
+                  <span @click="editDiary(item)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-pen-to-square mx-1"></i></a
                   ></span>
@@ -51,7 +50,6 @@
                 確認送出
               </button>
             </div>
-            <!-- </div> -->
           </div>
         </div>
       </div>
@@ -64,7 +62,7 @@
           <div class="work-time col-md-4">
             <label for="">工作時數</label>
             <br />
-            <select id="time" v-model="workinghour">
+            <select id="time" v-model="Workinghour">
               <option value="">請選擇時數</option>
               <option value="0.5">0.5</option>
               <option value="1">1</option>
@@ -88,6 +86,7 @@
             <label for="project">專案選擇</label>
             <br />
             <select id="project" v-model="Project">
+              <option value="">請選擇專案</option>
               <optgroup label="專案">
                 <option value="A專案">A專案</option>
                 <option value="B專案">B專案</option>
@@ -103,13 +102,15 @@
           <div class="work-time col-md-4">
             <label for="profile_pic">上傳圖片</label>
             <br />
-            <span
-              ><input
+            <span>
+              <input
+                @change="getFiles"
                 type="file"
                 id="profile_pic"
                 name="profile_pic"
                 accept=".jpg, .jpeg, .png"
-            /></span>
+              />
+            </span>
           </div>
           <br />
         </div>
@@ -123,7 +124,7 @@
             v-model="Content"
           ></textarea>
         </div>
-        <div class="text-end">
+        <div v-if="empty" class="text-end">
           <input
             id="submit"
             type="submit"
@@ -132,6 +133,24 @@
             value="+ 新增專案"
           />
         </div>
+        <div v-else class="text-end">
+          <input
+            id="submit"
+            type="submit"
+            class="btn btn-primary add-items confirm-btn editComplete"
+            @click="editComplete"
+            value="修改完成"
+          />
+        </div>
+        <!-- <div class="text-end">
+          <input
+            id="submit"
+            type="submit"
+            class="btn btn-primary add-items confirm-btn"
+            @click="test"
+            value="測試"
+          />
+        </div> -->
       </div>
     </div>
   </div>
@@ -150,31 +169,64 @@ import {
   computed,
 } from "vue";
 const isCreated = ref(false);
+const empty = ref(true);
 const store = useStore();
-const workinghour = ref("");
+const Workinghour = ref("");
 const Project = ref("");
+// const Imgurl = ref("");
+// const Img = getFiles();
 const Content = ref("");
 const AllProject = ref({});
 
 const submitDiary = () => {
-  AllProject.value = {
-    id: uuidv4(),
-    workinghour: workinghour.value,
-    Project: Project.value,
-    Content: Content.value,
-  };
-
-  store.dispatch("updateDiary", AllProject.value);
-  if_else();
+  // console.log(diary.value);
+  if (Workinghour.value === "") {
+    alert("請選擇時數!");
+  } else if (Project.value === "") {
+    alert("請選擇專案!");
+  } else if (Content.value === "") {
+    alert("請填寫日誌!");
+  }
+  // else if (Project.value === "") {
+  //   alert("已完成此專案日誌");
+  // }
+  else {
+    AllProject.value = {
+      id: uuidv4(),
+      Workinghour: Workinghour.value,
+      Project: Project.value,
+      // Imgurl: Img,
+      Content: Content.value,
+    };
+    store.dispatch("updateDiary", AllProject.value);
+    clearForm();
+    ifCreated();
+    // console.log(Img);
+  }
 };
 
 const diary = computed(() => {
   return store.state.diary;
 });
 
+const clearForm = () => {
+  Workinghour.value = "";
+  Project.value = "";
+  Content.value = "";
+};
+
 const removeDiary = (item) => {
-  console.log(item);
   store.dispatch("deleteDiary", item);
+  clearForm();
+  ifCreated();
+};
+
+const editDiary = (item) => {
+  console.log(item);
+  empty.value = false;
+  Workinghour.value = item.Workinghour;
+  Project.value = item.Project;
+  Content.value = item.Content;
 };
 
 const info = ref([
@@ -185,13 +237,63 @@ const info = ref([
     Email: "nini880219@gmail.com",
   },
 ]);
-function if_else() {
-  if (AllProject === "") {
+
+const editComplete = () => {
+  console.log(AllProject.value);
+  for (let i = 0; i < AllProject.value.length; i++) {
+    if (diary.value[i].id === diary.value.id) {
+      console.log(AllProject.value[i]);
+    }
+  }
+
+  empty.value = true;
+  clearForm();
+
+  // Workinghour.value = item.Workinghour;
+  // Project.value = item.Project;
+  // Content.value = item.Content;
+};
+// const test = () => {
+// console.log(diary.value.length);
+// for (let i = 0; i < AllProject.value.length; i++) {
+//   if (state.diary[i].id === status.id) {
+//     state.diary.splice(i, 1);
+//   }
+// }
+// console.log(AllProject.value.Project);
+// };
+
+function ifCreated() {
+  if (diary.value.length === 0) {
     isCreated.value = false;
   } else {
     isCreated.value = true;
   }
 }
+function getFiles(e) {
+  // console.log(e.target.files[0]);
+  console.log(e.target.files[0].name);
+}
+// const getImg = function getFiles(e) {
+//   // console.log(e.target.files[0]);
+//   console.log(e.target.files[0].name);
+// };
+
+// function onFileChange(e) {
+//   var files = e.target.files || e.dataTransfer.files;
+//   if (!files.length) return;
+//   this.createImage(files[0]);
+// }
+
+// function formEmpty() {
+//   console.log(diary.value.Project);
+//   if (diary.value.Project === undefined) {
+//     alert("請選擇專案!");
+//   }
+//   else {
+//     isCreated.value = true;
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>
@@ -250,6 +352,12 @@ function if_else() {
   input {
     font-size: 0.8rem;
     width: 80%;
+  }
+}
+.editComplete {
+  background: #fa2323;
+  &:hover {
+    background: #e01010;
   }
 }
 </style>

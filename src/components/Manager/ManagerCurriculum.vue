@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
 	<!-- filter -->
 	<div class="content-box filter-box">
 		<p class="title"><strong>課表資訊</strong></p> 	  	
@@ -37,14 +38,19 @@
 		</div>	
 	</div>
 
-   <!--table -->
+  <!--table -->
   <div class="content-box tableContainer">
-  	<p class="title"><strong>課程清單</strong></p>  	  	
-		<hr/>
-	  <vxe-table :data="tableData" class="tableInfo" emptyText="no data">
-	    <vxe-column v-for="data of tableTitle " :key="data" :field="data.field" :title="data.title"></vxe-column>
-	  </vxe-table>
-  </div> 
+    <p class="title"><strong>課程清單</strong></p>
+    <hr />
+    <vxe-table :data="tableData" class="tableInfo" emptyText="no data">
+      <vxe-column
+        v-for="data of tableTitle"
+        :key="data"
+        :field="data.field"
+        :title="data.title"
+      ></vxe-column>
+    </vxe-table>
+  </div>
 </template>
 <script setup>
 	import FilterSelect from "../baseComponents/FilterSelect.vue";
@@ -218,27 +224,27 @@
 </script>
 
 <style lang="scss" scoped>
-	.tableContainer{
-	  width: auto;
-	  height: 100vh;
-	  .tableInfo{
-	  	height: 80%;
-	  	overflow-y: auto;
-	  }
-	}
-	.filter-box{
-		height: auto;
-		width: auto;
-	  .selectInfo{
-	  	width: 100px;
-	  	height: 38px;
-	  	background-color: #E9F2FF;
-	  	border-radius: 4px;
-	  	border: none;
-	  	cursor: pointer;
-	  };		
-	  .btn-height{
-	  	height: 38px;
-	  }
-	}
+.tableContainer {
+  width: auto;
+  height: 100vh;
+  .tableInfo {
+    height: 80%;
+    overflow-y: auto;
+  }
+}
+.filter-box {
+  height: auto;
+  width: auto;
+  .selectInfo {
+    width: 100px;
+    height: 38px;
+    background-color: #e9f2ff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-height {
+    height: 38px;
+  }
+}
 </style>
