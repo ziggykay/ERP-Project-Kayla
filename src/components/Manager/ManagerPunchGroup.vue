@@ -121,7 +121,7 @@
 			name: "本月",
 			item: "month"
 		}				 		 // fix select option	value
-	]);		
+	]);
 
 	const axiosType = async() =>{
 		// clear option valeu
