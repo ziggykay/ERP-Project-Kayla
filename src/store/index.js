@@ -1,7 +1,17 @@
 import { createStore } from 'vuex'
-import axios from 'axios'
+import createPersistedState from "vuex-persistedstate";
+
 export default createStore({
     state: {
+        // 登入
+        token: '',
+        userInfo: [],
+        isLogin: '',
+
+        // 日誌
+        diary: [],
+
+        // 系統回覆
         unreplieds: [
             {
                 id: 1,
@@ -42,8 +52,15 @@ export default createStore({
         },
     },
     mutations: {
-        addTempResponse(state, temp) {
-            state.tempResponse.push(temp)
+        clearData(state) {
+            state.token = ''
+            state.userInfo = []
+        },
+        addTempResponse(state, responseText) {
+            state.tempResponse.push(responseText)
+        },
+        addResponse(state, responseText) {
+            state.response.push(responseText)
         },
         removeFromTemp(state, payload) {
             for (let i = 0; i < state.unreplieds.length; i++) {
@@ -59,21 +76,56 @@ export default createStore({
                     state.unreplieds[i].status = 1
                 }
             }
-        }
+        },
+        CreatedProject(state, status) {
+            state.diary.push(status);
+        },
+        storeToken(state, token) {
+            state.token = token
+        },
+        storeUserInfo(state, info) {
+            state.userInfo.push(info)
+        },
+        removeProject(state, status) {
+            for (let i = 0; i < state.diary.length; i++) {
+                if (state.diary[i].id === status.id) {
+                    state.diary.splice(i, 1);
+                }
+            }
+        },
     },
     actions: {
-        //更新到結案區
+        // 登入資訊
+        storeUserInfo(context, status) {
+            context.commit("storeUserInfo", status);
+        },
+        storeToken(context, status) {
+            context.commit("storeToken", status);
+        },
+        // 登出清空資料
+        clearData(context) {
+            context.commit("clearData")
+        },
+
+        // 日誌
+        updateDiary({ commit }, status) {
+            commit("CreatedProject", status);
+        },
+        deleteDiary({ commit }, status) {
+            commit("removeProject", status);
+        },
+
+
+        // 系統提問
+        toggleRes({ commit }, payload) {
+            commit("updateRes", payload);
+        },
         toggleDel({ commit }, payload) {
             commit("removeFromTemp", payload);
         },
-        toggleHasRes({ commit }, payload) {
-            commit("checkHasResponse", payload);
+        toggleTest({ commit }, payload) {
+            commit("test", payload);
         },
-    }
+    },
+    plugins: [createPersistedState()]
 })
-
-
-
-
-
-

@@ -1,12 +1,43 @@
 <template>
-  <!-- filter -->
-  <FilterSelect :parent-selectArr="selectArr" :parent-title="title">
-  </FilterSelect>
-
+	<!-- filter -->
+	<div class="content-box filter-box">
+		<p class="title"><strong>查看日誌</strong></p> 	  	
+		<hr/>
+		<div class="d-flex flex-wrap">
+	  	<select class="selectInfo me-2" v-model="type" @change="axiosNumber">
+	  		<option value="">請選擇班別</option>
+				<option v-for="(data, index) of selectType" :value="data.item">
+					{{ data.name}}
+				</option>	    	 	
+	  	</select>
+	  	<select class="selectInfo me-2" v-model="number">
+	  		<option value="">請選擇班級</option>
+				<option v-for="(data, index) of selectNumber" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>		 
+	  	<select class="selectInfo me-2" v-model="projectType" @change="axiosProject">
+	  		<option value="">請選擇類型</option>
+				<option v-for="(data, index) of selectProjectType" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>		  	 
+	  	<select class="selectInfo me-2" v-model="project">
+	  		<option value="">請選擇專案</option>
+				<option v-for="(data, index) of selectProjct" :value="data.item">
+					{{ data.name }}
+				</option>	      	 	
+	  	</select>	  		 	  	  	
+		</div> 		 	
+		<div class="d-flex mt-2 flex-wrap">
+	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range fixedStart/>
+	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
+		</div>
+	</div>
   <!-- chart -->
   <div class="content-box overall-box">
     <div class="py-2 checkBoxInner">
-      <div v-for="data in items" class="content-box-border checkDiv d-flex">
+      <div v-for="(data, index) of diaryData" class="content-box-border checkDiv d-flex">
         <div class="d-flex bigText">
           <div class="text align-self-center">
             <div>
@@ -25,11 +56,12 @@
           </div>
         </div>
         <div class="align-self-center">
-          <router-link
-            class="checkBtn btn btn-primary confirm-btn"
-            to="/user/checkSelfDiary"
-            >查看</router-link
-          >
+	        <button
+	          class="btn btn-primary confirm-btn"
+	          @click="checkUserInfo(data)"
+	        >
+	          詳細資訊
+	        </button>
         </div>
       </div>
     </div>
@@ -37,109 +69,191 @@
 </template>
 
 <script setup>
-import FilterSelect from "../baseComponents/filterSelect.vue";
-import { ref, onMounted, computed } from "vue";
+import {ref, onMounted, computed, watch} from "vue"
+import axios from 'axios'
+import VChart from "vue-echarts";
+import Overall from "../baseComponents/Overall.vue";
+import { useRouter, useRoute } from 'vue-router'
 
-const date = ref();
-
-// For demo purposes assign range from the current date
+	
+  const router = useRouter()
+// ==========================================================
+// select option data
+const date = ref(""); 	// date
 onMounted(() => {
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-  date.value = [startDate, endDate];
-  return Date;
+  const startDate = new Date(2022, 6, 2);
+  const endDate = new Date(2022, 6, 31)
+  date.value = [startDate, endDate]	
+})
+watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
+	for(let i = 0; i <= date.value.length - 1; i++){
+		date.value[i] = newVal[i].toISOString().split('T')[0] 
+	}
 });
-const selectArr = ref([
-  [
-    {
-      name: "請選擇班級",
-      item: "",
-    },
-    {
-      name: "前端班",
-      item: "fn",
-    },
-    {
-      name: "數據班",
-      item: "se",
-    },
-    {
-      name: "雲端班",
-      item: "dv",
-    },
-  ],
-  [
-    {
-      name: "請選擇班別",
-      item: "",
-    },
-    {
-      name: "102",
-      item: "102",
-    },
-    {
-      name: "103",
-      item: "103",
-    },
-    {
-      name: "211",
-      item: "211",
-    },
-  ],
-  [
-    {
-      name: "請選擇日期",
-      item: "",
-    },
-    {
-      name: "今日",
-      item: "today",
-    },
-    {
-      name: "本月",
-      item: "month",
-    },
-  ],
-  [
-    {
-      name: "請選擇專案",
-      item: "",
-    },
-    {
-      name: "專案",
-      item: "project",
-    },
-    {
-      name: "產品",
-      item: "product",
-    },
-  ],
-]);
-const title = ref("查看日誌");
 
-const items = ref([
-  {
-    Time: "2022-07-18",
-    Name: "AAA",
-    Content:
-      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
-  },
-  {
-    Time: "2022-07-18",
-    Name: "AAA",
-    Content:
-      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
-  },
-  {
-    Time: "2022-07-18",
-    Name: "AAA",
-    Content:
-      "進入專案開始階段 齊助浪寶:7/3日確認需使用的演算法 (從0開始還是套現成模組) V.Dr:6/23簡報呈現內容初次討論 確認使用者登入介面以及蟲害的判斷條件(資料庫 機器學習) SPSS下載與嘗試是否能成為齊助浪寶的現成演算法",
-  },
+const type = ref("") // dynamic select option
+const number = ref("")
+const project = ref("")
+const projectType = ref("")// fix select option
+
+
+const selectType = ref([]) // dynamic select option value
+const selectNumber = ref([])
+const selectProjct = ref([])
+const selectDate = ref([
+	{
+		name: "請選擇日期範圍",
+		item: ""
+	},					
+	{
+		name: "今日",
+		item: "today"
+	},
+	{
+		name: "本月",
+		item: "month"
+	}				 		 // fix select option	value //fix slect option value //fix select option value
 ]);
+const selectProjectType = ref([
+	{
+		name: "專案",
+		item: "專案"
+	},					
+	{
+		name: "產品",
+		item: "產品"
+	},
+])		
+
+const axiosType = async() =>{
+	// clear  option valeu
+	selectType.value = []
+	selectNumber.value = []
+	type.value = ''
+	number.value = ''
+	let href = 'http://54.186.56.114:8081/Getdatalist'
+
+	try{
+		let { data } = await axios.post(href)
+		let type = data.data.type
+
+
+		for(let i = 0; i < type.length; i++){
+			selectType.value.push({
+				name: type[i],
+				item: type[i]
+			})
+		}
+	}
+	catch{
+		alert("資料錯誤")
+	}
+}		
+axiosType()
+
+const axiosNumber = async() =>{
+	// clear  option valeu
+	selectNumber.value = []
+	number.value = ''	
+	let href = 'http://54.186.56.114:8081/Getdatalist'
+
+	if(type.value !== ""){
+		try{
+			let postData = {
+				type: type.value
+			}
+			let { data } = await axios.post(href, postData)
+			
+			let number = data.data.number
+			for(let i = 0; i < number.length; i++){
+				selectNumber.value.push({
+					name: number[i],
+					item: number[i]
+				})
+			}
+		}
+		catch(e){
+			console.log(e)
+			alert("資料錯誤")
+		}		
+	}
+	else{
+		alert("請選擇資料")
+	}
+}
+const axiosProject = async() =>{
+	let href = "http://54.186.56.114:8081/Getdatalist";
+	selectProjct.value = [];
+	project.value = ''
+	
+	try{
+		let { data } = await axios.get(href)
+		let filterProject = data.data.Project.filter((item)=>{
+			return item.Status == projectType.value
+		})
+		filterProject.forEach(function(item, index){
+			selectProjct.value.push({
+				name: item.Project,
+				item: item.Project
+			})			
+		})
+	}
+	catch(e){
+		console.log(e)
+	}
+}
+// ============================================================
+// diary data
+const diaryData = ref([])
+const search = async() =>{
+	let href = 'http://54.186.56.114:8081/ReadDiaryLog'
+	let postData = {
+		date_from: date.value[0],
+		date_to: date.value[1],
+		number: number.value,
+		project: project.value,
+		type: type.value
+	}
+	try{
+		diaryData.value = []
+		let { data } = await axios.post(href, postData)
+		// console.log(data.data)
+		data.data.forEach(function(item, index){
+			diaryData.value.push(item)
+		})
+	}
+	catch(e){
+		console.log(e)
+	}
+}
+// =========================================================
+// to  /user/checkSelfDiary"
+function checkUserInfo(data) {
+  router.push({
+    name: "CheckSelfDiary",
+    params: {
+    	user: JSON.stringify(data) 
+    },
+  });	
+}
 </script>
 
 <style lang="scss" scoped>
+.filter-box {
+  height: auto;
+  width: auto;
+  .selectInfo {
+    width: 100px;
+    height: 38px;
+    background-color: #e9f2ff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-height {
+    height: 38px;
+  }
+}		
 .overall-box {
   width: auto;
   height: auto;
