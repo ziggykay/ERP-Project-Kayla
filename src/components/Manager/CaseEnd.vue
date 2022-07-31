@@ -2,14 +2,14 @@
   <!-- 已結案區 -->
   <!-- filter -->
 <FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
-  <div class="d-flex justify-content-center">
+  <div class="d-flex justify-content-center" >
     <div class="content-box main-outter">
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
-        <div class="d-flex justify-content-evenly">
+        <div class="d-flex justify-content-evenly" v-if="repliedsDateCount!==0">
           <div class="resbox-outter">
-            <div class="content-box resbox ps-2"  v-for="data of replied">
+            <div class="content-box resbox ps-2" v-for="data of replieds">
               <div class="d-flex justify-content-between" >
-                <div class="d-flex date-and-title w-50 justify-content-evenly">
+                <div class="d-flex date-and-title w-50 justify-content-evenly  ms-3">
                 <p class="">日期</p>
                 <p>姓名</p>
                 <p>問題</p>
@@ -20,7 +20,7 @@
                   class="btn btn-primary confirm-btn check-res mt-2 ms-3" @click="updateData(data)">查看</button>
               </div>
             </div>
-            <div class="d-flex justify-content-around w-75 date-and-title-content">
+            <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
               <p class="ps-4">{{data.LeavingTime}}</p>
               <p>{{data.Name}}</p>
               <p>{{data.Title}}</p>
@@ -40,6 +40,7 @@
             </div>
           </div>
       </div>
+      <div v-else><p class="text-center fs-5">尚無結案資料</p></div>
     </div>
   </div>
 </template>
@@ -48,7 +49,7 @@
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
 import FilterSelect from "../baseComponents/FilterSelect.vue";
 import { ref, computed, onMounted } from "vue";
-import { useStore,mapActions } from "vuex";
+import { useStore, mapActions, mapState } from "vuex";
 const date = ref();
 // For demo purposes assign range from the current date
 onMounted(() => {
@@ -56,7 +57,9 @@ onMounted(() => {
   const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
   date.value = [startDate, endDate];
   return Date;
+  
 });
+
 // filter-data
 	const selectArr = ref([
 		[
@@ -73,8 +76,9 @@ onMounted(() => {
 	const title = "已結案區"
   //store
   const store = useStore()
-  const replied = computed(()=> store.state.replied)
+  const replieds = computed(()=> store.state.replieds)
   const response = computed(()=> store.state.response)
+  const repliedsDateCount = store.getters.repliedsDate.length
   //想要取特定Data但失敗
   // const selectResData = ref(response.value[0]);
   // function updateResData (resData) {
@@ -82,11 +86,16 @@ onMounted(() => {
   //   console.log(selectData.value)
   // }
   //查看按鈕
-  const selectData = ref(replied.value[0]);
+  const selectData = ref(replieds.value[0]);
   function updateData (data) {
     selectData.value = data
     console.log(selectData.value)
   }
+  //API測試
+  // onMounted(()=> {
+  //   store.dispatch('loadEndMessage')
+  // })
+  // const {replied} = mapState()
 </script>
 
 <style lang="scss" scoped>

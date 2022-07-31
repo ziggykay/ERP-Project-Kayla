@@ -1,7 +1,9 @@
 <template>
-  <div class="inner">
-    <AccountCheckPage />
-  </div>
+  	<div class="inner">
+  		<keep-alive>
+   	 		<AccountCheckPage />
+  		</keep-alive>
+  	</div>		
 </template>
 
 <script setup>

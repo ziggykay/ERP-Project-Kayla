@@ -22,8 +22,8 @@
             <!-- <div class=""> -->
             <div v-if="isCreated" class="d-flex completeDiary">
               <div
-                v-for="item of diary"
-                v-bind:key="item.id"
+                v-for="(item, index) of AllProject"
+                :key="index"
                 class="content-box-border project plates d-flex flex-column"
               >
                 <div class="project-name text-center align-self-center mt-4">
@@ -34,7 +34,7 @@
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-pen-to-square mx-1"></i></a
                   ></span>
-                  <span @click="removeDiary(item)"
+                  <span @click="removeDiary(index)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-trash-can mx-1"></i></a
                   ></span>
@@ -139,44 +139,30 @@
 
 <script setup>
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 import { useStore, mapActions } from "vuex";
-import {
-  ref,
-  onMounted,
-  reactive,
-  watch,
-  defineAsyncComponent,
-  computed,
-} from "vue";
+import { ref, onMounted, reactive, watch, defineAsyncComponent } from "vue";
+
 const isCreated = ref(false);
+
 const store = useStore();
+
 const workinghour = ref("");
 const Project = ref("");
 const Content = ref("");
-const AllProject = ref({});
-
+const AllProject = ref([]);
 const submitDiary = () => {
-  AllProject.value = {
-    id: uuidv4(),
+  AllProject.value.push({
     workinghour: workinghour.value,
     Project: Project.value,
     Content: Content.value,
-  };
-
+  });
   store.dispatch("updateDiary", AllProject.value);
   if_else();
+  console.log(AllProject.value);
 };
-
-const diary = computed(() => {
-  return store.state.diary;
-});
-
-const removeDiary = (item) => {
-  console.log(item);
-  store.dispatch("deleteDiary", item);
+const removeDiary = () => {
+  store.dispatch("deleteDiary", AllProject.value);
 };
-
 const info = ref([
   {
     Class: "fn102",
@@ -185,6 +171,7 @@ const info = ref([
     Email: "nini880219@gmail.com",
   },
 ]);
+
 function if_else() {
   if (AllProject === "") {
     isCreated.value = false;
@@ -192,6 +179,7 @@ function if_else() {
     isCreated.value = true;
   }
 }
+// addProject();
 </script>
 
 <style lang="scss" scoped>
@@ -228,6 +216,7 @@ function if_else() {
     }
   }
 }
+
 .diary-box {
   display: flex;
   flex-direction: column;

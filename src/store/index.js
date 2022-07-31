@@ -1,73 +1,89 @@
 import { createStore } from 'vuex'
+import createPersistedState from "vuex-persistedstate";
+
 export default createStore({
     state: {
-        unreplied: [
+        // 登入
+        token:'',
+        userInfo:[],
+		isLogin: '',
+        
+        // 日誌
+        diary: [],
+
+        // 系統回覆
+        unreplieds: [
             {
                 id: 1,
-                LeavingTime: '2022-07-09',
+                LeavingTime: '2022-06-06',
                 Name: 'Jay',
                 Title: '電腦螢幕打不開',
-                question:
-                {
-                    content: '電腦螢幕打不開，請問能幫忙維修嗎',
-                    responseBox: ""
-                },
+                content: '電腦螢幕打不開，請問能幫忙維修嗎',
+                responseBox: "",
+                status: 0
+
             },
             {
                 id: 2,
-                LeavingTime: '2022-07-13',
+                LeavingTime: '2022-06-09',
                 Name: 'Jay',
                 Title: '教室冷氣故障',
-                question:
-                {
-                    content: '教室冷氣故障，請問能幫忙維修嗎',
-                    responseBox: ""
-                },
+                content: '教室冷氣故障，請問能幫忙維修嗎',
+                responseBox: "",
+                status: 0
+
             },
-        ],
-        replied: [
             {
                 id: 3,
-                LeavingTime: '2022-06-02',
-                Name: 'May',
-                Title: '電腦螢幕有殘影',
-                question:
-                {
-                    content: '電腦螢幕有殘影，請問能幫忙維修嗎',
-                    responseBox: "我們會盡快找人去修理，請您耐心等候。"
-                },
-            },
-            {
-                id: 4,
-                LeavingTime: '2022-06-13',
-                Name: 'Penny',
-                Title: '教室冷氣故障',
-                question:
-                {
-                    content: '教室冷氣故障，請問能幫忙維修嗎',
-                    responseBox: "我們收到您的問題了，這周我們會找人去修理。"
-                },
+                LeavingTime: '2022-06-15',
+                Name: 'Jay',
+                Title: '投影幕故障',
+                content: '投影幕故障，請問能幫忙維修嗎',
+                responseBox: "",
+                status: 0
+
             },
         ],
         tempResponse: [],
-        response: []
-
-
-
+        replieds: [],
     },
     getters: {
-        unreplied: (state) => (id) => {
-            return state.unreplied.filter(u => u.id === Number(id))[0]
+        // unreplieds
+        unrepliedsid: (state) => {
+            return state.unreplieds.filter(u => u.id)
         },
-        tempResponse: (state) => {
-            return state.tempResponse.map(
-                itemId => state.unreplied.find(
-                    unreplied => unreplied.id === itemId
-                )
-            )
+        unrepliedsidLen: (state, getters) => {
+            return getters.unrepliedsDate.length
+        },
+        unrepliedsDate: state => {
+            return state.unreplieds.filter(u => u.LeavingTime)
+        },
+        unrepliedsDateCount: (state, getters) => {
+            return getters.unrepliedsDate.length
+        },
+        //暫存區
+        tempResponse: state => {
+            return state.tempResponse
+        },
+        unrepliedsres: state => {
+            return state.unreplieds.filter(u => u.responseBox)
+        },
+        //replieds
+        replieds: state => {
+            return state.replieds
+        },
+        repliedsDate: state => {
+            return state.replieds.filter(r => r.LeavingTime)
+        },
+        tempItem: (state) => {
+            return state.unreplieds.map(u => u.id)
         }
     },
     mutations: {
+        clearData(state){
+            state.token = ''
+            state.userInfo = []
+        },
         addTempResponse(state, responseText) {
             state.tempResponse.push(responseText)
         },
@@ -75,11 +91,66 @@ export default createStore({
             state.response.push(responseText)
         },
         removeFromTemp(state, payload) {
-            let indexToDelete = state.unreplied.indexOf(Number(payload));
-            state.unreplied.splice(indexToDelete, 1)
+            let indexToDelete = state.tempResponse.indexOf(Number(payload));
+            state.tempResponse.splice(indexToDelete, 1)
         },
+        CreatedProject(state, status) {
+            state.diary.push(status);
+        },
+        storeToken(state, token){
+            state.token = token
+        },
+        storeUserInfo(state, info){
+			state.userInfo.push(info)
+        },
+        removeProject(state, status) {
+            for (let i = 0; i < state.diary.length; i++) {
+                if (state.diary[i].id === status.id) {
+                    state.diary.splice(i, 1);
+                }
+            }
+        },
+        test(state, payload) {
+            for (let i = 0; i < state.unreplieds.length; i++) {
+                if (state.unreplieds[i].id == payload.id) {
+                    state.unreplieds[i].responseBox = payload.responseBox
+                    state.unreplieds[i].status = 1
+                }
+            }
+        }
     },
     actions: {
+        // 登入資訊
+        storeUserInfo(context, status){
+			context.commit("storeUserInfo", status);
+        },
+        storeToken(context, status){
+            context.commit("storeToken", status);
+        },
+        // 登出清空資料
+        clearData(context){
+            context.commit("clearData")            
+        },
 
-    }
+        // 日誌
+        updateDiary({ commit }, status) {
+            commit("CreatedProject", status);
+        },
+        deleteDiary({ commit }, status) {
+            commit("removeProject", status);
+        },
+
+
+        // 系統提問
+        toggleRes({ commit }, payload) {
+            commit("updateRes", payload);
+        },
+        toggleDel({ commit }, payload) {
+            commit("removeFromTemp", payload);
+        },
+        toggleTest({ commit }, payload) {
+            commit("test", payload);
+        },
+    },
+    plugins: [createPersistedState()]
 })

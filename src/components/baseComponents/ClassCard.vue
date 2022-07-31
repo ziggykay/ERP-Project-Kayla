@@ -2,13 +2,15 @@
   <div class="class-card content-box">
     <div class="class-title d-flex justify-content-between">
       <p class="title">{{ classData.course }}</p>
-      <button type="button" class="btn confirm-btn watch-btn" @click="updateVideo"
-      >觀看影片</button>
+      <!-- <button type="button" class="btn confirm-btn watch-btn"
+       @click="updateVideo">網路資源</button> -->
+      <button type="button" class="btn confirm-btn watch-btn"
+       @click="getResources">網路資源</button>
     </div>
     <div class="class-content container-fluid d-flex">
       <div class="percent-section col-3">
         <p class="percent-number">{{ progress }}%</p>
-        <p class="percent-desc">{{ classData.status }}</p>
+        <p class="percent-desc">{{ status }}</p>
       </div>
       <div class="bar-section col-9">
         <p class="bar-label">
@@ -26,7 +28,8 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from "vue"
+  import axios from "axios"
+  import { ref, onMounted, defineEmits } from "vue"
 
   const props = defineProps({
     parentData: Object
@@ -36,13 +39,29 @@
   let progress = Math.floor((classData.value.present/classData.value.totalhours)*100)
   let status = ref('')
   const define = () => {
-    progress == 100 ? status.value = '已完成' : status.value = '進行中' 
+    progress === 100 ? status.value = '已完成' : status.value = '進行中' 
+  }
+  define()
+
+  const classResources = ref([])
+
+  const getResources = () =>{
+    axios.post("http://54.186.56.114:8080/course", 
+      {
+        // course:"php",
+        course:classData.value.course,
+        group:"fn101"
+      }
+    ).then(res => {
+      classResources.value = res.data.data
+      sendData()
+    })
   }
 
-  const emit = defineEmits(['showVideo'])
-
-  function updateVideo () {
-    emit('showVideo', classData.value.video)
+  const emit = defineEmits(['showResources'])
+  
+  const sendData = () =>{
+    emit('showResources', classResources.value)
   }
 
 </script>

@@ -1,6 +1,7 @@
 <template>
+	<!--  filter-->
 	<div class="content-box filter-box">
-		<p class="title"><strong>學員學習進度</strong></p> 	  	
+		<p class="title"><strong>以學員篩選</strong></p> 	  	
 		<hr/>
 		<div class="d-flex flex-wrap">
 	  	<select class="selectInfo me-2" v-model="type" @change="axiosNumber">
@@ -20,7 +21,7 @@
 				<option v-for="(data, index) of selectName" :value="data.item">
 					{{ data.name }}
 				</option>	      	 	
-	  	</select>	
+	  	</select>			 	  	
 <!-- 	  	<select class="selectInfo me-2">
 				<option v-for="(data, index) of selectDate" :value="data.item">
 					{{ data.name }}
@@ -32,38 +33,43 @@
 	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
 		</div>
 	</div>	
-  <!-- chart -->
-  <div class="content-box overall-box chartContainer" >
-		<v-chart class="chartHeight" :option="barchart" autoresize />  	
-  </div> 
+	<!-- <button class="confirm-btn btn btn-height ms-auto ">匯出此頁</button>	 -->
 
+	<!-- overall -->
+	<Overall :parent-data="userAttendanceData"></Overall>			
+	<!-- chart -->
+	<div class="content-box overall-box chartContainer" >
+	<v-chart class="chartHeight" :option="userBarchart" autoresize />  	
+	</div>		   		
 </template>
+
 <script setup>
-	import VChart from "vue-echarts";
-	import	{ref, watch, onMounted} from "vue"
+	import {ref, onMounted, computed, watch} from "vue"
 	import axios from 'axios'
-	
-	// date
-	const date = ref("");
+	import VChart from "vue-echarts";
+	import Overall from "../baseComponents/Overall.vue";
+
+
+	const date = ref(""); 	// date
 	onMounted(() => {
     const startDate = new Date(2021, 11, 16);
     const endDate = new Date(2022, 4, 27)
     date.value = [startDate, endDate]	
 	})
-	//  set date to yyyy-mm-dd
-	watch(date, (newVal, oldVal) => {
+	watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
 		for(let i = 0; i <= date.value.length - 1; i++){
 			date.value[i] = newVal[i].toISOString().split('T')[0] 
 		}
 	});
 
-	// dynamic select option
-	const type = ref("")
+	const type = ref("") // dynamic select option
 	const number = ref("")
 	const name = ref("") 
+	const status = ref("")// fix select option
 
-
-	// dynamic select option value have three function
+	const selectType = ref([]) // dynamic select option value
+	const selectNumber = ref([])
+	const selectName = ref([])	
 	const selectDate = ref([
 		{
 			name: "請選擇日期範圍",
@@ -76,11 +82,8 @@
 		{
 			name: "本月",
 			item: "month"
-		}				 		
-	]);	 	
-	const selectType = ref([])
-	const selectNumber = ref([])
-	const selectName = ref([])	
+		}				 		// fix select option	value
+	]);		
 
 	const axiosType = async() =>{
 		// clear  option valeu
@@ -168,44 +171,69 @@
 		else{
 			alert("請選擇資料")
 		}
-
 	}
-	
-	const barchart = ref({
+
+
+
+// overvall and chart =================================================================
+	const userAttendanceData = ref([
+		{
+			title: "出席率",
+			number: "",
+			color: "#558ABA"
+		},
+		{
+			title: "遲到率",
+			number: "",
+			color: "#1AAF68"
+		},
+		{
+			title: "缺席率",
+			number: "",
+			color: "#1AAF68"
+		},
+		{
+			title: "早退率",
+			number: "",
+			color: "#1AAF68"
+		}
+	]); 	
+	const userBarchart = ref({
     title: {
-      text: '學員學習進度表',
+      text: '出席狀況',
 			textStyle: {
-			  color: '#558ABA'
-			},
-				subtext: '', 
+			    color: '#558ABA'
+			}
     },
     tooltip: {},
     legend: {
     	left: "right",
     },
-    yAxis: {
+    xAxis: {
       data: [],
       nameTextStyle: {
       	fontWeight: "bolder"
       }
     },
-    xAxis: {
+    yAxis: {
 			nameTextStyle: {
       	fontWeight: "bolder"
       }
     },
 	  series: [
 	    {
-	    	name: '課程時數',
+	    	name: '到班時數',
 	      data: [],
 	      type: 'bar',
 	      stack: 'x',
 	      itemStyle: {
 					color: '#558ABA'
 	      },
+	      // barWidth: '20%',
+				// barCategoryGap: '5%'
 	    },
 	    {
-	    	name: '學生學習時數',
+	    	name: '缺席時數',
 	      data: [],
 	      type: 'bar',
 	      stack: 'x',
@@ -214,36 +242,41 @@
 	      },			      
 	    }
 	  ],	  		
-	})	 
-  //search bar chart axios data
-	const search = async()=>{
-		try{
-			let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/course"
-			let axiosData = ''
-			let { data } = await axios.get(href, { params: { 
-				group: type.value+number.value,
-				name: name.value,				 
-				startdate: date.value[0], 
-				stopdate: date.value[1] 
-			}})			
-			axiosData = data.data.course			
+	})	  		
 
-			// 清空舊的資料再更新
-			barchart.value.yAxis.data = [];
-			barchart.value.series[0].data = [];
-			barchart.value.series[1].data = []			
-			for(let i = 0; i <= axiosData.length - 1; i++){
-				barchart.value.yAxis.data.push(axiosData[i].course)
-				barchart.value.series[0].data.push(axiosData[i].totalhours)
-				barchart.value.series[1].data.push(axiosData[i].present)
+	const search = async()=>{
+		// get axios data
+		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
+		let axiosData = ''
+		try{
+			let {data} = await axios.get(href, { params: { 
+				group: type.value+number.value, 
+				startdate: date.value[0], 
+				stopdate: date.value[1], 
+				name: name.value
+			}})	
+			axiosData = data.data		
+				// over all
+			userAttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			userAttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].excused/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`			
+			//barcart
+			// 清空資料再更新
+			userBarchart.value.xAxis.data = []
+			userBarchart.value.series[0].data = []
+			userBarchart.value.series[1].data = []	
+
+			for(let i = 0; i < axiosData.length - 1; i++){
+				userBarchart.value.xAxis.data.push(axiosData[i].day)
+				userBarchart.value.series[0].data.push(axiosData[i].attendancehours)
+				userBarchart.value.series[1].data.push(axiosData[i].lackhours)
 			}
 		}
 		catch{
 			alert("資料錯誤")
-		}
-	} 
-
-
+		}		
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -262,16 +295,31 @@
     height: 38px;
   }
 }	
-	.overall-box{
-	  width: auto;
-	  height: auto;
-	}		
-	.chartContainer{
-		height: 100vh;
-		.chartHeight{
-			height: 100%
-		}
-	}			
+.boxContainer{
+	margin: 1rem;
+}	
+.overall-box{
+  width: auto;
+  height: auto;
+
+}
+
+.check-info{
+	border-radius: 4px;
+	cursor: pointer;		
+}		
+.chartContainer{
+	height: 70vh;
+	.chartHeight{
+		height: 100%
+	}
+}		
+.bar-width{
+	width: 40%
+}
+.pie-width{
+	width: 60%;
+}
 </style>
 
 	

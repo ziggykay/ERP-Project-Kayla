@@ -1,12 +1,21 @@
 <template>
-  <!-- filter -->
-<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
+
+  <!-- Date-Picker -->
+  <div class="content-box filter-box">
+    <p class="title"><strong>查看問題回覆</strong></p> 	  	
+		<hr/>
+		<div class="d-flex mt-2 flex-wrap">
+	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range fixedStart/>
+	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
+		</div>
+  </div>	
+
   <div class="d-flex justify-content-center">
     <div class=" ">
       <div class="d-flex justify-content-evenly">
         <div class="content-box resbox-outter">
-          <div class="content-box resbox ps-2"  v-for="data of questionList" :key="data">
-            <div class="d-flex date-and-title justify-content-between tyh vccc" >
+          <div class="content-box resbox ps-2"  v-for="(data,index) of questionList" :key="data">
+            <div class="d-flex date-and-title justify-content-between" >
               <p class="ps-3">日期</p>
               <p class="">標題</p>
               <button
@@ -24,10 +33,10 @@
           <p class="title mb-3 ps-3 fw-bold w-25 text-center">提問</p>
           <div class="q-title">{{ selectData.Title }}</div>
           <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
-          <div class="q-content">{{ selectData.question.content }}</div>
+          <div class="q-content">{{ selectData.Content }}</div>
           <div>
             <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-            <div class="res-content">{{ selectData.question.response }}</div>
+            <div class="res-content">{{ selectData.ReplyContent }}</div>
           </div>
         </div>
       </div>
@@ -36,15 +45,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import FilterSelect from "../baseComponents/filterSelect.vue";
-const date = ref();
-// For demo purposes assign range from the current date
+import store from  "../../store";
+import axios from "axios";
+// ============================================================
+const date = ref(""); 	// date
 onMounted(() => {
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-  date.value = [startDate, endDate];
-  return Date;
+  const startDate = new Date(2022, 6, 2);
+  const endDate = new Date(2022, 6, 31)
+  date.value = [startDate, endDate]	
+})
+watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
+	for(let i = 0; i <= date.value.length - 1; i++){
+		date.value[i] = newVal[i].toISOString().split('T')[0] 
+	}
 });
 // filter-data
 	const selectArr = ref([
@@ -59,34 +74,42 @@ onMounted(() => {
 			}				 		
 		]
 	]);	
-	const title = "查看問題回覆"
-//data
-  const questionList = ref([
-    {
-      LeavingTime: '2022-07-09',
-      Title: '電腦螢幕打不開',
-      question: 
-        {
-          content: '今天上課發現電腦螢幕打不開，請問能幫忙維修嗎?',
-          response: '這周會請相關人員前往維修，謝謝'
-        },
-    },
-    {
-      LeavingTime: '2022-07-13',
-      Title: '教室冷氣故障',
-      question: 
-        {
-          content: '教室椅子壞掉，請問能幫忙維修嗎',
-          response: '這周會請相關人員前往維修，謝謝'
-        },
-    },
-	]);
-  const selectData = ref(questionList.value[0]);
+// ======================================================================
+const questionList = ref([])
+const search = async()=>{
+	let href = 'http://54.186.56.114/diary/Message'
+	try{
+		questionList.value = []
+		let { data } = await axios.get(href, {headers: {'authorization': `Bearer ${store.state.token}`}})
+		console.log(data.data)
+		for(let i = 0; i < data.data.length; i++){
+			questionList.value.push({
+			  Content: data.data[i].Content,
+			  LeavingTime: data.data[i].LeavingTime,
+			  ReplyContent: data.data[i].ReplyContent,
+			  ReplyingTime: data.data[i].ReplyingTime,
+			  Title: data.data[i].Title	
+			})
+		}
+	}
+	catch(e){
+		console.log(e)
+		alert("資料錯誤")
+	}
 
-  function updateData (data) {
-    selectData.value = data
-    console.log(selectData.value)
-  }
+
+}
+// ============================================================
+const selectData = ref({})
+const updateData = (data)=>{
+	selectData.value = data
+	console.log(selectData.value)
+}
+
+
+
+
+
 </script>
 
 <style lang="scss" scoped>
