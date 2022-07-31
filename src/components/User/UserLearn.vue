@@ -2,7 +2,7 @@
 <div class="section">
 
   <overallVue :parent-data="totalData"/>
-  <div>{{ totalData }}</div>
+  
   <div class="container-fluid d-md-flex">
     <!-- 課程區塊 -->
     <div class="content-box class-box col d-flex">
@@ -28,21 +28,25 @@
         @click="changeShow">顯示文章</button>
       </div>
       <div class="scroll-box">
+        <!-- 影片 -->
         <template v-if="isVideo">
           <div class="" v-if="courseResources">
             <div class="video-card" v-for="data of courseResources.video" :key="data">
-              <iframe width="504" height="283.5" :src="data.url"
+              <iframe  width="504" height="283.5" :src="data.url" 
                 title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
               </iframe>
             </div>
+            <div v-show="courseResources.video.length == 0" class="">此課程暫無影片</div>
           </div>
           <div v-else class="error">沒有影片</div>
         </template>
+        <!-- 文章 -->
         <template v-if="!isVideo">
           <div class="" v-if="courseResources">
             <div class="video-card" v-for="data of courseResources.article" :key="data">
               <a :href="data.url" class="article-link">{{ data.title }}</a>
             </div>
+            <div v-show="courseResources.article.length == 0" class="">此課程暫無文章</div>
           </div>
           <div v-else class="error">沒有文章</div>
         </template>
@@ -60,8 +64,30 @@
   import axios from "axios";
   import { ref, reactive, watch, defineAsyncComponent } from "vue";
 
-
-  const totalData = ref([])
+  // overall 用變數
+  const totalData = ref([
+    {
+      title: '課程總時數',
+      number: '',
+      color: '#558ABA'
+    },
+    {
+      title: '課程總堂數',
+      number: '',
+      color: '#1AAF68'
+    },
+    {
+      title: '已進行堂數',
+      number: '',
+      color: '#1AAF68'
+    },
+    {
+      title: '完成率',
+      number: '',
+      color: '#1AAF68'
+    }
+  ])
+  // 全部課程用變數
   const courseData = ref([])
   const input = ref(
     {
@@ -74,7 +100,12 @@
   const getCourses = async()=>{
     let {data} = await axios.get('http://54.186.56.114:8080/course', { params:{ group: "fn101", name: 'Rossen'}} )
       courseData.value = data.data.course
-      totalData.value = data.data.total
+
+      // 計算 overall 用資料
+      totalData.value[0].number = `${data.data.total[0].totalhours}小時`
+      totalData.value[1].number = `${data.data.total[0].totalcourse}堂`
+      totalData.value[2].number = `${data.data.total[0].progress}堂`
+      totalData.value[3].number = `${(data.data.total[0].progress/data.data.total[0].totalcourse)*100}%`
   }
   getCourses()
 
@@ -86,12 +117,13 @@
 	}
 
   // 影片文章資料
-  let courseResources = ref()
+  let courseResources = ref(
+  )
 
   function getResources (resource) {
     courseResources.value = '';
     courseResources.value = resource
-    console.log(courseResources.value)
+    // console.log(courseResources.value)
   }
 
 </script>

@@ -11,8 +11,10 @@
 
 <script setup>
 import router from '../../router';
+import store from '../../store'
 
   function logOut () {
+    store.dispatch('clearData')
     router.push('/')
   }
 
@@ -25,12 +27,6 @@ import router from '../../router';
   margin: 0px;
   list-style: none;
   box-sizing: border-box;
-}
-body {
-  background-color: #e4ecf0;
-}
-a {
-  text-decoration: none;
 }
 nav {
   background-color: #fff;
