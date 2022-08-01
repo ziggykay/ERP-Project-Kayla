@@ -150,7 +150,6 @@ import {ref, onMounted, reactive, watch, computed} from "vue";
 const store = useStore();
 const token = store.getters["auth/getToken"]
 
-
 // ==============================================================
 const info = ref({});  //get user data 
 const getUserData = async()=>{
@@ -162,11 +161,13 @@ const getUserData = async()=>{
 	}	
 	try{
 		let { data } = await axios.get(href, config)
+		// console.log(data.data)
+
 		info.value = {
-	    Class: data.data[0].Class,
-	    Name: data.data[0].Name,
-	    Id: data.data[0].Id,
-	    Email: data.data[0].Email,		
+	    Class: data.data.Class,
+	    Name: data.data.Name,
+	    Id: data.data.Id,
+	    Email: data.data.Email,		
 		}
 	}
 	catch(e){
@@ -179,9 +180,14 @@ const ProjectArr = ref([]) //get project value
 const ProductArr = ref([])
 const axiosProject = async() =>{
 	let href = "http://54.186.56.114/diary/Getdatalist";
-	
+	let config = {
+		headers:{
+			'authorization': `Bearer ${token}`
+		}
+	}		
+
 	try{
-		let { data } = await axios.get(href)
+		let { data } = await axios.get(href, config)
 		let Project = data.data.Project.filter((item)=>{
 			return item.Status == "專案"
 		})
