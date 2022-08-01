@@ -44,6 +44,8 @@ export default createStore({
 
             },
         ],
+        tempResponse: [],
+        replieds: [],
     },
     getters: {
         // unreplieds
@@ -84,7 +86,7 @@ export default createStore({
             state.token = token
         },
         storeUserInfo(state, info) {
-            state.userInfo.push(info)
+            state.userInfo = info
         },
         removeProject(state, status) {
             for (let i = 0; i < state.diary.length; i++) {
@@ -114,17 +116,14 @@ export default createStore({
         deleteDiary({ commit }, status) {
             commit("removeProject", status);
         },
-
-
         // 系統提問
-        toggleRes({ commit }, payload) {
-            commit("updateRes", payload);
-        },
+        //更新到結案區
         toggleDel({ commit }, payload) {
             commit("removeFromTemp", payload);
         },
-        toggleTest({ commit }, payload) {
-            commit("test", payload);
+        //查看
+        toggleHasRes({ commit }, payload) {
+            commit("checkHasResponse", payload);
         },
     },
     plugins: [createPersistedState()]

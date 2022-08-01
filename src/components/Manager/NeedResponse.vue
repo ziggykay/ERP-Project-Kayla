@@ -84,7 +84,7 @@ const emit = defineEmits(["changeShow"]);
  }
 //按送出後回覆按鈕的功能
  function checkHasRes(data){
-  store.dispatch('toggleTest',data)  
+  store.dispatch('toggleHasRes',data)  
  }
 //送出按鈕
  function send(selectData){

@@ -76,6 +76,8 @@
 	import FilterSelect from "../baseComponents/FilterSelect.vue";
 	import {ref, onMounted, computed, watch} from "vue"
 	import axios from "axios"
+	import store from "../../store"
+
 
 	// chartCopmponent
 	// filter-data
@@ -90,10 +92,10 @@
 			date.value[i] = newVal[i].toISOString().split('T')[0] 
 		}
 	});
-	const type = ref("fn")
-	const number = ref('101')	
-	const group = ref('fn101')
-	const	name = ref('Rossen') 	
+	const type = ref("dv")
+	const number = ref('102')	
+	const group = ref('dv102')
+	const	name = ref('Albee') 	
 	const selectDate = ref([
 		{
 			name: "請選擇日期範圍",
@@ -293,33 +295,35 @@
 	}
 
 	const searchTable = async()=>{
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/punch"
-
+		let href = "http://54.186.56.114/punch"
+		console.log(store.state.userInfo)
 		try{
 			let {data} = await axios.get(href, { params: { 
-				group: group.value, 
+				// group: group.value, 
 				startdate: tableDate.value[0], 
 				stopdate: tableDate.value[1], 
-				name: name.value, 
+				// name: name.value,
 				status: status.value,
 				page: chosePage.value
-			}})		
-			tablePage.value = Number(data.data.pagination[0].totalpages)
-			let axiosData = data.data.punch
-			tableData.value = [] 			// 清空舊的資料再更新
+			}}, {headers: {'Authorization': `Bearer ${store.state.token}`}})
+			// tablePage.value = Number(data.data.pagination[0].totalpages)
+			// let axiosData = data.data.punch
+			// tableData.value = [] 			// 清空舊的資料再更新
 
-			for(let i = 0; i <= axiosData.length - 1; i ++){
-				tableData.value.push({ 
-					date: axiosData[i].date, 
-					grade: group.value, 
-					name: axiosData[i].name, 
-					signin: axiosData[i].intime, 
-					signout: axiosData[i].outtime, 
-					inip: axiosData[i].inip
-				})
-			} 
+			// for(let i = 0; i <= axiosData.length - 1; i ++){
+			// 	tableData.value.push({ 
+			// 		date: axiosData[i].date, 
+			// 		grade: group.value, 
+			// 		name: axiosData[i].name, 
+			// 		signin: axiosData[i].intime, 
+			// 		signout: axiosData[i].outtime, 
+			// 		inip: axiosData[i].inip
+			// 	})
+			// } 
 		}
-		catch{
+		catch(e)
+		{
+			console.error(e)
 			alert("資料錯誤")
 		}			
 	}
