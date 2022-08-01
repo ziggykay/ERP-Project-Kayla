@@ -212,10 +212,11 @@ const getJob = async () => {
 };
 getJob();
 
+//彈出視窗-系統反應區====================================================================
+
 const title = ref("");
 const content = ref("");
 
-//彈出視窗-系統反應區====================================================================
 const isDisabled = ref(false);
 const systemReaction = () => {isDisabled.value = !isDisabled.value;};
 const sendQuestion = async () => {

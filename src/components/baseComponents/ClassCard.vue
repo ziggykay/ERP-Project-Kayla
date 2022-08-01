@@ -14,7 +14,7 @@
       </div>
       <div class="bar-section col-9">
         <p class="bar-label">
-          總時數：{{ classData.totalhours }}小時
+          總時數：{{ Math.floor(classData.totalhours) }}小時
         </p>
         <p class="bar-label">
           已完成：{{ Math.floor(classData.present) }}小時
@@ -49,7 +49,6 @@
 
   const getResources = async () =>{
     let href = 'http://54.186.56.114/course'
-    console.log(classData.value.course)
     try{
       let {data} = await axios.get(href, { params: {course: classData.value.course}, headers: { authorization: `Bearer ${token}`} })
       classResources.value = data.data
