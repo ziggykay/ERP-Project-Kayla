@@ -38,24 +38,24 @@
           <div>
           <!-- 回覆區 -->
             <div class="content-box question-box">
-              <p class="title mb-3 ps-3 fw-bold w-25 text-center">問題</p>
+              <p class="title fw-bold text-start">問題</p>
               <p class="q-title">{{selectData.Title}}</p>
-              <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
+              <p class="title fw-bold text-start mt-2">內容</p>
               <div class="q-content">{{selectData.content}}</div>
               <div>
-                <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
+                <p class="title ps-3 mt-2 fw-bold text-start">回覆</p>
                 <div>
                   <textarea
                   class="q-content d-block"
-                  cols="30"
-                  rows="10"
+                  cols="50"
+                  rows="3"
                   placeholder="請輸入回覆內容..."
                   v-model="selectData.responseBox">
                 </textarea>
                 </div>
               </div>
               <div class=" text-end">
-              <button type="button" class="btn btn-primary confirm-btn check-res mt-2"
+              <button type="button" class="btn btn-primary confirm-btn check-res mt-3"
                 @click="send(selectData)" v-if="selectData.responseBox!==''">送出</button>
               </div>
               <!-- <input type="hidden" v-for="{resData, index} of tempResponse" :key=index>{{resData}} -->
@@ -133,20 +133,20 @@ const emit = defineEmits(["changeShow"]);
 }
 .question-box {
   width: 28rem;
-  height: 27rem;
+  height: auto;
   .title {
     color: #558aba;
   }
   .q-title {
     border: solid 1px;
-    width: 22vw;
-    height: 5vh;
+    width: auto;
+    height: auto;
     margin: 0 auto;
   }
   .q-content {
     border: solid 1px;
-    width: 22vw;
-    height: 11vh;
+    width: auto;
+    height: 5rem;
     margin: 0 auto;
   }
   .res-content {
