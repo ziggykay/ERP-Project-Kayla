@@ -59,6 +59,8 @@
 	import axios from 'axios'
 	import store from "../../store"
 
+	const token = store.getters["auth/getToken"]
+
 	const date = ref(""); 	// date
 	onMounted(() => {
     const startDate = new Date(2021, 11, 16);
@@ -224,7 +226,7 @@
 		let href = "http://54.186.56.114/punch"
 		let config = {
 		  headers:{
-		  	'authorization': `Bearer ${store.state.token}`
+		  	'authorization': `Bearer ${token}`
 		  },
 		  params: {				
 		  	group: type.value+number.value, 

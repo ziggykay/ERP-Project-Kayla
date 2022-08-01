@@ -59,7 +59,7 @@ const props = defineProps({
   },		
 })
 const user = ref(props.parentUser)
-console.log(user.value)
+// console.log(user.value)
 
 </script>
 

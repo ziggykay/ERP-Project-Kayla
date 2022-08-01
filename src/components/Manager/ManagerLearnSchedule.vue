@@ -44,6 +44,7 @@
 	import axios from 'axios'
 	import store from "../../store"
 	
+	const token = store.getters["auth/getToken"]
 	
 	// date
 	const date = ref("");
@@ -222,7 +223,7 @@
 		let href = "http://54.186.56.114/course"
 		let config = {
 		  headers:{
-		  	'authorization': `Bearer ${store.state.token}`
+		  	'authorization': `Bearer ${token}`
 		  },
 		  params: {
 				group: type.value+number.value,

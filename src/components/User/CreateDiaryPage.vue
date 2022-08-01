@@ -148,6 +148,8 @@ import { useStore, mapActions } from "vuex";
 import {ref, onMounted, reactive, watch, computed} from "vue";
 
 const store = useStore();
+const token = store.getters["auth/getToken"]
+
 
 // ==============================================================
 const info = ref({});  //get user data 
@@ -155,7 +157,7 @@ const getUserData = async()=>{
 	let href = 'http://54.186.56.114/login'
 	let config = {
 		headers: {
-			'authorization': `Bearer ${store.state.token}`
+			'authorization': `Bearer ${token}`
 		}
 	}	
 	try{
@@ -205,14 +207,38 @@ const axiosProject = async() =>{
 }
 axiosProject()
 // ======================================================================================
-const isCreated = ref(false);
-const empty = ref(true);
-const Workinghour = ref("");
+// 顯示已編輯日誌狀態 
+const diary = computed(() => { //取得vuex diary arr
+  return store.state.diary;
+});
+const isCreated = ref(false); //預設已編輯日誌狀態
+
+watch(diary.value, (newVal, oldVal) => { 
+
+  if (newVal.length === 0) {
+    isCreated.value = false;
+  } else {
+    isCreated.value = true;
+  } //判斷diary長度，更改isCreated值
+});
+
+
+// ==========================================================================================
+const empty = ref(true); //切換 新增專案按鈕狀態
+const Workinghour = ref(""); //日誌燈打v-model
 const Project = ref("");
 const Content = ref("");
-const AllProject = ref({});
+const AllProject = ref({}); //日誌燈打v-model綁到物件
 
-const submitDiary = () => {
+const editDiary = (item) => { // 編輯function
+  // console.log(item);
+  empty.value = false; // 編輯專案按鈕，更改新增專案按鈕狀態
+  Workinghour.value = item.Workinghour; //賦值
+  Project.value = item.Project;
+  Content.value = item.Content;
+};
+
+const submitDiary = () => { // 提交到已編輯日誌區塊
   // console.log(diary.value);
   if (Workinghour.value === "") {
     alert("請選擇時數!");
@@ -221,7 +247,7 @@ const submitDiary = () => {
   } else if (Content.value === "") {
     alert("請填寫日誌!");
   }
-  // else if (Project.value === "") {
+  // else if (Project.value === "") { //todo 防止重複點選已填寫的專案
   //   alert("已完成此專案日誌");
   // }
   else {
@@ -231,17 +257,12 @@ const submitDiary = () => {
       Project: Project.value,
       Content: Content.value,
     };
-    store.dispatch("updateDiary", AllProject.value);
+    store.dispatch("updateDiary", AllProject.value); //將AllProject 存到vuex
     clearForm();
-    ifCreated();
   }
 };
 
-const diary = computed(() => {
-  return store.state.diary;
-});
-
-const clearForm = () => {
+const clearForm = () => { //清空v-model值
   Workinghour.value = "";
   Project.value = "";
   Content.value = "";
@@ -249,21 +270,12 @@ const clearForm = () => {
 
 const removeDiary = (item) => {
   store.dispatch("deleteDiary", item);
-  clearForm();
-  ifCreated();
-};
-
-const editDiary = (item) => {
-  console.log(item);
-  empty.value = false;
-  Workinghour.value = item.Workinghour;
-  Project.value = item.Project;
-  Content.value = item.Content;
+  // clearForm();
 };
 
 
 const editComplete = () => {
-  console.log(AllProject.value);
+  // console.log(AllProject.value);
   for (let i = 0; i < AllProject.value.length; i++) {
     if (diary.value[i].id === diary.value.id) {
       console.log(AllProject.value[i]);
@@ -273,14 +285,6 @@ const editComplete = () => {
   empty.value = true;
   clearForm();
 };
-
-function ifCreated() {
-  if (diary.value.length === 0) {
-    isCreated.value = false;
-  } else {
-    isCreated.value = true;
-  }
-}
 
 
 

@@ -85,19 +85,19 @@ const emit = defineEmits(["changeShow"]);
 //store
   const store = useStore()
   const replieds = computed(()=> store.state.replieds)
-  console.log(replieds)
+  // console.log(replieds)
   const unreplieds = computed(()=>  store.state.unreplieds)
   const unrepliedsid = store.getters.unrepliedsid
   const unrepliedsLength = store.getters.unrepliedsLength
-  console.log(unrepliedsLength)
+  // console.log(unrepliedsLength)
   const unrepliedsDateCount = store.getters.unrepliedsDate.length
   const responseText = ref("")
   const tempResponse = store.getters.tempResponse
   const tempResponseVal = store.getters.tempResponseVal
   const tempItem = store.getters.tempItem
   const unrepliedsres = store.getters.unrepliedsres
-  console.log(unrepliedsres)
-  console.log(tempItem)
+  // console.log(unrepliedsres)
+  // console.log(tempItem)
   //回覆至暫存區&&顯示結案按鈕
   // function changeStatus() {
   //   store.dispatch("toggleTempRes",selectData.responseBox);
@@ -107,12 +107,12 @@ const emit = defineEmits(["changeShow"]);
  function updateRes(){
   store.dispatch('toggleRes',unrepliedsid)
    alert('已結案')
-   console.log(unrepliedsid)
+   // console.log(unrepliedsid)
  }
- console.log(unrepliedsid.length)
+ // console.log(unrepliedsid.length)
  //從暫存區消失
  function endCase(data){
-  console.log(data)
+  // console.log(data)
   for(let i=0; i<unrepliedsid.length;i++){
     if (this.unreplieds[i] === data){
         this.unreplieds.splice(i,1)
@@ -126,7 +126,7 @@ const emit = defineEmits(["changeShow"]);
 //送出
  function endCase2(selectData){
   store.dispatch('toggleTest',selectData) 
-  console.log(selectData) 
+  // console.log(selectData) 
  }
   //動態切換顯示資料
   const selectData = ref(unreplieds.value[0]);

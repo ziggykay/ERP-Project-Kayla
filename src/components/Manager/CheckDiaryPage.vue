@@ -75,7 +75,8 @@ import VChart from "vue-echarts";
 import Overall from "../baseComponents/Overall.vue";
 import { useRouter, useRoute } from 'vue-router'
 import store from  "../../store";
-	
+
+const token = store.getters["auth/getToken"]
 const router = useRouter()
 // ==========================================================
 // select option data
@@ -216,7 +217,7 @@ const search = async() =>{
 	}
 	try{
 		diaryData.value = []
-		let { data } = await axios.post(href, postData, {headers: {'authorization': `Bearer ${store.state.token}`}})
+		let { data } = await axios.post(href, postData, {headers: {'authorization': `Bearer ${token}`}})
 		// console.log(data.data)
 		data.data.forEach(function(item, index){
 			diaryData.value.push(item)

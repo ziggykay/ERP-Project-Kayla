@@ -55,6 +55,8 @@
 	import	{ref, watch, onMounted} from "vue"
 	import axios from 'axios'
 	import store from "../../store"	
+
+	const token = store.getters["auth/getToken"]
 	
 	const date = ref(""); 	// date
 	onMounted(() => {
@@ -212,7 +214,7 @@
 	  const href = 'http://54.186.56.114/leave'
 		const headers = {
 		  'Content-Type': 'multipart/form-data',
-		  'authorization': `Bearer ${store.state.token}`
+		  'authorization': `Bearer ${token}`
 		}
 		try{
 		let {data} = await axios.post(href, formData, {headers}) 	  //Upload to server
@@ -238,7 +240,7 @@
 		let href = "http://54.186.56.114/leave"
 		let config = {
 		  headers:{
-		  	'authorization': `Bearer ${store.state.token}`
+		  	'authorization': `Bearer ${token}`
 		  },
 		  params: {				
 		  	group: type.value+number.value, 

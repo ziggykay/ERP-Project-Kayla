@@ -28,7 +28,7 @@
 	  	</select>		 -->	  	
 		</div>  	
 		<div class="d-flex mt-2 flex-wrap">
-	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+	  	<!-- <Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/> -->
 	  	<button class="confirm-btn btn btn-height me-2" @click="search">搜尋</button>
 			<label class="btn confirm-btn upload">
 				<input style="display:none;" ref="uploadFile" v-on:change="handleFileUpload()"  accept=".csv" type="file">
@@ -56,7 +56,9 @@
 	import	{ref, watch, onMounted} from "vue"
 	import axios from "axios"
 	import store from "../../store"	
-	
+		
+		const token = store.getters["auth/getToken"]
+
 		const date = ref(""); 	// date
 	onMounted(() => {
     const startDate = new Date(2021, 11, 16);
@@ -174,7 +176,7 @@
 	  const href = 'http://54.186.56.114/curriculum'
 		const headers = {
 		  'Content-Type': 'multipart/form-data',
-		  'authorization': `Bearer ${store.state.token}`
+		  'authorization': `Bearer ${token}`
 		}
 		try{
 		let {data} = await axios.post(href, formData, {headers}) 	  //Upload to server
@@ -199,7 +201,7 @@
 	const search = async(group, month) => {
 		let href = 'http://54.186.56.114/curriculum'
 		let config = {
-		  headers:{'authorization': `Bearer ${store.state.token}`},
+		  headers:{'authorization': `Bearer ${token}`},
 		  params: {group: type.value+number.value, month: monthPick.value},
 		}		
 

@@ -50,6 +50,7 @@
 	import Overall from "../baseComponents/Overall.vue";
 	import store from "../../store"
 
+	const token = store.getters["auth/getToken"]
 
 	const date = ref(""); 	// date
 	onMounted(() => {
@@ -250,7 +251,7 @@
 		let href = "http://54.186.56.114/count"
 		let config = {
 			headers: {
-				'authorization': `Bearer ${store.state.token}`
+				'authorization': `Bearer ${token}`
 			},
 			params: { 
 				group: type.value+number.value, 

@@ -91,6 +91,7 @@ import { useRouter, useRoute } from 'vue-router'
 import axios from "axios";
 import store from  "../../store";
 	
+	const token = store.getters["auth/getToken"]	
   const router = useRouter()
 
 	const type = ref("") // dynamic select option
@@ -237,7 +238,7 @@ import store from  "../../store";
 	  const href = 'http://54.186.56.114/leave'
 		const headers = {
 		  'Content-Type': 'multipart/form-data',
-		  'authorization': `Bearer ${store.state.token}`
+		  'authorization': `Bearer ${token}`
 		}
 		try{
 		let {data} = await axios.post(href, formData, {headers}) 	  //Upload to server
@@ -258,13 +259,13 @@ import store from  "../../store";
 		
 		if(name.value == ""){
 			config = {
-			  headers:{'authorization': `Bearer ${store.state.token}`},
+			  headers:{'authorization': `Bearer ${token}`},
 			  params: {type: type.value, number: number.value},
 			}		
 		}
 		else{
 			config = {
-			  headers:{'authorization': `Bearer ${store.state.token}`},
+			  headers:{'authorization': `Bearer ${token}`},
 			  params: {type: type.value, number: number.value, Name: name.value},
 			}				
 		}

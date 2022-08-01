@@ -90,8 +90,11 @@
 	import Overall from "../baseComponents/Overall.vue";
 	import store from "../../store"
 	
+
+	const token = store.getters["auth/getToken"]
 	// data
 	// grade
+
 	const date = ref(""); 	// date
 	onMounted(() => {
     const startDate = new Date(2021, 11, 16);
@@ -303,7 +306,7 @@
 			let axiosData = ''
 			let config = {
 				headers: {
-					'authorization': `Bearer ${store.state.token}`
+					'authorization': `Bearer ${token}`
 				},
 				params: { 
 					group: type.value+number.value, 

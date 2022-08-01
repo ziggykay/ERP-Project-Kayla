@@ -78,6 +78,8 @@
 	import store from "../../store"
 
 
+	const token = store.getters["auth/getToken"]
+
 	// chartCopmponent
 	// filter-data
 	const date = ref(""); 	// date
@@ -92,7 +94,7 @@
 		}
 	});
 
-	const group = store.state.userInfo[0].Class
+	// const group = store.state.userInfo[0].Class
 	const selectDate = ref([
 		{
 			name: "請選擇日期範圍",
@@ -182,7 +184,7 @@
 		let href = "http://54.186.56.114/count"	
 		let axiosData = ""
 		let config = {
-		  headers:{'authorization': `Bearer ${store.state.token}`},
+		  headers:{'authorization': `Bearer ${token}`},
 		  params: {startdate: date.value[0], stopdate: date.value[1]},
 		}
 		try{
@@ -276,7 +278,7 @@
 	// table
 	const tableTitle = ref([
 		{field:"date", title:"日期"},
-		{field:"grade", title:"班級"},	  		
+		// {field:"grade", title:"班級"},	  		
 		{field:"name", title:"姓名"},
 		{field:"signin", title:"簽到"},
 		{field:"signout", title:"簽退"},
@@ -294,7 +296,7 @@
 		let href = "http://54.186.56.114/punch"
 		let config = {
 			headers: {
-				'authorization': `Bearer ${store.state.token}`
+				'authorization': `Bearer ${token}`
 			},
 			params: { 
 				startdate: tableDate.value[0], 
@@ -312,7 +314,7 @@
 			for(let i = 0; i <= axiosData.length - 1; i ++){
 				tableData.value.push({ 
 					date: axiosData[i].date, 
-					grade: group.value, 
+					// grade: group.value, 
 					name: axiosData[i].name, 
 					signin: axiosData[i].intime, 
 					signout: axiosData[i].outtime, 
