@@ -81,9 +81,14 @@
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
+import axios from "axios"
+
+
 const emit = defineEmits(["changeShow"]);
-//store
   const store = useStore()
+const token = store.getters["auth/getToken"]
+//store
+
   const replieds = computed(()=> store.state.replieds)
   // console.log(replieds)
   const unreplieds = computed(()=>  store.state.unreplieds)
@@ -91,6 +96,37 @@ const emit = defineEmits(["changeShow"]);
   const unrepliedsLength = store.getters.unrepliedsLength
   // console.log(unrepliedsLength)
   const unrepliedsDateCount = store.getters.unrepliedsDate.length
+
+
+const search = async()=>{
+	let href = 'http://54.186.56.114/diary/Message'
+	try{
+		// questionList.value = []
+		let { data } = await axios.get(href, {headers: {'authorization': `Bearer ${token}`}})
+		console.log(data)
+		// for(let i = 0; i < data.data.length; i++){
+		// 	unreplieds.value.push({
+		// 	  Content: data.data[i].Content,
+		// 	  LeavingTime: data.data[i].LeavingTime,
+		// 	  ReplyContent: data.data[i].ReplyContent,
+		// 	  ReplyingTime: data.data[i].ReplyingTime,
+		// 	  Title: data.data[i].Title	
+		// 	})
+		// }
+	}
+	catch(e){
+		console.log(e)
+		alert("資料錯誤")
+	}
+}
+search()
+
+
+
+
+
+
+
   const responseText = ref("")
   const tempResponse = store.getters.tempResponse
   const tempResponseVal = store.getters.tempResponseVal

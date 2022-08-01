@@ -134,6 +134,7 @@
 		type.value = ''
 		number.value = ''
 		let href = 'http://54.186.56.114/diary/Getdatalist'
+		const headers = {'authorization': `Bearer ${token}`}		
 
 		try{
 			let { data } = await axios.post(href)
@@ -158,13 +159,13 @@
 		selectNumber.value = []
 		number.value = ''	
 		let href = 'http://54.186.56.114/diary/Getdatalist'
-
+		const headers = {'authorization': `Bearer ${token}`}		
 		if(type.value !== ""){
 			try{
 				let postData = {
 					type: type.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData, {headers})
 				
 				let number = data.data.number
 				for(let i = 0; i < number.length; i++){
