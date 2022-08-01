@@ -237,7 +237,6 @@ const sendQuestion = async () => {
     Content: content.value,
   };
   try {
-    console.log(store.state.token);
     let { data } = await axios.post(href, postData, {
       headers: { authorization: `Bearer ${store.state.token}` },
     });

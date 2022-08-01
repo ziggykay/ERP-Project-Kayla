@@ -82,6 +82,7 @@
     <!-- <router-link to="/home">
       <button class="btn btn-primary text-light">Login</button>
     </router-link> -->
+    <div class="error">{{ errMsg }}</div>
     <button class="btn btn-primary text-light my-4" @click="login">
       Login
     </button>
@@ -93,6 +94,7 @@ import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import store from "../store";
+
 const router = useRouter();
 const route = useRoute();
 const selectType = ref([]);
@@ -153,13 +155,13 @@ let errMsg = ref("");
 //     alert("請選擇資料")
 //   }
 // }
-let name = ref("Jeff");
-let password = ref("xyWeafrIiv4v.");
+let name = ref("Albee");
+let password = ref("xyIWYIuZ4IqHU");
 let group = ref("");
 // user:
-// fn211
-// WWW
-// 1202
+// dv102
+// Albee
+// xyIWYIuZ4IqHU
 // manager:
 // KJH
 // 8743
@@ -177,50 +179,43 @@ const login = async () => {
   //    nameErr.value = '請輸入完整資料'
   // }
   let { data } = await axios.post(href, postData);
-  console.log(data);
-  if (data.message == "failure") {
-    console.error(data.data);
-    errMsg.value = data.data;
-    return;
-  } else if (data.message == "success") {
-    try {
-      // 儲存Token
-      store.dispatch("storeToken", data.data.access_token);
-      // 解密Token取得使用者資料
-      const parseJwt = (token) => {
-        if (!token) {
-          return;
-        } else {
-          const base64Url = token.split(".")[1];
-          const base64 = base64Url.replace("-", "+").replace("_", "/");
-          return JSON.parse(window.atob(base64));
-        }
-      };
-      let { sub } = await parseJwt(data.data.access_token);
-      // 儲存使用者資料
-      let userData = sub;
-      store.dispatch("storeUserInfo", userData);
-      console.log(store.state.userInfo);
-      const userStatus = store.state.userInfo[0].Access;
-      // 導至對應頁面
-      switch (userStatus) {
-        case "1":
-          router.push("/user/home");
-          break;
-        case "2":
-          router.push("/manager/home");
-          break;
-        case "3":
-          router.push("/company/home");
-          break;
-        default:
-          router.push("/");
-          break;
+  try {
+    // 儲存Token
+    store.dispatch("auth/storeToken", data.data.access_token);
+    // 解密Token取得使用者資料
+    const parseJwt = (token) => {
+      if (!token) {
+        return;
+      } else {
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace("-", "+").replace("_", "/");
+        return JSON.parse(window.atob(base64));
       }
-    } catch (e) {
-      console.error(e);
-      errMsg.value = "抱歉，伺服器發生錯誤";
+    };
+    let { sub } = await parseJwt(data.data.access_token);
+    // 儲存使用者資料
+    let userData = sub;
+    store.dispatch("auth/storeUserInfo", userData);
+    const userStatus = store.getters['auth/getUserAccess']
+    
+    // 導至對應頁面
+    switch (userStatus) {
+      case "1":
+        router.push("/user/home");
+        break;
+      case "2":
+        router.push("/manager/home");
+        break;
+      case "3":
+        router.push("/company/home");
+        break;
+      default:
+        router.push("/");
+        break;
     }
+  } catch (e) {
+    console.error(e);
+    errMsg.value = "抱歉，伺服器發生錯誤";
   }
 };
 </script>

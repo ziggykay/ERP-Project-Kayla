@@ -1,13 +1,9 @@
 import { createStore } from 'vuex'
+import authModule from "./auth.js"
 import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
     state: {
-        // 登入
-        token:'',
-        userInfo:[],
-		isLogin: '',
-        
         // 日誌
         diary: [],
 
@@ -80,10 +76,10 @@ export default createStore({
         }
     },
     mutations: {
-        clearData(state){
-            state.token = ''
-            state.userInfo = []
-        },
+        // clearData(state){
+        //     state.token = ''
+        //     state.userInfo = []
+        // },
         addTempResponse(state, responseText) {
             state.tempResponse.push(responseText)
         },
@@ -97,12 +93,12 @@ export default createStore({
         CreatedProject(state, status) {
             state.diary.push(status);
         },
-        storeToken(state, token){
-            state.token = token
-        },
-        storeUserInfo(state, info){
-			state.userInfo = info
-        },
+        // storeToken(state, token){
+        //     state.token = token
+        // },
+        // storeUserInfo(state, info){
+		// 	state.userInfo = info
+        // },
         removeProject(state, status) {
             for (let i = 0; i < state.diary.length; i++) {
                 if (state.diary[i].id === status.id) {
@@ -120,18 +116,6 @@ export default createStore({
         }
     },
     actions: {
-        // 登入資訊
-        storeUserInfo(context, status){
-			context.commit("storeUserInfo", status);
-        },
-        storeToken(context, status){
-            context.commit("storeToken", status);
-        },
-        // 登出清空資料
-        clearData(context){
-            context.commit("clearData")            
-        },
-
         // 日誌
         updateDiary({ commit }, status) {
             commit("CreatedProject", status);
@@ -151,6 +135,9 @@ export default createStore({
         toggleTest({ commit }, payload) {
             commit("test", payload);
         },
+    },
+    modules: {
+        auth: authModule
     },
     plugins: [createPersistedState()]
 })
