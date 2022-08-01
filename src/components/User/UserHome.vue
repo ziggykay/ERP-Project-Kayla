@@ -159,10 +159,8 @@ const getTodayPunch = async () => {
   }
 };
 getTodayPunch();
-
 // class
 const todayClass = ref([]);
-
 const getTodayCourse = async () => {
   let href = "http://54.186.56.114/course";
   try {
@@ -179,10 +177,8 @@ const getTodayCourse = async () => {
   }
 };
 getTodayCourse();
-
 // diary
 let diaryMsg = ref("暫無資料");
-
 const getTodayDiary = async () => {
   let href = `http://54.186.56.114/diary/status`
   try {
@@ -195,10 +191,8 @@ const getTodayDiary = async () => {
   }
 };
 getTodayDiary();
-
 // job
 const jobData = ref([]);
-
 const getJob = async () => {
   let href = `http://54.186.56.114/diary/RecommandCareer`
   try {

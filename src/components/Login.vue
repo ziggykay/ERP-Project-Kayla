@@ -94,7 +94,6 @@ import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import store from "../store";
-
 const router = useRouter();
 const route = useRoute();
 const selectType = ref([]);
@@ -138,7 +137,6 @@ let errMsg = ref("");
 //           type: type.value
 //         }
 //         let { data } = await axios.post(href, postData)
-
 //         let number = data.data.number
 //         for(let i = 0; i < number.length; i++){
 //           selectNumber.value.push({

@@ -125,6 +125,11 @@ const routes = [
     name: 'WatchUserDiary',
     component: () => import('../components/Company/WatchUserDiary.vue')
   },
+  {
+    path: '/company/checkdiarylist',
+    name: 'CheckDiaryList',
+    component: () => import('../views/company/CheckDiaryListView.vue')
+  },
 ];
 
 const router = createRouter({
