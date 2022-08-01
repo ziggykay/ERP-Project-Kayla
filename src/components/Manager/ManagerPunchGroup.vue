@@ -88,9 +88,13 @@
 	import axios from 'axios'
 	import VChart from "vue-echarts";
 	import Overall from "../baseComponents/Overall.vue";
+	import store from "../../store"
 	
+
+	const token = store.getters["auth/getToken"]
 	// data
 	// grade
+
 	const date = ref(""); 	// date
 	onMounted(() => {
     const startDate = new Date(2021, 11, 16);
@@ -129,7 +133,7 @@
 		selectNumber.value = []
 		type.value = ''
 		number.value = ''
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 
 		try{
 			let { data } = await axios.post(href)
@@ -153,7 +157,7 @@
 		// clear  option value
 		selectNumber.value = []
 		number.value = ''	
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 
 		if(type.value !== ""){
 			try{
@@ -197,7 +201,7 @@
 			color: "#1AAF68"
 		},
 		{
-			title: "早退率",
+			title: "請假率",
 			number: "",
 			color: "#1AAF68"
 		}
@@ -271,7 +275,7 @@
 	  legend: {
 	    orient: "vertical",
 	    left: "right",
-	    data: ["出勤", "遲到數", "缺席"]
+	    data: ["出勤", "遲到數", "缺勤"]
 	  },
 	  series: [
 	    {
@@ -282,7 +286,7 @@
 	      data: [
 	        { value:'', name: "出勤" },
 	        { value:'', name: "遲到數" },
-	        { value:'', name: "缺席" },
+	        { value:'', name: "缺勤" },
 	      ],
         label : {
             show: true, position: 'inner',
@@ -298,20 +302,26 @@
 	const search = async()=>{
 		try{
 			// get axios data
-			let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
+			let href = "http://54.186.56.114/count"
 			let axiosData = ''
-			let {data} = await axios.get(href, { params: { 
-				group: type.value+number.value, 
-				startdate: date.value[0], 
-				stopdate: date.value[1] 
-			}})	
+			let config = {
+				headers: {
+					'authorization': `Bearer ${token}`
+				},
+				params: { 
+					group: type.value+number.value, 
+					startdate: date.value[0], 
+					stopdate: date.value[1] 
+				}			
+			}			
+			let {data} = await axios.get(href, config)	
 			axiosData = data.data
 
 			// // over all
 			gradeAttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			gradeAttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			gradeAttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
-			gradeAttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].excused/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
+			gradeAttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].leave/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 
 			// // pie chart
 			piechart.value.series[0].data[0].value = axiosData[axiosData.length-1].regular

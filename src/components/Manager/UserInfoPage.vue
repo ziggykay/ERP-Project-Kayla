@@ -9,10 +9,6 @@
 						回列表頁
 					</div>        	
         </router-link>
-<!-- TODO:直接套用History可能會有Bug -->
-<!--<a href="javascript:history.back()" class="back"
-          ><div><i class="fa-solid fa-arrow-left"></i> 回列表頁</div></a
-        > -->
       </div>
       <div class="d-flex align-items-center justify-content-between">
         <div class="between mx-2">
@@ -90,8 +86,10 @@
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import axios from "axios"
+import store from "../../store"
 
- const router = useRouter()
+const token = store.getters["auth/getToken"]
+const router = useRouter()
 const props = defineProps({
   parentUser:{
     type: Object,
@@ -113,7 +111,7 @@ const editUser = async()=>{ //editUser
 }
 
 const submitEdit = async()=>{
-	let href = 'http://54.186.56.114:8081/account'
+	let href = 'http://54.186.56.114/diary/account'
 	let postData = {
 		Email: email.value,
 		Id: id.value,
@@ -124,7 +122,7 @@ const submitEdit = async()=>{
 	}
 	try{
 		disableStatus.value = !disableStatus.value
-		let { data } = await axios.patch(href, postData)
+		let { data } = await axios.patch(href, postData, { headers:{'authorization': `Bearer ${token}`}})
 		alert("資料更新成功")		
 	}
 	catch(e){
@@ -133,17 +131,23 @@ const submitEdit = async()=>{
 	}
 }
 const delUser = async()=>{
-	let href = 'http://54.186.56.114:8081/account'
+	let href = 'http://54.186.56.114/diary/account'
 	let yes = confirm('確定要刪除該使用者嗎？！');
+	let config = {
+	  headers:{
+	  	'authorization': `Bearer ${token}`
+	  },
+	  data: {
+	  	Name: name.value,
+			number: grade.value,
+			type: group.value
+		},
+	}	
 	if(yes){
 		try{
-			let { data } = await axios.delete(href, {data: {
-				Name: name.value,
-				number: grade.value,
-				type: group.value
-			}})
+			let { data } = await axios.delete(href, config)
 			alert("已刪除該筆資料!")
-			router.go()
+			router.push('/manager/accountcheck')
 		}
 		catch(e){
 			alert("刪除失敗!")

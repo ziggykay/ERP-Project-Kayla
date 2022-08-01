@@ -2,17 +2,15 @@
   <div class="section">
     <div class="d-md-flex">
       <div class="content-box diary-box col">
-        <div v-for="data in info" class="container p-2">
           <p class="text-primary InfoTitle"><strong>個人資訊</strong></p>
           <hr />
-          <p class="Info"><strong>Class : </strong>{{ data.Class }}</p>
+          <p class="Info"><strong>Class : </strong>{{ info.Class }}</p>
           <hr />
-          <p class="Info"><strong>Number : </strong>{{ data.Id }}</p>
+          <p class="Info"><strong>Number : </strong>{{ info.Id }}</p>
           <hr />
-          <p class="Info"><strong>Name : </strong>{{ data.Name }}</p>
+          <p class="Info"><strong>Name : </strong>{{ info.Name }}</p>
           <hr />
-          <p class="Info"><strong>Email : </strong>{{ data.Email }}</p>
-        </div>
+          <p class="Info"><strong>Email : </strong>{{ info.Email }}</p>
       </div>
       <div class="container-fluid d-md-flex">
         <div class="content-box userInfo-box col d-flex">
@@ -88,19 +86,15 @@
             <select id="project" v-model="Project">
               <option value="">請選擇專案</option>
               <optgroup label="專案">
-                <option value="A專案">A專案</option>
-                <option value="B專案">B專案</option>
-                <option value="C專案">C專案</option>
+                <option  v-for= "(item, index) of ProjectArr" :value="item.item">{{  item.name }}</option>
               </optgroup>
               <optgroup label="產品">
-                <option value="A產品">A產品</option>
-                <option value="B產品">B產品</option>
-                <option value="C產品">C產品</option>
+                <option  v-for= "(item, index) of ProductArr" :value="item.item">{{  item.name }}</option>
               </optgroup>
             </select>
           </div>
           <div class="work-time col-md-4">
-            <label for="profile_pic">上傳圖片</label>
+<!--             <label for="profile_pic">上傳圖片</label>
             <br />
             <span>
               <input
@@ -110,7 +104,7 @@
                 name="profile_pic"
                 accept=".jpg, .jpeg, .png"
               />
-            </span>
+            </span> -->
           </div>
           <br />
         </div>
@@ -127,7 +121,7 @@
         <div v-if="empty" class="text-end">
           <input
             id="submit"
-            type="submit"
+            type="button"
             class="btn btn-primary add-items confirm-btn"
             @click="submitDiary"
             value="+ 新增專案"
@@ -136,21 +130,12 @@
         <div v-else class="text-end">
           <input
             id="submit"
-            type="submit"
+            type="button"
             class="btn btn-primary add-items confirm-btn editComplete"
             @click="editComplete"
             value="修改完成"
           />
         </div>
-        <!-- <div class="text-end">
-          <input
-            id="submit"
-            type="submit"
-            class="btn btn-primary add-items confirm-btn"
-            @click="test"
-            value="測試"
-          />
-        </div> -->
       </div>
     </div>
   </div>
@@ -160,25 +145,100 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useStore, mapActions } from "vuex";
-import {
-  ref,
-  onMounted,
-  reactive,
-  watch,
-  defineAsyncComponent,
-  computed,
-} from "vue";
-const isCreated = ref(false);
-const empty = ref(true);
-const store = useStore();
-const Workinghour = ref("");
-const Project = ref("");
-// const Imgurl = ref("");
-// const Img = getFiles();
-const Content = ref("");
-const AllProject = ref({});
+import {ref, onMounted, reactive, watch, computed} from "vue";
 
-const submitDiary = () => {
+const store = useStore();
+const token = store.getters["auth/getToken"]
+
+
+// ==============================================================
+const info = ref({});  //get user data 
+const getUserData = async()=>{
+	let href = 'http://54.186.56.114/login'
+	let config = {
+		headers: {
+			'authorization': `Bearer ${token}`
+		}
+	}	
+	try{
+		let { data } = await axios.get(href, config)
+		info.value = {
+	    Class: data.data[0].Class,
+	    Name: data.data[0].Name,
+	    Id: data.data[0].Id,
+	    Email: data.data[0].Email,		
+		}
+	}
+	catch(e){
+		console.log(e)
+	}
+}
+getUserData()
+// ============================================================================
+const ProjectArr = ref([]) //get project value 
+const ProductArr = ref([])
+const axiosProject = async() =>{
+	let href = "http://54.186.56.114/diary/Getdatalist";
+	
+	try{
+		let { data } = await axios.get(href)
+		let Project = data.data.Project.filter((item)=>{
+			return item.Status == "專案"
+		})
+		let Product = data.data.Project.filter((item)=>{
+			return item.Status == "產品"
+		})		
+		Project.forEach(function(item, index){
+			ProjectArr.value.push({
+				name: item.Project,
+				item: item.Project
+			})			
+		})
+		Product.forEach(function(item, index){
+			ProductArr.value.push({
+				name: item.Project,
+				item: item.Project
+			})			
+		})		
+	}
+	catch(e){
+		console.log(e)
+	}
+}
+axiosProject()
+// ======================================================================================
+// 顯示已編輯日誌狀態 
+const diary = computed(() => { //取得vuex diary arr
+  return store.state.diary;
+});
+const isCreated = ref(false); //預設已編輯日誌狀態
+
+watch(diary.value, (newVal, oldVal) => { 
+
+  if (newVal.length === 0) {
+    isCreated.value = false;
+  } else {
+    isCreated.value = true;
+  } //判斷diary長度，更改isCreated值
+});
+
+
+// ==========================================================================================
+const empty = ref(true); //切換 新增專案按鈕狀態
+const Workinghour = ref(""); //日誌燈打v-model
+const Project = ref("");
+const Content = ref("");
+const AllProject = ref({}); //日誌燈打v-model綁到物件
+
+const editDiary = (item) => { // 編輯function
+  // console.log(item);
+  empty.value = false; // 編輯專案按鈕，更改新增專案按鈕狀態
+  Workinghour.value = item.Workinghour; //賦值
+  Project.value = item.Project;
+  Content.value = item.Content;
+};
+
+const submitDiary = () => { // 提交到已編輯日誌區塊
   // console.log(diary.value);
   if (Workinghour.value === "") {
     alert("請選擇時數!");
@@ -187,7 +247,7 @@ const submitDiary = () => {
   } else if (Content.value === "") {
     alert("請填寫日誌!");
   }
-  // else if (Project.value === "") {
+  // else if (Project.value === "") { //todo 防止重複點選已填寫的專案
   //   alert("已完成此專案日誌");
   // }
   else {
@@ -195,21 +255,14 @@ const submitDiary = () => {
       id: uuidv4(),
       Workinghour: Workinghour.value,
       Project: Project.value,
-      // Imgurl: Img,
       Content: Content.value,
     };
-    store.dispatch("updateDiary", AllProject.value);
+    store.dispatch("updateDiary", AllProject.value); //將AllProject 存到vuex
     clearForm();
-    ifCreated();
-    // console.log(Img);
   }
 };
 
-const diary = computed(() => {
-  return store.state.diary;
-});
-
-const clearForm = () => {
+const clearForm = () => { //清空v-model值
   Workinghour.value = "";
   Project.value = "";
   Content.value = "";
@@ -217,29 +270,12 @@ const clearForm = () => {
 
 const removeDiary = (item) => {
   store.dispatch("deleteDiary", item);
-  clearForm();
-  ifCreated();
+  // clearForm();
 };
 
-const editDiary = (item) => {
-  console.log(item);
-  empty.value = false;
-  Workinghour.value = item.Workinghour;
-  Project.value = item.Project;
-  Content.value = item.Content;
-};
-
-const info = ref([
-  {
-    Class: "fn102",
-    Name: "Jessie",
-    Id: 13,
-    Email: "nini880219@gmail.com",
-  },
-]);
 
 const editComplete = () => {
-  console.log(AllProject.value);
+  // console.log(AllProject.value);
   for (let i = 0; i < AllProject.value.length; i++) {
     if (diary.value[i].id === diary.value.id) {
       console.log(AllProject.value[i]);
@@ -248,52 +284,23 @@ const editComplete = () => {
 
   empty.value = true;
   clearForm();
-
-  // Workinghour.value = item.Workinghour;
-  // Project.value = item.Project;
-  // Content.value = item.Content;
 };
-// const test = () => {
-// console.log(diary.value.length);
-// for (let i = 0; i < AllProject.value.length; i++) {
-//   if (state.diary[i].id === status.id) {
-//     state.diary.splice(i, 1);
-//   }
-// }
-// console.log(AllProject.value.Project);
-// };
 
-function ifCreated() {
-  if (diary.value.length === 0) {
-    isCreated.value = false;
-  } else {
-    isCreated.value = true;
-  }
-}
-function getFiles(e) {
-  // console.log(e.target.files[0]);
-  console.log(e.target.files[0].name);
-}
-// const getImg = function getFiles(e) {
-//   // console.log(e.target.files[0]);
+
+
+
+
+
+
+
+
+
+
+// function getFiles(e) {
+
 //   console.log(e.target.files[0].name);
-// };
-
-// function onFileChange(e) {
-//   var files = e.target.files || e.dataTransfer.files;
-//   if (!files.length) return;
-//   this.createImage(files[0]);
 // }
 
-// function formEmpty() {
-//   console.log(diary.value.Project);
-//   if (diary.value.Project === undefined) {
-//     alert("請選擇專案!");
-//   }
-//   else {
-//     isCreated.value = true;
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>

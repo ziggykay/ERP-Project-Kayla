@@ -17,11 +17,11 @@
 				</option>	      	 	
 	  	</select>
 	    <div class="py-1">
-	      <input class="mx-1" type="checkbox" /><span>企業已回覆</span>
+	      <input class="mx-1" type="checkbox" id="checkbox" v-model="checked"/><span>企業已回覆</span>
 	    </div>	  		  		 	  	  	
 		</div> 		 	
 		<div class="d-flex mt-2 flex-wrap">
-	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range fixedStart/>
+	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
 	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
 		</div>
 	</div>
@@ -30,7 +30,7 @@
   <!-- chart -->
   <div class="content-box overall-box">
     <div class="py-2 checkBoxInner">
-      <div v-for="(data, index) of diaryData" class="content-box-border checkDiv d-flex">
+      <div v-for="(data, index) of changeData" class="content-box-border checkDiv d-flex">
         <div class="d-flex bigText">
           <div class="text align-self-center">
             <div>
@@ -64,6 +64,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter, useRoute } from 'vue-router'
+import store from  "../../store";
 import axios from "axios"
 
 const router = useRouter()
@@ -81,9 +82,9 @@ watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
 });
 
 const project = ref("")// dynamic select option
-const type = ref("dv") // fix select option
-const number = ref("102")
-const name = ref("AAA")
+const type = store.state.userInfo[0].Class.slice(0,2) // fix select option
+const number = store.state.userInfo[0].Class.slice(2)
+const name = store.state.userInfo[0].Name
 const projectType = ref("")
 
 
@@ -114,7 +115,7 @@ const selectProjectType = ref([
 ])		
 
 const axiosProject = async() =>{
-	let href = "http://54.186.56.114:8081/Getdatalist";
+	let href = "http://54.186.56.114/diary/Getdatalist";
 	selectProjct.value = [];
 	project.value = ''
 	
@@ -138,28 +139,43 @@ const axiosProject = async() =>{
 // ======================================================================
 // diary data
 const diaryData = ref([])
+const changeData = ref([]) //企業回復狀態陣列
+const checked = ref(false) //企業回復狀態判斷
 const search = async() =>{
-	let href = 'http://54.186.56.114:8081/ReadDiaryLog'
+	let href = 'http://54.186.56.114/diary/ReadDiaryLog'
 	let postData = {
 		date_from: date.value[0],
 		date_to: date.value[1],
-		number: number.value,
 		project: project.value,
-		type: type.value,
-		Name: name.value
 	}
 	try{
 		diaryData.value = []
-		let { data } = await axios.post(href, postData)
-		// console.log(data.data)
+		let { data } = await axios.post(href, postData, {headers: {'authorization': `Bearer ${store.state.token}`}})
+		// console.log(data)
 		data.data.forEach(function(item, index){
 			diaryData.value.push(item)
 		})
+		changeData.value = diaryData.value
 	}
 	catch(e){
 		console.log(e)
+		alert("資料錯誤")
 	}
 }
+
+
+// entReply
+watch(checked, (newVal, oldVal) => { //  set date to yyyy-mm-dd
+	if(newVal == true){
+		changeData.value =  diaryData.value.filter((item)=>{
+		 	return item.Ent_reply !== null
+		})
+	}
+	else{
+		changeData.value = diaryData.value
+	} 
+});
+
 // =========================================================
 // to  /user/checkSelfDiary"
 function checkUserInfo(data) {

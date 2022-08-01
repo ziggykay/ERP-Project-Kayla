@@ -89,7 +89,9 @@
 import { ref, watch,  onMounted } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import axios from "axios";
+import store from  "../../store";
 	
+	const token = store.getters["auth/getToken"]	
   const router = useRouter()
 
 	const type = ref("") // dynamic select option
@@ -145,7 +147,7 @@ import axios from "axios";
 		type.value = ''
 		number.value = ''
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		try{
 			let { data } = await axios.post(href)
 			let type = data.data.type
@@ -170,7 +172,7 @@ import axios from "axios";
 		selectName.value = []
 		number.value = ''
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 
 		if(type.value !== ""){
 			try{
@@ -200,7 +202,7 @@ import axios from "axios";
 		// clear  option valeu
 		selectName.value = []
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		if(number.value !== ""){
 			try{
 				let postData = {
@@ -233,9 +235,10 @@ import axios from "axios";
 	  formData.append('group', type.value+number.value)
 	  formData.append('file', uploadFile.value.files[0])
 
-	  const href = 'http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/leave'
+	  const href = 'http://54.186.56.114/leave'
 		const headers = {
-		  'Content-Type': 'multipart/form-data'
+		  'Content-Type': 'multipart/form-data',
+		  'authorization': `Bearer ${token}`
 		}
 		try{
 		let {data} = await axios.post(href, formData, {headers}) 	  //Upload to server
@@ -250,42 +253,50 @@ import axios from "axios";
 // get checkpage data
 	const usersData = ref([])
 	const search = async()=>{
-		let href = 'http://54.186.56.114:8081/account'
+		let href = 'http://54.186.56.114/diary/account'
 		let axiosData = ''
+		let config = ''
+		
+		if(name.value == ""){
+			config = {
+			  headers:{'authorization': `Bearer ${token}`},
+			  params: {type: type.value, number: number.value},
+			}		
+		}
+		else{
+			config = {
+			  headers:{'authorization': `Bearer ${token}`},
+			  params: {type: type.value, number: number.value, Name: name.value},
+			}				
+		}
+
 		try{
 				if(name.value == ""){
-					let { data } = await axios.get(href, { params: { 
-						type: type.value,
-						number: number.value,
-					}})
+					let { data } = await axios.get(href, config)
 					axiosData = data.data
 				}
 				else{
-					let { data } = await axios.get(href, { params: { 
-						type: type.value,
-						number: number.value,
-						Name: name.value
-					}})			
+					let { data } = await axios.get(href, config)	
 					axiosData = data.data	
 				}
 				// console.log(axiosData)
 			// cleart usersData
-			usersData.value = []			
-			for(let i = 0; i <= axiosData.length; i++){
+			usersData.value = []		
+			axiosData.forEach(function(item, index){
 				usersData.value.push({
-					access: axiosData[i].Access,
-					group: axiosData[i].Class.slice(0,2),
-					grade: axiosData[i].Class.slice(2),
-					email: axiosData[i].Email,
-					id: axiosData[i].Id,					
-					name: axiosData[i].Name,
-					password: axiosData[i].Password
-				})
-			}
+					access: item.Access,
+					group: item.Class.slice(0,2),
+					grade: item.Class.slice(2),
+					email: item.Email,
+					id: item.Id,					
+					name: item.Name,
+					password: item.Password
+				})				
+			})
 		}
 		catch(e){
 			console.log(e)
-			// alert("請輸入正確格式資料")
+			alert("沒有該筆資料")
 		}
 
 	}
