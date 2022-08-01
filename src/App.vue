@@ -17,6 +17,10 @@ const noToken = () => {
 }
 noToken()
 
+const tokenExpired = () => {
+	return 
+}
+
 </script>
 
 <template>
