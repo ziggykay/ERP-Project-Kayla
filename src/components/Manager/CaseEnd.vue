@@ -116,7 +116,7 @@ onMounted(() => {
 .resbox-outter {
   overflow-y: scroll;
   height: 28rem;
-  width: 40rem;
+  width: 100%;
   .date-and-title {
     color: #558aba;
   }
@@ -125,7 +125,7 @@ onMounted(() => {
   }
 }
 .question-box {
-  width: auto;
+  width:70%;
   height: auto;
   .title {
     color: #558aba;

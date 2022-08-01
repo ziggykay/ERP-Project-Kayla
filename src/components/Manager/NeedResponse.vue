@@ -4,7 +4,7 @@
 <div class="d-flex container-out">
   <div class="content-box main-outter">
       <div class="title p-3 fw-bold border-bottom">待回覆區</div>
-      <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
+      <div class="d-flex justify-content-between" v-if="unrepliedsid.length!=0">
         <div class="resbox-outter">
           <!-- 尚未按回覆 -->
           <div class="content-box resbox res-box-hover ps-2" v-for="(data,index) of unreplieds" :key="index" >
@@ -110,7 +110,7 @@ const emit = defineEmits(["changeShow"]);
 .resbox-outter {
   overflow-y: scroll;
   height: 28rem;
-  width: 40rem;
+  width: 100%;
   .date-and-title {
     color: #558aba;
   }
@@ -119,7 +119,7 @@ const emit = defineEmits(["changeShow"]);
   }
 }
 .question-box {
-  width: auto;
+  width: 70%;
   height: auto;
   .title {
     color: #558aba;
