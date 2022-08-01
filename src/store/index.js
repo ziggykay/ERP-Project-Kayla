@@ -76,10 +76,6 @@ export default createStore({
         }
     },
     mutations: {
-        // clearData(state){
-        //     state.token = ''
-        //     state.userInfo = []
-        // },
         addTempResponse(state, responseText) {
             state.tempResponse.push(responseText)
         },
@@ -93,12 +89,6 @@ export default createStore({
         CreatedProject(state, status) {
             state.diary.push(status);
         },
-        // storeToken(state, token){
-        //     state.token = token
-        // },
-        // storeUserInfo(state, info){
-		// 	state.userInfo = info
-        // },
         removeProject(state, status) {
             for (let i = 0; i < state.diary.length; i++) {
                 if (state.diary[i].id === status.id) {

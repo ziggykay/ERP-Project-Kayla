@@ -146,6 +146,8 @@ import axios from "axios";
 
 // punch
 const punchData = ref([]);
+const token = store.getters['auth/getToken']
+
 
 const getTodayPunch = async () => {
   let href = "http://54.186.56.114/punch";
@@ -197,7 +199,7 @@ const getTodayDiary = async () => {
   try {
     let href = `http://54.186.56.114/diary/status`;
     let { data } = await axios.get(href, {
-      headers: { authorization: `Bearer ${store.state.token}` },
+      headers: { authorization: `Bearer ${token}` },
     });
     diaryMsg.value = data.data.message;
   } catch (e) {
@@ -213,7 +215,7 @@ const getJob = async () => {
   let href = `http://54.186.56.114/diary/RecommandCareer`;
   try {
     let { data } = await axios.get(href, {
-      headers: { authorization: `Bearer ${store.state.token}` },
+      headers: { authorization: `Bearer ${token}` },
     });
     jobData.value = data.data;
   } catch (e) {
