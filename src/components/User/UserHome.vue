@@ -164,18 +164,14 @@ getTodayPunch();
 const todayClass = ref([]);
 
 const getTodayCourse = async () => {
-  let group = "fn101";
-  let name = "Rossen";
   let href = "http://54.186.56.114/course";
   try {
     let { data } = await axios.get(href, {
       params: {
-        group: group,
         // cur:'today',
-        startdate: "2022-01-12",
-        stopdate: "2022-01-12",
-        name: name,
-      },
+        startdate: "2022-05-12",
+        stopdate: "2022-05-12",
+      },headers: { authorization: `Bearer ${token}`}
     });
     todayClass.value = data.data.course;
   } catch (e) {
