@@ -1,8 +1,10 @@
 <template>
   <!-- 已結案區 -->
   <!-- filter -->
-<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
-  <div class="d-flex justify-content-center" >
+  <div class="filter-select">
+    <FilterSelect  :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
+  </div>
+  <div class="d-flex container-out" >
     <div class="content-box main-outter">
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
         <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
@@ -85,7 +87,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .filter-select{
-  width:100%
+  width:95%
+}
+.container-out{
+  width: 95%;
 }
 .selectInfo {
   width: 70px;
@@ -98,13 +103,14 @@ onMounted(() => {
 .content-box {
   margin: 1rem;
   background-color: #fff;
-  width: 97.5%;
+  // width: 97.5%;
+  width: 100%;
   height: 180px;
   padding: 1rem;
   box-shadow: gray;
 }
 .main-outter {
-  width: 100%;
+  // width: 100%;
   height: 32rem;
 }
 .resbox {
