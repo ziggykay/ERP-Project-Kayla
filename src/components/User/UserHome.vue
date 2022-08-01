@@ -148,19 +148,11 @@ import axios from "axios";
 const punchData = ref([]);
 const token = store.getters['auth/getToken']
 
-
 const getTodayPunch = async () => {
   let href = "http://54.186.56.114/punch";
-  let group = "dv102";
-  let name = "Jeff";
   try {
-    let { data } = await axios.get(href, {
-      params: {
-        group: group,
-        cur: "today",
-        name: name,
-      },
-    });
+    let { data } = await axios.get(href, {params: {cur: "today"}, 
+    headers: { authorization: `Bearer ${token}`}}, );
     punchData.value = data.punch;
   } catch (e) {
     console.error(e);
@@ -196,8 +188,8 @@ getTodayCourse();
 let diaryMsg = ref("暫無資料");
 
 const getTodayDiary = async () => {
+  let href = `http://54.186.56.114/diary/status`
   try {
-    let href = `http://54.186.56.114/diary/status`;
     let { data } = await axios.get(href, {
       headers: { authorization: `Bearer ${token}` },
     });
@@ -212,7 +204,7 @@ getTodayDiary();
 const jobData = ref([]);
 
 const getJob = async () => {
-  let href = `http://54.186.56.114/diary/RecommandCareer`;
+  let href = `http://54.186.56.114/diary/RecommandCareer`
   try {
     let { data } = await axios.get(href, {
       headers: { authorization: `Bearer ${token}` },
@@ -229,9 +221,7 @@ const content = ref("");
 
 //彈出視窗-系統反應區====================================================================
 const isDisabled = ref(false);
-const systemReaction = () => {
-  isDisabled.value = !isDisabled.value;
-};
+const systemReaction = () => {isDisabled.value = !isDisabled.value;};
 const sendQuestion = async () => {
   let href = `http://54.186.56.114/diary/Message`;
   let postData = {
@@ -240,9 +230,8 @@ const sendQuestion = async () => {
   };
   try {
     let { data } = await axios.post(href, postData, {
-      headers: { authorization: `Bearer ${store.state.token}` },
+      headers: { authorization: `Bearer ${token}` },
     });
-    // console.log(data.data.status)
     alert("已更新資料");
   } catch (e) {
     console.log(e);
