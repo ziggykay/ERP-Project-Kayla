@@ -3,9 +3,7 @@
   <!-- filter -->
   <div class="content-box">
 			<p class="title"><strong>已結案區</strong></p> 	  	
-			<hr/>
-			<div class="d-flex flex-wrap">		 	   	
-			</div>  	
+			<hr/>	
 			<div class="d-flex mt-2 flex-wrap">
 		  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
 		  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
@@ -24,7 +22,6 @@
                   <p class="">姓名</p>
                   <p class="">問題</p>
                 </div>
-                <!--  -->
                     <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
                     @click="updateData()" >查看</button>
               </div>
@@ -35,22 +32,18 @@
               </div>
             </div>
           </div>
-            <div>
           <!-- 回覆區 -->
             <div class="content-box question-box">
               <p class="title fw-bold text-start">問題</p>
               <p class="q-title">XXX</p>
               <p class="title fw-bold text-start mt-2">內容</p>
               <div class="q-content">XXX</div>
-              <div>
                 <p class="title ps-3 mt-2 fw-bold text-start">回覆</p>
                 <div>
                   <div class="q-content d-block">XXX</div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
       <div v-else><p class="text-center fs-5">尚無資料</p></div>
     </div>
   </div>
@@ -117,7 +110,7 @@ onMounted(() => {
   height: auto;
 }
 .resbox {
-  width: 34rem;
+  width: auto;
   height: 6rem;
 }
 .resbox-outter {
@@ -132,27 +125,23 @@ onMounted(() => {
   }
 }
 .question-box {
-  width: 28rem;
+  width: auto;
   height: auto;
   .title {
     color: #558aba;
   }
   .q-title {
     border: solid 1px;
-    width: auto;
+    width:100%;
+    min-width: 350px;
     height: auto;
     margin: 0 auto;
   }
   .q-content {
     border: solid 1px;
-    width: auto;
+    width:100%;
+    min-width: 350px;
     height: 5rem;
-    margin: 0 auto;
-  }
-  .res-content {
-    border: solid 1px;
-    width: 22vw;
-    height: 11vh;
     margin: 0 auto;
   }
 }

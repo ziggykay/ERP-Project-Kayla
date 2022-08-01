@@ -3,8 +3,6 @@
   <div class="content-box filter-box">
 			<p class="title"><strong>查看問題回覆</strong></p> 	  	
 			<hr/>
-			<div class="d-flex flex-wrap">		 	   	
-			</div>  	
 			<div class="d-flex mt-2 flex-wrap">
 		  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
 		  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
