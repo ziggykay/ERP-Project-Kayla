@@ -27,10 +27,10 @@
                   {{ item.Project }}
                 </div>
                 <div class="align-self-end mt-3">
-                  <span @click="editDiary(item)"
+<!--                   <span @click="editDiary(item)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-pen-to-square mx-1"></i></a
-                  ></span>
+                  ></span> -->
                   <span @click="removeDiary(item)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-trash-can mx-1"></i></a
@@ -44,7 +44,7 @@
               </div>
             </div>
             <div v-if="isCreated" class="text-end mt-2">
-              <button type="button" class="btn btn-primary confirm-btn">
+              <button type="button" class="btn btn-primary confirm-btn" @click="toBackEnd">
                 確認送出
               </button>
             </div>
@@ -94,17 +94,18 @@
             </select>
           </div>
           <div class="work-time col-md-4">
-<!--             <label for="profile_pic">上傳圖片</label>
+            <label for="profile_pic">上傳圖片網址</label>
             <br />
             <span>
-              <input
+            	<input type="text" v-model="Imgurl">
+<!--               <input
                 @change="getFiles"
                 type="file"
                 id="profile_pic"
                 name="profile_pic"
                 accept=".jpg, .jpeg, .png"
-              />
-            </span> -->
+              /> -->
+            </span>
           </div>
           <br />
         </div>
@@ -220,20 +221,18 @@ const diary = computed(() => { //取得vuex diary arr
 const isCreated = ref(false); //預設已編輯日誌狀態
 
 watch(diary.value, (newVal, oldVal) => { 
-
   if (newVal.length === 0) {
     isCreated.value = false;
   } else {
     isCreated.value = true;
   } //判斷diary長度，更改isCreated值
 });
-
-
 // ==========================================================================================
 const empty = ref(true); //切換 新增專案按鈕狀態
 const Workinghour = ref(""); //日誌燈打v-model
 const Project = ref("");
 const Content = ref("");
+const Imgurl = ref("");
 const AllProject = ref({}); //日誌燈打v-model綁到物件
 
 const editDiary = (item) => { // 編輯function
@@ -262,6 +261,7 @@ const submitDiary = () => { // 提交到已編輯日誌區塊
       Workinghour: Workinghour.value,
       Project: Project.value,
       Content: Content.value,
+      Imgurl: Imgurl.value
     };
     store.dispatch("updateDiary", AllProject.value); //將AllProject 存到vuex
     clearForm();
@@ -272,6 +272,7 @@ const clearForm = () => { //清空v-model值
   Workinghour.value = "";
   Project.value = "";
   Content.value = "";
+  Imgurl.value = ''
 };
 
 const removeDiary = (item) => {
@@ -279,34 +280,34 @@ const removeDiary = (item) => {
   // clearForm();
 };
 
+const toBackEnd = async() => {
 
-const editComplete = () => {
-  // console.log(AllProject.value);
-  for (let i = 0; i < AllProject.value.length; i++) {
-    if (diary.value[i].id === diary.value.id) {
-      console.log(AllProject.value[i]);
-    }
-  }
+	let href = "http://54.186.56.114/diary/DiaryLog";
+	let postData = {
+		Project: "sst",
+		Workinghours: "5",
+		Imgurl: "sss",
+		Content: "stest"
+	}
+	try{
+		let { data } = await axios.post(href, postData, {headers:{'authorization': `Bearer ${token}`}})	
+		console.log(data)
+	}
+	catch(e){
+		console.log(e)
+	}	
+}
 
-  empty.value = true;
-  clearForm();
-};
+// const editComplete = () => {
+//   AllProject.value.Workinghour = Workinghour.value
+//   AllProject.value.Project = Project.value
+//   AllProject.value.Content = Content.value
+//    // console.log(AllProject.value);
+//   store.dispatch("editDiary", AllProject.value); 
 
-
-
-
-
-
-
-
-
-
-
-// function getFiles(e) {
-
-//   console.log(e.target.files[0].name);
-// }
-
+//   empty.value = true;
+//   clearForm();
+// };
 </script>
 
 <style lang="scss" scoped>

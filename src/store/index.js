@@ -93,12 +93,14 @@ export default createStore({
         CreatedProject(state, status) {
             state.diary.push(status);
         },
-        // storeToken(state, token){
-        //     state.token = token
-        // },
-        // storeUserInfo(state, info){
-		// 	state.userInfo = info
-        // },
+        editProject(state, status) {
+        	for(let i = 0; i < state.diary.length; i++){
+        		if(state.diary[i].id === status.id){
+        			// console.log(status)
+        			state.diary[i] = status
+        		}
+        	}
+        },
         removeProject(state, status) {
             for (let i = 0; i < state.diary.length; i++) {
                 if (state.diary[i].id === status.id) {
@@ -120,6 +122,9 @@ export default createStore({
         updateDiary({ commit }, status) {
             commit("CreatedProject", status);
         },
+        editDiary({ commit }, status) {
+            commit("editProject", status);
+        },        
         deleteDiary({ commit }, status) {
             commit("removeProject", status);
         },
