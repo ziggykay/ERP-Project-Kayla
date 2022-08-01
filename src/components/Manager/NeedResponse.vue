@@ -1,7 +1,7 @@
 <template>
   <!-- 待回覆區 -->
   <!-- 問題區 -->
-<div class="d-flex justify-content-center">
+<div class="d-flex container-out">
   <div class="content-box main-outter">
     <div class="title p-3 fw-bold">待回覆區</div>
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
@@ -99,16 +99,21 @@ const emit = defineEmits(["changeShow"]);
 </script>
 
 <style lang="scss" scoped>
+.container-out{
+  width: 100%;
+}
 .content-box {
   margin: 1rem;
   background-color: #fff;
-  width: 300px;
+  // width: 300px;
+  width: 100%;
   height: 180px;
   padding: 1rem;
   box-shadow: gray;
 }
 .main-outter {
-  width: 100%;
+  // width: 100%;
+  // width: auto;
   height: 35rem;
 }
 .resbox {
@@ -127,7 +132,7 @@ const emit = defineEmits(["changeShow"]);
   }
 }
 .question-box {
-  width: 30rem;
+  width: 28rem;
   height: 27rem;
   .title {
     color: #558aba;
