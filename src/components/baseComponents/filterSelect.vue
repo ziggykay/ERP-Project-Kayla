@@ -12,7 +12,7 @@
 		</div>  	
 		<div class="d-flex mt-2 flex-wrap">
     	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
-    	<!-- <button class="confirm-btn btn btn-height">搜尋</button> -->
+    	<button class="confirm-btn btn btn-height">搜尋</button>
     	<slot></slot>	  
 		</div>
 	</div>
