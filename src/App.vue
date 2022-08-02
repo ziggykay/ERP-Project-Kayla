@@ -1,7 +1,26 @@
 <script setup>
-
 import Navbar from "./components/baseComponents/Navbar.vue";
 import Sidebar from "./components/baseComponents/Sidebar.vue";
+
+import store from "./store"
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
+
+const token = store.getters['auth/getToken']
+
+const noToken = () => {
+	if(token === ''){
+		router.push('/')		
+	}
+}
+noToken()
+
+const tokenExpired = () => {
+	return 
+}
+
 </script>
 
 <template>
@@ -16,5 +35,7 @@ import Sidebar from "./components/baseComponents/Sidebar.vue";
 </template>
 
 <style scoped>
+
+
 
 </style>

@@ -90,6 +90,7 @@
 	import Overall from "../baseComponents/Overall.vue";
 	import store from "../../store"
 	
+	const token = store.getters["auth/getToken"]
 	// data
 	// grade
 	const date = ref(""); 	// date
@@ -103,10 +104,8 @@
 			date.value[i] = newVal[i].toISOString().split('T')[0] 
 		}
 	});
-
 	const type = ref("") // dynamic select option
 	const number = ref("")
-
 	const selectType = ref([]) // dynamic select option value
 	const selectNumber = ref([])
 	const selectDate = ref([
@@ -123,20 +122,23 @@
 			item: "month"
 		}				 		 // fix select option	value
 	]);
-
 	const axiosType = async() =>{
 		// clear option valeu
 		selectType.value = []
 		selectNumber.value = []
 		type.value = ''
 		number.value = ''
-		let href = 'http://54.186.56.114/diary/Getdatalist'
-
+		let href = 'http://54.186.56.114/diary/Getdatalist'	
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}
 		try{
-			let { data } = await axios.post(href)
+			let { data } = await axios.post(href, postData, config)
+			console.log(data)
 			let type = data.data.type
-
-
 			for(let i = 0; i < type.length; i++){
 				selectType.value.push({
 					name: type[i],
@@ -144,24 +146,29 @@
 				})
 			}
 		}
-		catch{
+		catch(e){
+			console.log(e)
 			alert("資料錯誤")
 		}
 	}		
 	axiosType()
-
 	const axiosNumber = async() =>{
 		// clear  option value
 		selectNumber.value = []
 		number.value = ''	
 		let href = 'http://54.186.56.114/diary/Getdatalist'
-
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
 		if(type.value !== ""){
 			try{
 				let postData = {
 					type: type.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData,config)
 				
 				let number = data.data.number
 				for(let i = 0; i < number.length; i++){
@@ -303,7 +310,7 @@
 			let axiosData = ''
 			let config = {
 				headers: {
-					'authorization': `Bearer ${store.state.token}`
+					'authorization': `Bearer ${token}`
 				},
 				params: { 
 					group: type.value+number.value, 
@@ -313,18 +320,15 @@
 			}			
 			let {data} = await axios.get(href, config)	
 			axiosData = data.data
-
 			// // over all
 			gradeAttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			gradeAttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			gradeAttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			gradeAttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].leave/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
-
 			// // pie chart
 			piechart.value.series[0].data[0].value = axiosData[axiosData.length-1].regular
 			piechart.value.series[0].data[1].value = axiosData[axiosData.length-1].late
 			piechart.value.series[0].data[2].value = axiosData[axiosData.length-1].absent
-
 			// // bar chart
 			// 先清空值再更改新資料
 			gradeBarchart.value.xAxis.data = [];
@@ -343,7 +347,6 @@
 			alert("沒有該筆資料!")
 		}
 	}
-
 	//gradecompare ==================================================================
 	const checkedGrades = ref([])	
 	const gradeCompareSelectArr =ref([
@@ -514,9 +517,7 @@
 .overall-box{
   width: auto;
   height: auto;
-
 }
-
 .check-info{
 	border-radius: 4px;
 	cursor: pointer;		
@@ -534,5 +535,3 @@
 	width: 60%;
 }
 </style>
-
-	

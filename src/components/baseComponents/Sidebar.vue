@@ -163,14 +163,14 @@
 		},
 		{
 			title: '查看問題回覆',
-			href: "/company/userdiaryfeedback",
+			href: "/company/checkdiarylist",
 			iconCss: 'fa-chalkboard-user'
 		}		 		  		 		
 	])
 
   // 使用者權限
   const currentSidebar = ref()
-  const userStatus = store.state.userInfo[0].Access
+  const userStatus = store.getters['auth/getUserAccess']
   const changeSidebar = () => {
     switch (userStatus) {
       case "1" :

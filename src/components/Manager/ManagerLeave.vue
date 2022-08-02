@@ -55,6 +55,7 @@
 	import	{ref, watch, onMounted} from "vue"
 	import axios from 'axios'
 	import store from "../../store"	
+	const token = store.getters["auth/getToken"]
 	
 	const date = ref(""); 	// date
 	onMounted(() => {
@@ -67,12 +68,10 @@
 			date.value[i] = newVal[i].toISOString().split('T')[0] 
 		}
 	});
-
 	const type = ref("") // dynamic select option
 	const number = ref("")
 	const name = ref("") 
 	const leavetype = ref("")// fix select option
-
 	const selectType = ref([]) // dynamic select option value
 	const selectNumber = ref([])
 	const selectName = ref([])	
@@ -112,21 +111,23 @@
 			item: "month"
 		}				 		
 	]);		
-
 	const axiosType = async() =>{
-		// clear  option valeu
+		// clear option valeu
 		selectType.value = []
 		selectNumber.value = []
-		selectName.value = []
 		type.value = ''
 		number.value = ''
-		name.value = ''
-		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'	
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}
 		try{
-			let { data } = await axios.post(href)
+			let { data } = await axios.post(href, postData, config)
+			console.log(data)
 			let type = data.data.type
-
-
 			for(let i = 0; i < type.length; i++){
 				selectType.value.push({
 					name: type[i],
@@ -134,26 +135,30 @@
 				})
 			}
 		}
-		catch{
+		catch(e){
+			console.log(e)
 			alert("資料錯誤")
 		}
 	}		
 	axiosType()
-
 	const axiosNumber = async() =>{
-		// clear  option valeu
+		// clear  option value
 		selectNumber.value = []
-		selectName.value = []
-		number.value = ''
-		name.value = ''			
+		number.value = ''	
 		let href = 'http://54.186.56.114/diary/Getdatalist'
-
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
 		if(type.value !== ""){
 			try{
 				let postData = {
 					type: type.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData,config)
+				
 				let number = data.data.number
 				for(let i = 0; i < number.length; i++){
 					selectNumber.value.push({
@@ -171,19 +176,23 @@
 			alert("請選擇資料")
 		}
 	}
-
 	const axiosName = async() =>{
 		// clear  option valeu
 		selectName.value = []
 		name.value = ''		
 		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
 		if(number.value !== ""){
 			try{
 				let postData = {
 					type: type.value,
 					number: number.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData, config)
 				let name = data.data.name
 				for(let i = 0; i < name.length; i++){
 					selectName.value.push({
@@ -200,7 +209,6 @@
 			alert("請選擇資料")
 		}
 	}
-
   const uploadFile = ref(null)  	// upload file
   const handleFileUpload = async() => {
 		const formData = new FormData();
@@ -208,11 +216,10 @@
 	  // console.log("selected file",uploadFile.value.files[0])
 	  formData.append('group', type.value+number.value)
 	  formData.append('file', uploadFile.value.files[0])
-
 	  const href = 'http://54.186.56.114/leave'
 		const headers = {
 		  'Content-Type': 'multipart/form-data',
-		  'authorization': `Bearer ${store.state.token}`
+		  'authorization': `Bearer ${token}`
 		}
 		try{
 		let {data} = await axios.post(href, formData, {headers}) 	  //Upload to server
@@ -223,7 +230,6 @@
 			console.log(e)
 		}
   }
-
 	const tableTitle = ref([ 	// table
 		{field:"name", title:"姓名"},
 		{field:"date", title:"日期"},
@@ -231,14 +237,13 @@
 		{field:"time", title:"請假時間"},
 		{field:"note", title:"說明事由"},  		
 	])
-
 	const tableData = ref([])
 	const search = async()=>{
 		// get axios data
 		let href = "http://54.186.56.114/leave"
 		let config = {
 		  headers:{
-		  	'authorization': `Bearer ${store.state.token}`
+		  	'authorization': `Bearer ${token}`
 		  },
 		  params: {				
 		  	group: type.value+number.value, 
@@ -252,7 +257,6 @@
 			let {data} = await axios.get(href, config)			
 			let axiosData = data.data
 			tableData.value = [] 			// 清空舊的資料再更新
-
 			for(let i = 0; i <= axiosData.length - 1; i ++){
 				tableData.value.push({ 
 					date: axiosData[i].date, 

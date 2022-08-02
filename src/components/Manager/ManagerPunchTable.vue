@@ -59,6 +59,8 @@
 	import axios from 'axios'
 	import store from "../../store"
 
+	const token = store.getters["auth/getToken"]
+
 	const date = ref(""); 	// date
 	onMounted(() => {
     const startDate = new Date(2021, 11, 16);
@@ -117,16 +119,22 @@
 	]);		
 
 	const axiosType = async() =>{
-		// clear  option valeu
+		// clear option valeu
 		selectType.value = []
 		selectNumber.value = []
-		selectName.value = []
 		type.value = ''
 		number.value = ''
-		name.value = ''		
-		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'	
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}
+
 		try{
-			let { data } = await axios.post(href)
+			let { data } = await axios.post(href, postData, config)
+			console.log(data)
 			let type = data.data.type
 
 
@@ -137,26 +145,30 @@
 				})
 			}
 		}
-		catch{
+		catch(e){
+			console.log(e)
 			alert("資料錯誤")
 		}
 	}		
 	axiosType()
-
 	const axiosNumber = async() =>{
-		// clear  option valeu
+		// clear  option value
 		selectNumber.value = []
-		selectName.value = []
-		number.value = ''
-		name.value = ''		
+		number.value = ''	
 		let href = 'http://54.186.56.114/diary/Getdatalist'
-
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
 		if(type.value !== ""){
 			try{
 				let postData = {
 					type: type.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData,config)
+				
 				let number = data.data.number
 				for(let i = 0; i < number.length; i++){
 					selectNumber.value.push({
@@ -176,17 +188,23 @@
 	}
 
 	const axiosName = async() =>{
-		// clear option value
+		// clear  option valeu
 		selectName.value = []
-		name.value = ''
+		name.value = ''		
 		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
+
 		if(number.value !== ""){
 			try{
 				let postData = {
 					type: type.value,
 					number: number.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData, config)
 				let name = data.data.name
 				for(let i = 0; i < name.length; i++){
 					selectName.value.push({
@@ -197,7 +215,7 @@
 			}
 			catch{
 				alert("資料錯誤")
-			}
+			}		
 		}
 		else{
 			alert("請選擇資料")
@@ -224,7 +242,7 @@
 		let href = "http://54.186.56.114/punch"
 		let config = {
 		  headers:{
-		  	'authorization': `Bearer ${store.state.token}`
+		  	'authorization': `Bearer ${token}`
 		  },
 		  params: {				
 		  	group: type.value+number.value, 

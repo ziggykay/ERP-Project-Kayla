@@ -88,9 +88,8 @@ import { useRouter, useRoute } from 'vue-router'
 import axios from "axios"
 import store from "../../store"
 
-
-
- const router = useRouter()
+const token = store.getters["auth/getToken"]
+const router = useRouter()
 const props = defineProps({
   parentUser:{
     type: Object,
@@ -123,7 +122,7 @@ const submitEdit = async()=>{
 	}
 	try{
 		disableStatus.value = !disableStatus.value
-		let { data } = await axios.patch(href, postData, { headers:{'authorization': `Bearer ${store.state.token}`}})
+		let { data } = await axios.patch(href, postData, { headers:{'authorization': `Bearer ${token}`}})
 		alert("資料更新成功")		
 	}
 	catch(e){
@@ -136,7 +135,7 @@ const delUser = async()=>{
 	let yes = confirm('確定要刪除該使用者嗎？！');
 	let config = {
 	  headers:{
-	  	'authorization': `Bearer ${store.state.token}`
+	  	'authorization': `Bearer ${token}`
 	  },
 	  data: {
 	  	Name: name.value,
@@ -148,7 +147,7 @@ const delUser = async()=>{
 		try{
 			let { data } = await axios.delete(href, config)
 			alert("已刪除該筆資料!")
-			router.go()
+			router.push('/manager/accountcheck')
 		}
 		catch(e){
 			alert("刪除失敗!")

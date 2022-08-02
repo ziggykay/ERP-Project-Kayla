@@ -63,6 +63,8 @@
   import ClassCard from "../../components/baseComponents/ClassCard.vue";
   import axios from "axios";
   import { ref, reactive, watch, defineAsyncComponent } from "vue";
+  import store from '../../store'
+  const token = store.getters['auth/getToken']
 
   // overall 用變數
   const totalData = ref([
@@ -98,11 +100,11 @@
 
   // 獲得全部課程
   const getCourses = async()=>{
-    let {data} = await axios.get('http://54.186.56.114:8080/course', { params:{ group: "fn101", name: 'Rossen'}} )
+    let {data} = await axios.get('http://54.186.56.114/course', { headers: { authorization: `Bearer ${token}`}} )
       courseData.value = data.data.course
 
       // 計算 overall 用資料
-      totalData.value[0].number = `${data.data.total[0].totalhours}小時`
+      totalData.value[0].number = `${Math.floor(data.data.total[0].totalhours)}小時`
       totalData.value[1].number = `${data.data.total[0].totalcourse}堂`
       totalData.value[2].number = `${data.data.total[0].progress}堂`
       totalData.value[3].number = `${(data.data.total[0].progress/data.data.total[0].totalcourse)*100}%`

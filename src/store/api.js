@@ -1,6 +1,0 @@
-
-selectType()
-
-selectNumber()
-
-selectName()

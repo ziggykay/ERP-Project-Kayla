@@ -14,7 +14,7 @@ import router from '../../router';
 import store from '../../store'
 
   function logOut () {
-    store.dispatch('clearData')
+    store.dispatch('auth/clearData')
     router.push('/')
   }
 
