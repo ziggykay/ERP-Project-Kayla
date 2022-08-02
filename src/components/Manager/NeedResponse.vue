@@ -1,70 +1,57 @@
 <template>
-  <!-- 待回覆區 -->
-  <!-- 問題區 -->
+<!-- 待回覆區 -->
+<!-- 問題區 -->
 <div class="d-flex container-out">
   <div class="content-box main-outter">
-    <div class="title p-3 fw-bold">待回覆區</div>
-      <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
-        <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
-          <div class="resbox-outter">
-            <!-- 尚未按回覆 -->
-            <div class="content-box resbox res-box-hover ps-2" v-for="(data,index) of unreplieds" :key="index" >
-              <div class="d-flex justify-content-between">
-                <div class="d-flex date-and-title w-50 justify-content-around ms-4">
-                  <p class="">日期</p>
-                  <p class="">姓名</p>
-                  <p class="">問題</p>
-                </div>
-                <!--  -->
-                  <div v-if="data.status == 0">
-                    <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-                    @click="updateData(data)" >回覆</button>
-                  </div>
-                  <!-- 按了回覆改變狀態為新增結案按鈕 -->
-                  <div v-if="data.status == 1">
-                    <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3 me-2"
-                    @click="{responseToTemp: [updateData(data),checkHasRes(data)]}" >查看</button>
-                    <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2"
-                    @click="endCase(data)">結案</button>
-                  </div>
+      <div class="title p-3 fw-bold border-bottom">待回覆區</div>
+      <div class="d-flex justify-content-between" v-if="unrepliedsid.length!=0">
+        <div class="resbox-outter">
+          <!-- 尚未按回覆 -->
+          <div class="content-box resbox res-box-hover ps-2" v-for="(data,index) of unreplieds" :key="index" >
+            <div class="d-flex justify-content-between">
+              <div class="d-flex date-and-title w-50 justify-content-around ms-4">
+                <p class="">日期</p>
+                <p class="">姓名</p>
+                <p class="">問題</p>
               </div>
-              <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
-                <p class="text-ellipsis ms-1">{{data.LeavingTime}}</p>
-                <p class="text-ellipsis ms-3">{{data.Name}}</p>
-                <p class="text-ellipsis ">{{data.Title}}</p>
+              <div v-if="data.status == 0">
+                <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
+                 @click="updateData(data)" >回覆</button>
+              </div>
+              <!-- 按了回覆改變狀態會新增結案按鈕 -->
+              <div v-if="data.status == 1">
+                <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3 me-2"
+                @click="{responseToTemp: [updateData(data),checkHasRes(data)]}" >查看</button>
+                <button type="button" class="btn btn-primary confirm-btn case-end check-res mt-2"
+                @click="endCase(data)">結案</button>
               </div>
             </div>
-          </div>
-          <div>
-          <!-- 回覆區 -->
-            <div class="content-box question-box">
-              <p class="title mb-3 ps-3 fw-bold w-25 text-center">問題</p>
-              <p class="q-title">{{selectData.Title}}</p>
-              <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
-              <div class="q-content">{{selectData.content}}</div>
-              <div>
-                <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-                <div>
-                  <textarea
-                  class="q-content d-block"
-                  cols="30"
-                  rows="10"
-                  placeholder="請輸入回覆內容..."
-                  v-model="selectData.responseBox">
-                </textarea>
-                </div>
-              </div>
-              <div class=" text-end">
-              <button type="button" class="btn btn-primary confirm-btn check-res mt-2"
-                @click="send(selectData)" v-if="selectData.responseBox!==''">送出</button>
-              </div>
-              <!-- <input type="hidden" v-for="{resData, index} of tempResponse" :key=index>{{resData}} -->
+            <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
+              <p class="text-ellipsis ms-1">{{data.LeavingTime}}</p>
+              <p class="text-ellipsis ms-3">{{data.Name}}</p>
+              <p class="text-ellipsis ">{{data.Title}}</p>
             </div>
           </div>
         </div>
-      <div v-else><p class="text-center fs-5">尚無資料</p></div>
-    </div>
+        <!-- 回覆區 -->
+        <div class="content-box question-box">
+          <p class="title fw-bold text-start">問題</p>
+          <p class="q-title">{{selectData.Title}}</p>
+          <p class="title fw-bold text-start mt-2">內容</p>
+            <div class="q-content">{{selectData.content}}</div>
+            <p class="title ps-3 mt-2 fw-bold text-start">回覆</p>
+            <textarea class="q-content d-block" cols="50" rows="3" placeholder="請輸入回覆內容..."
+              v-model="selectData.responseBox">
+            </textarea>
+            <div class=" text-end">
+              <button type="button" class="btn btn-primary confirm-btn check-res mt-3"
+              @click="send(selectData)" v-if="selectData.responseBox!==''">送出</button>
+            </div>
+        </div>
+      </div>
+    <div v-else><p class="text-center fs-5">尚無資料</p></div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -117,13 +104,13 @@ const emit = defineEmits(["changeShow"]);
   height: 35rem;
 }
 .resbox {
-  width: 34rem;
-  height: 6rem;
+  width: auto;
+  height: auto;
 }
 .resbox-outter {
   overflow-y: scroll;
   height: 28rem;
-  width: 40rem;
+  width: 100%;
   .date-and-title {
     color: #558aba;
   }
@@ -132,27 +119,21 @@ const emit = defineEmits(["changeShow"]);
   }
 }
 .question-box {
-  width: 28rem;
-  height: 27rem;
+  width: 70%;
+  height: auto;
   .title {
     color: #558aba;
   }
   .q-title {
     border: solid 1px;
-    width: 22vw;
-    height: 5vh;
+    width: 100%;
+    height: auto;
     margin: 0 auto;
   }
   .q-content {
     border: solid 1px;
-    width: 22vw;
-    height: 11vh;
-    margin: 0 auto;
-  }
-  .res-content {
-    border: solid 1px;
-    width: 22vw;
-    height: 11vh;
+    width: 100%;
+    height: 5rem;
     margin: 0 auto;
   }
 }
