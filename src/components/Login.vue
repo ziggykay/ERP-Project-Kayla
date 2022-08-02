@@ -166,7 +166,7 @@ let nameErr = ref("");
 const login = async () => {
   let href = "http://54.186.56.114/login";
   let postData = {
-    group: "manager",
+    group: "ent",
     // Class: 'manager',
     // Class: group.value,
     account: name.value,
