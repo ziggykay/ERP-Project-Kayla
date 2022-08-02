@@ -41,8 +41,7 @@
 
 <!-- gradeCompare =================================================================== -->
 	<!-- filter -->
-	<!-- filter -->
-	<div class="content-box filter-box">
+<!-- 	<div class="content-box filter-box">
 		<p class="title"><strong>以班級篩選</strong></p> 	  	
 		<hr/>
 		<div class="d-flex flex-wrap">
@@ -57,13 +56,13 @@
 				<option v-for="(data, index) of selectNumber" :value="data.item">
 					{{ data.name }}
 				</option>	      	 	
-	  	</select>		  	 	  	
+	  	</select>	 -->	  	 	  	
 	<!-- 	  	<select class="selectInfo me-2">
 				<option v-for="(data, index) of selectDate" :value="data.item">
 					{{ data.name }}
 				</option>	      	 	
 	  	</select>		 -->
-		<div class="d-flex">
+<!-- 		<div class="d-flex">
 			<input type="checkbox" id="fn" value="fn" v-model="checkedGrades">
 			<label for="fn">前端班</label>
 			<input type="checkbox" id="dv" value="dv" v-model="checkedGrades">
@@ -76,11 +75,11 @@
 	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
 	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
 		</div>
-	</div>	  	
+	</div>	 -->  	
   <!-- chart -->
-  <div class="content-box overall-box chartContainer" >
+<!--   <div class="content-box overall-box chartContainer" >
 		<v-chart class="chartHeight" :option="gradeCompareBarchart" autoresize />  	
-  </div>	
+  </div> -->	
 </template>
 
 <script setup>

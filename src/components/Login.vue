@@ -82,8 +82,8 @@ const number = ref('')
 let errMsg = ref('')
 
 
-let name = ref('Albee')
-let password = ref('xyIWYIuZ4IqHU')
+let name = ref('KJH')
+let password = ref('8743')
 let group = ref('')
 
 // user:
@@ -97,8 +97,8 @@ let nameErr = ref("");
 const login = async () => {
 	let href = "http://54.186.56.114/login"
 	let postData = {
-		group: 'dv102',
-		// group: 'manager',
+		// group: 'dv102',
+		group: 'manager',
 		// Class: group.value,
 		account: name.value,
 		password: password.value
