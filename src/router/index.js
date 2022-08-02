@@ -116,9 +116,9 @@ const routes = [
     component: () => import('../views/Company/CheckDiaryView.vue')
   },
   {
-    path: '/company/userdiaryfeedback',
-    name: 'UserDiaryFeedback',
-    component: () => import('../components/Company/UserDiaryFeedback.vue')
+    path: '/company/ResponsePage',
+    name: 'ResponsePage',
+    component: () => import('../components/Company/ResponsePage.vue')
   },
   {
     path: '/company/watchuserdiary',

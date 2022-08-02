@@ -1,52 +1,52 @@
 <template>
-  <!-- 已結案區 -->
   <!-- filter -->
   <div class="content-box">
-			<p class="title"><strong>已結案區</strong></p> 	  	
-			<hr/>	
-			<div class="d-flex mt-2 flex-wrap">
-		  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
-		  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
-			</div>
-		</div>	
-  <div class="d-flex container-out">
+		<p class="title"><strong>已結案區</strong></p> 	  	
+		<hr/>	
+		<div class="d-flex mt-2 flex-wrap">
+		  <Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+		  <button class="confirm-btn btn btn-height" @click="search">搜尋</button>
+		</div>
+	</div>
+  <!-- 已結案區	 -->
+<div class="d-flex container-out">
   <div class="content-box main-outter">
-      <div class="d-flex justify-content-start p-3 "></div>
-        <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
-          <div class="resbox-outter">
-            <!-- 尚未按回覆 -->
-            <div class="content-box resbox res-box-hover ps-2">
-              <div class="d-flex justify-content-between">
-                <div class="d-flex date-and-title w-50 justify-content-around ms-0">
-                  <p class="">日期</p>
-                  <p class="">姓名</p>
-                  <p class="">問題</p>
-                </div>
-                    <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-                    @click="updateData()" >查看</button>
-              </div>
-              <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
-                <p class="text-ellipsis ms-1">XXX</p>
-                <p class="text-ellipsis ms-3">XXX</p>
-                <p class="text-ellipsis ">XXX</p>
-              </div>
+    <div class="d-flex justify-content-start p-3 "></div>
+    <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
+      <div class="resbox-outter">
+        <!-- 尚未按回覆 -->
+        <div class="content-box resbox res-box-hover ps-2">
+          <div class="d-flex justify-content-between">
+            <div class="d-flex date-and-title w-50 justify-content-around ms-0">
+              <p class="">日期</p>
+              <p class="">姓名</p>
+              <p class="">問題</p>
             </div>
+            <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
+            @click="updateData()" >查看</button>
           </div>
-          <!-- 回覆區 -->
-            <div class="content-box question-box">
-              <p class="title fw-bold text-start">問題</p>
-              <p class="q-title">XXX</p>
-              <p class="title fw-bold text-start mt-2">內容</p>
-              <div class="q-content">XXX</div>
-                <p class="title ps-3 mt-2 fw-bold text-start">回覆</p>
-                <div>
-                  <div class="q-content d-block">XXX</div>
-                </div>
-              </div>
-            </div>
-      <div v-else><p class="text-center fs-5">尚無資料</p></div>
+          <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
+            <p class="text-ellipsis ms-1">XXX</p>
+            <p class="text-ellipsis ms-3">XXX</p>
+            <p class="text-ellipsis ">XXX</p>
+          </div>
+        </div>
+      </div>
+      <!-- 回覆區 -->
+        <div class="content-box question-box">
+          <p class="title fw-bold text-start">問題</p>
+          <p class="q-title">XXX</p>
+          <p class="title fw-bold text-start mt-2">內容</p>
+        <div class="q-content">XXX</div>
+        <p class="title ps-3 mt-2 fw-bold text-start">回覆</p>
+        <div>
+          <div class="q-content d-block">XXX</div>
+        </div>
+      </div>
     </div>
+    <div v-else><p class="text-center fs-5">尚無資料</p></div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -63,7 +63,6 @@ onMounted(() => {
   return Date;
   
 });
-
 // filter-data
 	const selectArr = ref([
 		[
@@ -82,7 +81,6 @@ onMounted(() => {
   const store = useStore()
   const unreplieds = computed(()=>  store.state.unreplieds)
   const unrepliedsid = store.getters.unrepliedsid
-
   //查看按鈕
   const selectData = ref(unreplieds.value[0]);
   function updateData (data) {

@@ -93,12 +93,10 @@ import store from  "../../store";
 	
 	const token = store.getters["auth/getToken"]	
   const router = useRouter()
-
 	const type = ref("") // dynamic select option
 	const number = ref("")
 	const name = ref("") 
 	const status = ref("")// fix select option
-
 	const selectType = ref([]) // dynamic select option value
 	const selectNumber = ref([])
 	const selectName = ref([])	
@@ -138,21 +136,23 @@ import store from  "../../store";
 			item: "month"
 		}				 		
 	]);		
-
 	const axiosType = async() =>{
-		// clear  option valeu
+		// clear option valeu
 		selectType.value = []
 		selectNumber.value = []
-		selectName.value = []
 		type.value = ''
 		number.value = ''
-		name.value = ''		
-		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'	
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}
 		try{
-			let { data } = await axios.post(href)
+			let { data } = await axios.post(href, postData, config)
+			console.log(data)
 			let type = data.data.type
-
-
 			for(let i = 0; i < type.length; i++){
 				selectType.value.push({
 					name: type[i],
@@ -160,26 +160,30 @@ import store from  "../../store";
 				})
 			}
 		}
-		catch{
+		catch(e){
+			console.log(e)
 			alert("資料錯誤")
 		}
 	}		
 	axiosType()
-
 	const axiosNumber = async() =>{
-		// clear  option valeu
+		// clear  option value
 		selectNumber.value = []
-		selectName.value = []
-		number.value = ''
-		name.value = ''		
+		number.value = ''	
 		let href = 'http://54.186.56.114/diary/Getdatalist'
-
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
 		if(type.value !== ""){
 			try{
 				let postData = {
 					type: type.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData,config)
+				
 				let number = data.data.number
 				for(let i = 0; i < number.length; i++){
 					selectNumber.value.push({
@@ -197,19 +201,23 @@ import store from  "../../store";
 			alert("請選擇資料")
 		}
 	}
-
 	const axiosName = async() =>{
 		// clear  option valeu
 		selectName.value = []
 		name.value = ''		
 		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
 		if(number.value !== ""){
 			try{
 				let postData = {
 					type: type.value,
 					number: number.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData, config)
 				let name = data.data.name
 				for(let i = 0; i < name.length; i++){
 					selectName.value.push({
@@ -234,7 +242,6 @@ import store from  "../../store";
 	  // console.log("selected file",uploadFile.value.files[0])
 	  formData.append('group', type.value+number.value)
 	  formData.append('file', uploadFile.value.files[0])
-
 	  const href = 'http://54.186.56.114/leave'
 		const headers = {
 		  'Content-Type': 'multipart/form-data',
@@ -269,7 +276,6 @@ import store from  "../../store";
 			  params: {type: type.value, number: number.value, Name: name.value},
 			}				
 		}
-
 		try{
 				if(name.value == ""){
 					let { data } = await axios.get(href, config)
@@ -298,7 +304,6 @@ import store from  "../../store";
 			console.log(e)
 			alert("沒有該筆資料")
 		}
-
 	}
 // ========================================================================
 // to checkUserInfo
@@ -343,7 +348,6 @@ function checkUserInfo(data) {
   .checkDiv {
     width: auto;
     height: auto;
-
     height: 60vh;
     overflow-y: scroll;
   }

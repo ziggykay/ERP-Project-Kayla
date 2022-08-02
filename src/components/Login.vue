@@ -136,12 +136,19 @@ let group = ref("");
 // manager:
 // KJH
 // 8743
+// company:
+// QWE公司
+// 2345
+//company:
+//MES公司
+//9012
 let nameErr = ref("");
 const login = async () => {
   let href = "http://54.186.56.114/login";
   let postData = {
     group: "dv102",
-    // group: 'manager',
+    // group: "manager",
+    // group: "ent",
     account: name.value,
     password: password.value,
   };
@@ -166,8 +173,8 @@ const login = async () => {
     // 儲存使用者資料
     let userData = sub;
     store.dispatch("auth/storeUserInfo", userData);
-    const userStatus = store.getters['auth/getUserAccess']
-    
+    const userStatus = store.getters["auth/getUserAccess"];
+
     // 導至對應頁面
     switch (userStatus) {
       case "1":

@@ -2,15 +2,15 @@
   <div class="section">
     <div class="d-md-flex">
       <div class="content-box diary-box col">
-          <p class="text-primary InfoTitle"><strong>個人資訊</strong></p>
-          <hr />
-          <p class="Info"><strong>Class : </strong>{{ info.Class }}</p>
-          <hr />
-          <p class="Info"><strong>Number : </strong>{{ info.Id }}</p>
-          <hr />
-          <p class="Info"><strong>Name : </strong>{{ info.Name }}</p>
-          <hr />
-          <p class="Info"><strong>Email : </strong>{{ info.Email }}</p>
+        <p class="text-primary InfoTitle"><strong>個人資訊</strong></p>
+        <hr />
+        <p class="Info"><strong>Class : </strong>{{ info.Class }}</p>
+        <hr />
+        <p class="Info"><strong>Number : </strong>{{ info.Id }}</p>
+        <hr />
+        <p class="Info"><strong>Name : </strong>{{ info.Name }}</p>
+        <hr />
+        <p class="Info"><strong>Email : </strong>{{ info.Email }}</p>
       </div>
       <div class="container-fluid d-md-flex">
         <div class="content-box userInfo-box col d-flex">
@@ -27,10 +27,10 @@
                   {{ item.Project }}
                 </div>
                 <div class="align-self-end mt-3">
-                  <span @click="editDiary(item)"
+                  <!--                   <span @click="editDiary(item)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-pen-to-square mx-1"></i></a
-                  ></span>
+                  ></span> -->
                   <span @click="removeDiary(item)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-trash-can mx-1"></i></a
@@ -44,7 +44,11 @@
               </div>
             </div>
             <div v-if="isCreated" class="text-end mt-2">
-              <button type="button" class="btn btn-primary confirm-btn">
+              <button
+                type="button"
+                class="btn btn-primary confirm-btn"
+                @click="toBackEnd"
+              >
                 確認送出
               </button>
             </div>
@@ -86,25 +90,30 @@
             <select id="project" v-model="Project">
               <option value="">請選擇專案</option>
               <optgroup label="專案">
-                <option  v-for= "(item, index) of ProjectArr" :value="item.item">{{  item.name }}</option>
+                <option v-for="(item, index) of ProjectArr" :value="item.item">
+                  {{ item.name }}
+                </option>
               </optgroup>
               <optgroup label="產品">
-                <option  v-for= "(item, index) of ProductArr" :value="item.item">{{  item.name }}</option>
+                <option v-for="(item, index) of ProductArr" :value="item.item">
+                  {{ item.name }}
+                </option>
               </optgroup>
             </select>
           </div>
           <div class="work-time col-md-4">
-<!--             <label for="profile_pic">上傳圖片</label>
+            <label for="profile_pic">上傳圖片網址</label>
             <br />
             <span>
-              <input
+              <input type="text" v-model="Imgurl" />
+              <!--               <input
                 @change="getFiles"
                 type="file"
                 id="profile_pic"
                 name="profile_pic"
                 accept=".jpg, .jpeg, .png"
-              />
-            </span> -->
+              /> -->
+            </span>
           </div>
           <br />
         </div>
@@ -145,92 +154,96 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useStore, mapActions } from "vuex";
-import {ref, onMounted, reactive, watch, computed} from "vue";
+import { ref, onMounted, reactive, watch, computed } from "vue";
 
 const store = useStore();
-const token = store.getters["auth/getToken"]
-
+const token = store.getters["auth/getToken"];
 
 // ==============================================================
-const info = ref({});  //get user data 
-const getUserData = async()=>{
-	let href = 'http://54.186.56.114/login'
-	let config = {
-		headers: {
-			'authorization': `Bearer ${token}`
-		}
-	}	
-	try{
-		let { data } = await axios.get(href, config)
-		info.value = {
-	    Class: data.data[0].Class,
-	    Name: data.data[0].Name,
-	    Id: data.data[0].Id,
-	    Email: data.data[0].Email,		
-		}
-	}
-	catch(e){
-		console.log(e)
-	}
-}
-getUserData()
+const info = ref({}); //get user data
+const getUserData = async () => {
+  let href = "http://54.186.56.114/login";
+  let config = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    let { data } = await axios.get(href, config);
+    // console.log(data.data)
+
+    info.value = {
+      Class: data.data.Class,
+      Name: data.data.Name,
+      Id: data.data.Id,
+      Email: data.data.Email,
+    };
+  } catch (e) {
+    console.log(e);
+  }
+};
+getUserData();
 // ============================================================================
-const ProjectArr = ref([]) //get project value 
-const ProductArr = ref([])
-const axiosProject = async() =>{
-	let href = "http://54.186.56.114/diary/Getdatalist";
-	
-	try{
-		let { data } = await axios.get(href)
-		let Project = data.data.Project.filter((item)=>{
-			return item.Status == "專案"
-		})
-		let Product = data.data.Project.filter((item)=>{
-			return item.Status == "產品"
-		})		
-		Project.forEach(function(item, index){
-			ProjectArr.value.push({
-				name: item.Project,
-				item: item.Project
-			})			
-		})
-		Product.forEach(function(item, index){
-			ProductArr.value.push({
-				name: item.Project,
-				item: item.Project
-			})			
-		})		
-	}
-	catch(e){
-		console.log(e)
-	}
-}
-axiosProject()
+const ProjectArr = ref([]); //get project value
+const ProductArr = ref([]);
+const axiosProject = async () => {
+  let href = "http://54.186.56.114/diary/Getdatalist";
+  let config = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    let { data } = await axios.get(href, config);
+    let Project = data.data.Project.filter((item) => {
+      return item.Status == "專案";
+    });
+    let Product = data.data.Project.filter((item) => {
+      return item.Status == "產品";
+    });
+    Project.forEach(function (item, index) {
+      ProjectArr.value.push({
+        name: item.Project,
+        item: item.Project,
+      });
+    });
+    Product.forEach(function (item, index) {
+      ProductArr.value.push({
+        name: item.Project,
+        item: item.Project,
+      });
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+axiosProject();
 // ======================================================================================
-// 顯示已編輯日誌狀態 
-const diary = computed(() => { //取得vuex diary arr
+// 顯示已編輯日誌狀態
+const diary = computed(() => {
+  //取得vuex diary arr
   return store.state.diary;
 });
 const isCreated = ref(false); //預設已編輯日誌狀態
 
-watch(diary.value, (newVal, oldVal) => { 
-
+watch(diary.value, (newVal, oldVal) => {
   if (newVal.length === 0) {
     isCreated.value = false;
   } else {
     isCreated.value = true;
   } //判斷diary長度，更改isCreated值
 });
-
-
 // ==========================================================================================
 const empty = ref(true); //切換 新增專案按鈕狀態
 const Workinghour = ref(""); //日誌燈打v-model
 const Project = ref("");
 const Content = ref("");
+const Imgurl = ref("");
 const AllProject = ref({}); //日誌燈打v-model綁到物件
 
-const editDiary = (item) => { // 編輯function
+const editDiary = (item) => {
+  // 編輯function
   // console.log(item);
   empty.value = false; // 編輯專案按鈕，更改新增專案按鈕狀態
   Workinghour.value = item.Workinghour; //賦值
@@ -238,7 +251,8 @@ const editDiary = (item) => { // 編輯function
   Content.value = item.Content;
 };
 
-const submitDiary = () => { // 提交到已編輯日誌區塊
+const submitDiary = () => {
+  // 提交到已編輯日誌區塊
   // console.log(diary.value);
   if (Workinghour.value === "") {
     alert("請選擇時數!");
@@ -256,16 +270,19 @@ const submitDiary = () => { // 提交到已編輯日誌區塊
       Workinghour: Workinghour.value,
       Project: Project.value,
       Content: Content.value,
+      Imgurl: Imgurl.value,
     };
     store.dispatch("updateDiary", AllProject.value); //將AllProject 存到vuex
     clearForm();
   }
 };
 
-const clearForm = () => { //清空v-model值
+const clearForm = () => {
+  //清空v-model值
   Workinghour.value = "";
   Project.value = "";
   Content.value = "";
+  Imgurl.value = "";
 };
 
 const removeDiary = (item) => {
@@ -273,34 +290,34 @@ const removeDiary = (item) => {
   // clearForm();
 };
 
-
-const editComplete = () => {
-  // console.log(AllProject.value);
-  for (let i = 0; i < AllProject.value.length; i++) {
-    if (diary.value[i].id === diary.value.id) {
-      console.log(AllProject.value[i]);
-    }
+const toBackEnd = async () => {
+  let href = "http://54.186.56.114/diary/DiaryLog";
+  let postData = {
+    Project: "sst",
+    Workinghours: "5",
+    Imgurl: "sss",
+    Content: "stest",
+  };
+  try {
+    let { data } = await axios.post(href, postData, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+    console.log(data);
+  } catch (e) {
+    console.log(e);
   }
-
-  empty.value = true;
-  clearForm();
 };
 
+// const editComplete = () => {
+//   AllProject.value.Workinghour = Workinghour.value
+//   AllProject.value.Project = Project.value
+//   AllProject.value.Content = Content.value
+//    // console.log(AllProject.value);
+//   store.dispatch("editDiary", AllProject.value);
 
-
-
-
-
-
-
-
-
-
-// function getFiles(e) {
-
-//   console.log(e.target.files[0].name);
-// }
-
+//   empty.value = true;
+//   clearForm();
+// };
 </script>
 
 <style lang="scss" scoped>
@@ -339,9 +356,10 @@ const editComplete = () => {
 }
 .diary-box {
   display: flex;
+  min-width: 20vw;
   flex-direction: column;
   height: auto;
-  max-height: 100vh;
+  // max-height: 100vh;
 }
 .completeDiary {
   overflow-x: scroll;
