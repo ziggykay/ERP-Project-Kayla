@@ -126,8 +126,8 @@ let errMsg = ref("");
 //     alert("請選擇資料")
 //   }
 // }
-let name = ref("Albee");
-let password = ref("xyIWYIuZ4IqHU");
+let name = ref("MES公司");
+let password = ref("9012");
 let group = ref("");
 // user:
 // dv102
@@ -139,6 +139,9 @@ let group = ref("");
 // company:
 // QWE公司
 // 2345
+//company:
+//MES公司
+//9012
 let nameErr = ref("");
 const login = async () => {
   let href = "http://54.186.56.114/login";
