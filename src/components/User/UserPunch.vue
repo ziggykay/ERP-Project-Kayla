@@ -46,7 +46,7 @@
 		  	</select>			  	
 			</div>  	
 			<div class="d-flex mt-2 flex-wrap">
-		  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+		  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="tableDate" range/>
 		  	<button class="confirm-btn btn btn-height" @click="searchTable">搜尋</button>
 			</div>
 		</div>	
@@ -73,11 +73,12 @@
 <script setup>
 	import VChart from "vue-echarts";
 	import Overall from "../baseComponents/overall.vue";
-	import FilterSelect from "../baseComponents/FilterSelect.vue";
 	import {ref, onMounted, computed, watch} from "vue"
 	import axios from "axios"
 	import store from "../../store"
 
+
+	const token = store.getters["auth/getToken"]
 
 	// chartCopmponent
 	// filter-data
@@ -92,10 +93,8 @@
 			date.value[i] = newVal[i].toISOString().split('T')[0] 
 		}
 	});
-	const type = ref("dv")
-	const number = ref('102')	
-	const group = ref('dv102')
-	const	name = ref('Albee') 	
+
+	// const group = store.state.userInfo[0].Class
 	const selectDate = ref([
 		{
 			name: "請選擇日期範圍",
@@ -129,7 +128,7 @@
 			color: "#1AAF68"
 		},
 		{
-			title: "早退率",
+			title: "遲到率",
 			number: "",
 			color: "#1AAF68"
 		}
@@ -182,16 +181,14 @@
 	})
 	const search = async()=>{
 		// console.log(cur)
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"	
+		let href = "http://54.186.56.114/count"	
 		let axiosData = ""
-
+		let config = {
+		  headers:{'authorization': `Bearer ${token}`},
+		  params: {startdate: date.value[0], stopdate: date.value[1]},
+		}
 		try{
-			let {data} = await axios.get(href, { params: { 
-				group: type.value+number.value, 
-				startdate: date.value[0], 
-				stopdate: date.value[1], 
-				name: name.value
-			}})	
+			let {data} = await axios.get(href, config)	
 			axiosData = data.data			
 			// console.log(axiosData)
 			
@@ -199,7 +196,7 @@
 			AttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			AttendanceData.value[1].number = `${Math.round(axiosData[axiosData.length-1].late/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
 			AttendanceData.value[2].number = `${Math.round((axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
-			AttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].excused/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`		
+			AttendanceData.value[3].number = `${Math.round(axiosData[axiosData.length-1].leave/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`		
 			
 			//barcart
 			// 清空資料再更新
@@ -214,7 +211,8 @@
 			}
 	
 		}
-		catch{
+		catch(e){
+			console.log(e)
 			alert("資料錯誤")
 		}	
 	}
@@ -280,7 +278,7 @@
 	// table
 	const tableTitle = ref([
 		{field:"date", title:"日期"},
-		{field:"grade", title:"班級"},	  		
+		// {field:"grade", title:"班級"},	  		
 		{field:"name", title:"姓名"},
 		{field:"signin", title:"簽到"},
 		{field:"signout", title:"簽退"},
@@ -296,30 +294,33 @@
 
 	const searchTable = async()=>{
 		let href = "http://54.186.56.114/punch"
-		console.log(store.state.userInfo)
-		try{
-			let {data} = await axios.get(href, { params: { 
-				// group: group.value, 
+		let config = {
+			headers: {
+				'authorization': `Bearer ${token}`
+			},
+			params: { 
 				startdate: tableDate.value[0], 
 				stopdate: tableDate.value[1], 
-				// name: name.value,
 				status: status.value,
 				page: chosePage.value
-			}}, {headers: {'Authorization': `Bearer ${store.state.token}`}})
-			// tablePage.value = Number(data.data.pagination[0].totalpages)
-			// let axiosData = data.data.punch
-			// tableData.value = [] 			// 清空舊的資料再更新
+			}			
+		}
+		try{
+			let {data} = await axios.get(href, config)
+			tablePage.value = Number(data.data.pagination[0].totalpages)
+			let axiosData = data.data.punch
+			tableData.value = [] 			// 清空舊的資料再更新
 
-			// for(let i = 0; i <= axiosData.length - 1; i ++){
-			// 	tableData.value.push({ 
-			// 		date: axiosData[i].date, 
-			// 		grade: group.value, 
-			// 		name: axiosData[i].name, 
-			// 		signin: axiosData[i].intime, 
-			// 		signout: axiosData[i].outtime, 
-			// 		inip: axiosData[i].inip
-			// 	})
-			// } 
+			for(let i = 0; i <= axiosData.length - 1; i ++){
+				tableData.value.push({ 
+					date: axiosData[i].date, 
+					// grade: group.value, 
+					name: axiosData[i].name, 
+					signin: axiosData[i].intime, 
+					signout: axiosData[i].outtime, 
+					inip: axiosData[i].inip
+				})
+			} 
 		}
 		catch(e)
 		{

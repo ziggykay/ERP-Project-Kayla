@@ -74,8 +74,9 @@ import axios from 'axios'
 import VChart from "vue-echarts";
 import Overall from "../baseComponents/Overall.vue";
 import { useRouter, useRoute } from 'vue-router'
+import store from  "../../store";
 
-	
+const token = store.getters["auth/getToken"]
 const router = useRouter()
 // ==========================================================
 // select option data
@@ -131,7 +132,7 @@ const axiosType = async() =>{
 	selectNumber.value = []
 	type.value = ''
 	number.value = ''
-	let href = 'http://54.186.56.114:8081/Getdatalist'
+	let href = 'http://54.186.56.114/diary/Getdatalist'
 
 	try{
 		let { data } = await axios.post(href)
@@ -155,7 +156,7 @@ const axiosNumber = async() =>{
 	// clear  option valeu
 	selectNumber.value = []
 	number.value = ''	
-	let href = 'http://54.186.56.114:8081/Getdatalist'
+	let href = 'http://54.186.56.114/diary/Getdatalist'
 
 	if(type.value !== ""){
 		try{
@@ -182,7 +183,7 @@ const axiosNumber = async() =>{
 	}
 }
 const axiosProject = async() =>{
-	let href = "http://54.186.56.114:8081/Getdatalist";
+	let href = "http://54.186.56.114/diary/Getdatalist";
 	selectProjct.value = [];
 	project.value = ''
 	
@@ -206,7 +207,7 @@ const axiosProject = async() =>{
 // diary data
 const diaryData = ref([])
 const search = async() =>{
-	let href = 'http://54.186.56.114:8081/ReadDiaryLog'
+	let href = 'http://54.186.56.114/diary/ReadDiaryLog'
 	let postData = {
 		date_from: date.value[0],
 		date_to: date.value[1],
@@ -216,7 +217,7 @@ const search = async() =>{
 	}
 	try{
 		diaryData.value = []
-		let { data } = await axios.post(href, postData)
+		let { data } = await axios.post(href, postData, {headers: {'authorization': `Bearer ${token}`}})
 		// console.log(data.data)
 		data.data.forEach(function(item, index){
 			diaryData.value.push(item)
@@ -224,6 +225,7 @@ const search = async() =>{
 	}
 	catch(e){
 		console.log(e)
+		alert("資料錯誤")
 	}
 }
 // =========================================================

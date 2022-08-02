@@ -43,7 +43,7 @@ const routes = [
     path: '/user/checkselfdiary',
     name: 'CheckSelfDiary',
     component: () => import('../views/User/CheckSelfDiaryView.vue'),
-		props: (route) => route.params
+    props: (route) => route.params
   },
   // ========== manager-page ============== 
   {
@@ -96,7 +96,7 @@ const routes = [
     path: '/manager/accountcheck/user',
     name: 'AccountCheckId',
     component: () => import('../views/Manager/UserInfoView.vue'),
-		props: (route) => route.params
+    props: (route) => route.params
   },
   // {
   //   path: '/manager/userinfo',
@@ -124,6 +124,11 @@ const routes = [
     path: '/company/watchuserdiary',
     name: 'WatchUserDiary',
     component: () => import('../components/Company/WatchUserDiary.vue')
+  },
+  {
+    path: '/company/checkdiarylist',
+    name: 'CheckDiaryList',
+    component: () => import('../views/company/CheckDiaryListView.vue')
   },
 ];
 

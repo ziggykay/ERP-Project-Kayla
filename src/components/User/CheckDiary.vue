@@ -43,8 +43,8 @@
       <div class="title border-bottom p-2 fw-bold">企業回覆 :</div>
       <div class="d-flex justify-content-center">
         <div class="content-box-feeback m-3">
-          <p class="text-center"></p>
-          <textarea class="border-0 ps-1" cols="100" rows="8"></textarea>
+          <p class="text-center">{{user.Ent_reply}}</p>
+          <!-- <textarea class="border-0 ps-1" cols="100" rows="8"></textarea> -->
         </div>
       </div>
     </div>

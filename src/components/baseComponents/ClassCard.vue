@@ -14,7 +14,7 @@
       </div>
       <div class="bar-section col-9">
         <p class="bar-label">
-          總時數：{{ classData.totalhours }}小時
+          總時數：{{ Math.floor(classData.totalhours) }}小時
         </p>
         <p class="bar-label">
           已完成：{{ Math.floor(classData.present) }}小時
@@ -30,6 +30,8 @@
 <script setup>
   import axios from "axios"
   import { ref, onMounted, defineEmits } from "vue"
+  import store from '../../store'
+  const token = store.getters['auth/getToken']
 
   const props = defineProps({
     parentData: Object
@@ -45,17 +47,15 @@
 
   const classResources = ref([])
 
-  const getResources = () =>{
-    axios.post("http://54.186.56.114/course", 
-      {
-        // course:"php",
-        course:classData.value.course,
-        group:"fn101"
-      }
-    ).then(res => {
-      classResources.value = res.data.data
+  const getResources = async () =>{
+    let href = 'http://54.186.56.114/course'
+    try{
+      let {data} = await axios.get(href, { params: {course: classData.value.course}, headers: { authorization: `Bearer ${token}`} })
+      classResources.value = data.data
       sendData()
-    })
+    } catch (e){
+      console.error(e)
+    }
   }
 
   const emit = defineEmits(['showResources'])

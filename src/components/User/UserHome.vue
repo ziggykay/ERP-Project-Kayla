@@ -72,13 +72,16 @@
     <div class="content-box diary-box col-1">
       <p class="title"><strong>日誌登打狀態</strong></p>
       <hr />
-      <div class="container">
-        <p>{{ diaryMsg }}</p>
+      <div class="d-flex container my-2 justify-content-center mt-1">
         <div
+          class="mx-2 align-self-center"
           :class="[
             diaryMsg == '今日尚未登打' ? 'diarySign-red' : 'diarySign-green',
           ]"
         ></div>
+        <div class="mx-2 align-self-center">
+          <p class="diaryMsg mt-3">{{ diaryMsg }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -93,10 +96,10 @@
         v-for="data of jobData"
         :key="data"
       >
-        <p>{{ data.Job }}</p>
+        <p class="multiline-ellipsis">{{ data.Job }}</p>
         <hr />
         <p>工作地點：{{ data.Region }}</p>
-        <p>技能：{{ data.Skill }}</p>
+        <p class="multiline-ellipsis">技能：{{ data.Skill }}</p>
         <a :href="data.Url">{{ data.Resource }}</a>
       </div>
     </div>
@@ -143,10 +146,9 @@
 import { ref, onMounted } from "vue";
 import store from "../../store";
 import axios from "axios";
-
+const token = store.getters["auth/getToken"];
 // punch
 const punchData = ref([]);
-const token = store.getters['auth/getToken']
 
 const getTodayPunch = async () => {
   let href = "http://54.186.56.114/punch";
@@ -159,23 +161,17 @@ const getTodayPunch = async () => {
   }
 };
 getTodayPunch();
-
 // class
 const todayClass = ref([]);
-
 const getTodayCourse = async () => {
-  let group = "fn101";
-  let name = "Rossen";
   let href = "http://54.186.56.114/course";
   try {
     let { data } = await axios.get(href, {
       params: {
-        group: group,
         // cur:'today',
-        startdate: "2022-01-12",
-        stopdate: "2022-01-12",
-        name: name,
-      },
+        startdate: "2022-05-12",
+        stopdate: "2022-05-12",
+      },headers: { authorization: `Bearer ${token}`}
     });
     todayClass.value = data.data.course;
   } catch (e) {
@@ -183,10 +179,8 @@ const getTodayCourse = async () => {
   }
 };
 getTodayCourse();
-
 // diary
 let diaryMsg = ref("暫無資料");
-
 const getTodayDiary = async () => {
   let href = `http://54.186.56.114/diary/status`
   try {
@@ -202,13 +196,13 @@ getTodayDiary();
 
 // job
 const jobData = ref([]);
-
 const getJob = async () => {
   let href = `http://54.186.56.114/diary/RecommandCareer`
   try {
     let { data } = await axios.get(href, {
       headers: { authorization: `Bearer ${token}` },
     });
+    console.log(data)
     jobData.value = data.data;
   } catch (e) {
     console.error(e);
@@ -216,10 +210,11 @@ const getJob = async () => {
 };
 getJob();
 
+//彈出視窗-系統反應區====================================================================
+
 const title = ref("");
 const content = ref("");
 
-//彈出視窗-系統反應區====================================================================
 const isDisabled = ref(false);
 const systemReaction = () => {isDisabled.value = !isDisabled.value;};
 const sendQuestion = async () => {
@@ -404,5 +399,11 @@ const sendQuestion = async () => {
   position: fixed;
   right: 5%;
   bottom: 5%;
+}
+.multiline-ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
 }
 </style>

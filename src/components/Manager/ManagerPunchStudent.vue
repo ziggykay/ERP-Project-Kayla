@@ -48,7 +48,9 @@
 	import axios from 'axios'
 	import VChart from "vue-echarts";
 	import Overall from "../baseComponents/Overall.vue";
+	import store from "../../store"
 
+	const token = store.getters["auth/getToken"]
 
 	const date = ref(""); 	// date
 	onMounted(() => {
@@ -93,7 +95,7 @@
 		type.value = ''
 		number.value = ''
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		try{
 			let { data } = await axios.post(href)
 			let type = data.data.type
@@ -118,7 +120,7 @@
 		selectName.value = []
 		number.value = ''
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 
 		if(type.value !== ""){
 			try{
@@ -148,7 +150,7 @@
 		// clear  option valeu
 		selectName.value = []
 		name.value = ''		
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'
 		if(number.value !== ""){
 			try{
 				let postData = {
@@ -193,7 +195,7 @@
 			color: "#1AAF68"
 		},
 		{
-			title: "早退率",
+			title: "請假率",
 			number: "",
 			color: "#1AAF68"
 		}
@@ -246,15 +248,21 @@
 
 	const search = async()=>{
 		// get axios data
-		let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
-		let axiosData = ''
-		try{
-			let {data} = await axios.get(href, { params: { 
+		let href = "http://54.186.56.114/count"
+		let config = {
+			headers: {
+				'authorization': `Bearer ${token}`
+			},
+			params: { 
 				group: type.value+number.value, 
 				startdate: date.value[0], 
 				stopdate: date.value[1], 
 				name: name.value
-			}})	
+			}			
+		}				
+		let axiosData = ''
+		try{
+			let {data} = await axios.get(href, config)	
 			axiosData = data.data		
 				// over all
 			userAttendanceData.value[0].number = `${Math.round((axiosData[axiosData.length-1]["number of people"]*axiosData.length-axiosData[axiosData.length-1].absent)/(axiosData[axiosData.length-1]["number of people"]*axiosData.length)*100)}%`
@@ -273,8 +281,9 @@
 				userBarchart.value.series[1].data.push(axiosData[i].lackhours)
 			}
 		}
-		catch{
-			alert("資料錯誤")
+		catch(e){
+			console.log(e)
+			alert("沒有該筆資料")
 		}		
 	}
 </script>

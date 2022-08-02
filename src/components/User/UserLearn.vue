@@ -64,7 +64,6 @@
   import axios from "axios";
   import { ref, reactive, watch, defineAsyncComponent } from "vue";
   import store from '../../store'
-
   const token = store.getters['auth/getToken']
 
   // overall 用變數

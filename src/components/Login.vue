@@ -55,33 +55,6 @@
         </div>
       </div>
     </div>
-    <!-- <span class="mt-4">
-      <label class="mt-4 text-primary" for="">選擇登入身份</label>
-      <br />
-      <select>
-        <option>學生</option>
-        <option>管理員</option>
-        <option>企業</option>
-      </select>
-    </span>
-    <span class="mt-4">
-      <label for="name">姓名</label>
-      <br />
-      <input id="name" type="name" />
-    </span>
-    <br />
-    <div class="mt-4">
-      <label for="passWord">密碼</label>
-      <input id="passWord" type="password" />
-    </div>
-    <div class="mt-5">
-      <label for="passWord">驗證碼</label>
-      <input id="passWord" type="password" />
-    </div>
-    <br /> -->
-    <!-- <router-link to="/home">
-      <button class="btn btn-primary text-light">Login</button>
-    </router-link> -->
     <div class="error">{{ errMsg }}</div>
     <button class="btn btn-primary text-light my-4" @click="login">
       Login
@@ -94,7 +67,6 @@ import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import store from "../store";
-
 const router = useRouter();
 const route = useRoute();
 const selectType = ref([]);
@@ -138,7 +110,6 @@ let errMsg = ref("");
 //           type: type.value
 //         }
 //         let { data } = await axios.post(href, postData)
-
 //         let number = data.data.number
 //         for(let i = 0; i < number.length; i++){
 //           selectNumber.value.push({
