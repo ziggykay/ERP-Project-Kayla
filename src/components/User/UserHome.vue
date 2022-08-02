@@ -31,7 +31,7 @@
           </div>
           <div class="class-content container-fluid d-flex">
             <div class="percent-section col-3">
-              <p class="percent-number mt-1">
+              <p class="percent-number mt-3">
                 {{
                   (Math.floor(todayClass[0].present) /
                     todayClass[0].totalhours) *
@@ -40,10 +40,11 @@
               </p>
               <p class="percent-desc">{{ todayClass[0].status }}</p>
             </div>
-            <div class="bar-section col-9">
+            <div class="bar-section col-9 mt-1">
               <p class="bar-label">
                 總時數：{{ todayClass[0].totalhours }}小時
               </p>
+              <!-- <br /> -->
               <p class="bar-label">
                 已完成：{{ Math.floor(todayClass[0].present) }}小時
               </p>
@@ -72,8 +73,8 @@
     <div class="content-box diary-box col-1">
       <p class="title"><strong>日誌登打狀態</strong></p>
       <hr />
-      <div class="d-flex align-items-center justify-content-center mt-1">
-        <div class="text-center">
+      <div class="d-flex align-items-center justify-content-center mt-3">
+        <div class="text-center mt-4">
           <div
             class="mx-5"
             :class="[
@@ -264,6 +265,7 @@ const sendQuestion = async () => {
 .punch-box {
   flex-direction: column;
   width: auto;
+  height: auto;
   min-height: 12rem;
   // max-height: 100%;
 }
@@ -341,7 +343,7 @@ const sendQuestion = async () => {
         text-align: center;
         padding-top: 1rem;
         .percent-number {
-          font-size: 1.5rem;
+          font-size: 0.8rem;
           margin-bottom: 0%;
         }
         .percent-desc {
@@ -352,8 +354,8 @@ const sendQuestion = async () => {
         padding-top: 1.5rem;
         .bar-label {
           display: inline;
-          margin: 1rem 1rem 0 0;
-          font-size: 0.8rem;
+          // margin: 1rem 1rem 0 0;
+          font-size: 0.4rem;
         }
         .progress {
           margin-top: 1rem;
