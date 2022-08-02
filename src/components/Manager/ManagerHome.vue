@@ -55,6 +55,11 @@
 	import axios from 'axios'
 	import VChart from "vue-echarts";
 	import Overall from "../baseComponents/Overall.vue";
+	import store from "../../store"	
+
+
+	const token = store.getters["auth/getToken"]
+
 	// data
 	// grade
 	const date = ref(""); 	// date
@@ -90,14 +95,21 @@
 	]);		
 
 	const axiosType = async() =>{
-		// clear  option value
+		// clear option valeu
 		selectType.value = []
 		selectNumber.value = []
 		type.value = ''
 		number.value = ''
-		let href = 'http://54.186.56.114:8081/Getdatalist'
+		let href = 'http://54.186.56.114/diary/Getdatalist'	
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}
+
 		try{
-			let { data } = await axios.post(href)
+			let { data } = await axios.post(href, postData, config)
 			let type = data.data.type
 
 
@@ -108,24 +120,30 @@
 				})
 			}
 		}
-		catch{
+		catch(e){
+			console.log(e)
 			alert("資料錯誤")
 		}
-	}
+	}		
 	axiosType()
-
 	const axiosNumber = async() =>{
-		// clear option value
+		// clear  option value
 		selectNumber.value = []
 		number.value = ''	
-		let href = 'http://54.186.56.114:8081/Getdatalist'
-
+		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
 		if(type.value !== ""){
 			try{
 				let postData = {
 					type: type.value
 				}
-				let { data } = await axios.post(href, postData)
+				let { data } = await axios.post(href, postData,config)
+				
 				let number = data.data.number
 				for(let i = 0; i < number.length; i++){
 					selectNumber.value.push({
@@ -346,13 +364,19 @@
 		const getPunchData = async () => {
 			try{
 				// get axios data
-				let href = "http://ec2-34-221-251-1.us-west-2.compute.amazonaws.com:8080/count"
+				let href = "http://54.186.56.114/count"
 				let axiosData = ''
-				let {data} = await axios.get(href, { params: { 
-					group: type.value+number.value, 
-					startdate: date.value[0], 
-					stopdate: date.value[1] 
-				}})	
+				let config = {
+					params: {
+						group: type.value+number.value, 
+						startdate: date.value[0], 
+						stopdate: date.value[1] 			
+					},
+					headers: {
+						'authorization': `Bearer ${token}`
+					}
+				}
+				let {data} = await axios.get(href,config)	
 				axiosData = data.data
 
 				// over all
@@ -387,12 +411,18 @@
 		const getDiaryData = async () => {
 			try{
 				// get axios data
-				let href = "http://54.186.56.114:8081/typingrate"
+				let href = "http://54.186.56.114/typingrate"
 				let axiosData = ''
-				let {data} = await axios.post(href, { params: { 
-					group: type.value+number.value, 
-					time:'month'
-				}})	
+				let config = {
+					params: {
+						group: type.value+number.value, 
+						time:'month'						
+					},
+					headers: {
+						'authorization': `Bearer ${token}`
+					}					
+				}
+				let {data} = await axios.post(href, config)	
 				axiosData = data.data
 
 				// pie chart

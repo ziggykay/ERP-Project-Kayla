@@ -67,6 +67,8 @@ import { useRouter, useRoute } from 'vue-router'
 import store from  "../../store";
 import axios from "axios"
 
+
+const token = store.getters["auth/getToken"]
 const router = useRouter()
 
 const date = ref(""); 	// date
@@ -82,9 +84,9 @@ watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
 });
 
 const project = ref("")// dynamic select option
-const type = store.state.userInfo[0].Class.slice(0,2) // fix select option
-const number = store.state.userInfo[0].Class.slice(2)
-const name = store.state.userInfo[0].Name
+// const type = store.state.userInfo[0].Class.slice(0,2) // fix select option
+// const number = store.state.userInfo[0].Class.slice(2)
+// const name = store.state.userInfo[0].Name
 const projectType = ref("")
 
 
@@ -120,7 +122,7 @@ const axiosProject = async() =>{
 	project.value = ''
 	
 	try{
-		let { data } = await axios.get(href)
+		let { data } = await axios.get(href, {headers:{'authorization': `Bearer ${token}`}})
 		let filterProject = data.data.Project.filter((item)=>{
 			return item.Status == projectType.value
 		})
@@ -150,7 +152,7 @@ const search = async() =>{
 	}
 	try{
 		diaryData.value = []
-		let { data } = await axios.post(href, postData, {headers: {'authorization': `Bearer ${store.state.token}`}})
+		let { data } = await axios.post(href, postData, {headers: {'authorization': `Bearer ${token}`}})
 		// console.log(data)
 		data.data.forEach(function(item, index){
 			diaryData.value.push(item)

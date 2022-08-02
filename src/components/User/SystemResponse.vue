@@ -5,7 +5,7 @@
     <p class="title"><strong>查看問題回覆</strong></p> 	  	
 		<hr/>
 		<div class="d-flex mt-2 flex-wrap">
-	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range fixedStart/>
+	  	<!-- <Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range fixedStart/> -->
 	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
 		</div>
   </div>	
@@ -49,6 +49,9 @@ import { ref, onMounted, watch } from "vue";
 import FilterSelect from "../baseComponents/filterSelect.vue";
 import store from  "../../store";
 import axios from "axios";
+
+const token = store.getters["auth/getToken"]
+
 // ============================================================
 const date = ref(""); 	// date
 onMounted(() => {
@@ -80,17 +83,17 @@ const search = async()=>{
 	let href = 'http://54.186.56.114/diary/Message'
 	try{
 		questionList.value = []
-		let { data } = await axios.get(href, {headers: {'authorization': `Bearer ${store.state.token}`}})
-		console.log(data)
-		// for(let i = 0; i < data.data.length; i++){
-		// 	questionList.value.push({
-		// 	  Content: data.data[i].Content,
-		// 	  LeavingTime: data.data[i].LeavingTime,
-		// 	  ReplyContent: data.data[i].ReplyContent,
-		// 	  ReplyingTime: data.data[i].ReplyingTime,
-		// 	  Title: data.data[i].Title	
-		// 	})
-		// }
+		let { data } = await axios.get(href, {headers: {'authorization': `Bearer ${token}`}})
+		// console.log(data)
+		for(let i = 0; i < data.data.length; i++){
+			questionList.value.push({
+			  Content: data.data[i].Content,
+			  LeavingTime: data.data[i].LeavingTime,
+			  ReplyContent: data.data[i].ReplyContent,
+			  ReplyingTime: data.data[i].ReplyingTime,
+			  Title: data.data[i].Title	
+			})
+		}
 	}
 	catch(e){
 		console.log(e)
@@ -103,7 +106,7 @@ const search = async()=>{
 const selectData = ref({})
 const updateData = (data)=>{
 	selectData.value = data
-	console.log(selectData.value)
+	// console.log(selectData.value)
 }
 
 

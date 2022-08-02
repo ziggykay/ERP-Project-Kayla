@@ -1,13 +1,13 @@
 <template>
   <!-- 待回覆區 -->
   <!-- 問題區 -->
-  <div class="d-flex container-out">
+  <div class="d-flex justify-content-center">
     <div class="content-box main-outter">
       <div class="title p-3 fw-bold">待回覆區</div>
       <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
       <div
         class="d-flex justify-content-evenly"
-        v-if="unrepliedsid.length != 0"
+        v-if="unrepliedsDateCount != 0"
       >
         <div class="resbox-outter">
           <!-- 尚未按回覆 -->
@@ -18,7 +18,7 @@
           >
             <div class="d-flex justify-content-between">
               <div
-                class="d-flex date-and-title w-50 justify-content-around ms-4"
+                class="d-flex date-and-title w-50 justify-content-evenly ms-3"
               >
                 <p class="">日期</p>
                 <p class="">姓名</p>
@@ -29,7 +29,11 @@
                 <button
                   type="button"
                   class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-                  @click="updateData(data)"
+                  @click="
+                    {
+                      responseToTemp: [updateData(data)];
+                    }
+                  "
                 >
                   回覆
                 </button>
@@ -38,30 +42,34 @@
               <div v-if="data.status == 1">
                 <button
                   type="button"
-                  class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3 me-2"
+                  class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
                   @click="
                     {
-                      responseToTemp: [updateData(data), checkHasRes(data)];
+                      responseToTemp: [updateData(data), endCase1(data)];
                     }
                   "
                 >
-                  查看
+                  回覆
                 </button>
                 <button
                   type="button"
                   class="btn btn-primary confirm-btn case-end check-res mt-2"
-                  @click="endCase(data)"
+                  @click="
+                    {
+                      close: [updateRes(), endCase(data)];
+                    }
+                  "
                 >
                   結案
                 </button>
               </div>
             </div>
             <div
-              class="d-flex justify-content-around w-50 date-and-title-content ms-5"
+              class="d-flex justify-content-between w-50 date-and-title-content ms-5"
             >
-              <p class="text-ellipsis ms-1">{{ data.LeavingTime }}</p>
-              <p class="text-ellipsis ms-3">{{ data.Name }}</p>
-              <p class="text-ellipsis">{{ data.Title }}</p>
+              <p class="">{{ data.LeavingTime }}</p>
+              <p>{{ data.Name }}</p>
+              <p>{{ data.Title }}</p>
             </div>
           </div>
         </div>
@@ -84,13 +92,26 @@
                 >
                 </textarea>
               </div>
+              <!-- <div v-else >
+                  <textarea
+                  class="q-content d-block"
+                  cols="30"
+                  rows="10"
+                  placeholder="請輸入修改的內容..."
+                  v-model="responseText"
+                  >{{tempData}}
+                </textarea>
+                </div> -->
             </div>
             <div class="text-end">
               <button
                 type="button"
                 class="btn btn-primary confirm-btn check-res mt-2"
-                @click="send(selectData)"
-                v-if="selectData.responseBox !== ''"
+                @click="
+                  {
+                    send: [endCase2(selectData)];
+                  }
+                "
               >
                 送出
               </button>
@@ -99,7 +120,9 @@
           </div>
         </div>
       </div>
-      <div v-else><p class="text-center fs-5">尚無資料</p></div>
+      <div v-if="unrepliedsDateCount === 0">
+        <p class="text-center fs-5">尚無待回覆問題</p>
+      </div>
     </div>
   </div>
 </template>
@@ -108,49 +131,101 @@
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
+import axios from "axios";
+
 const emit = defineEmits(["changeShow"]);
-//store
 const store = useStore();
+const token = store.getters["auth/getToken"];
+//store
+
+const replieds = computed(() => store.state.replieds);
+// console.log(replieds)
 const unreplieds = computed(() => store.state.unreplieds);
 const unrepliedsid = store.getters.unrepliedsid;
 const unrepliedsLength = store.getters.unrepliedsLength;
+// console.log(unrepliedsLength)
+const unrepliedsDateCount = store.getters.unrepliedsDate.length;
+
+const search = async () => {
+  let href = "http://54.186.56.114/diary/Message";
+  try {
+    // questionList.value = []
+    let { data } = await axios.get(href, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+    console.log(data);
+    // for(let i = 0; i < data.data.length; i++){
+    // 	unreplieds.value.push({
+    // 	  Content: data.data[i].Content,
+    // 	  LeavingTime: data.data[i].LeavingTime,
+    // 	  ReplyContent: data.data[i].ReplyContent,
+    // 	  ReplyingTime: data.data[i].ReplyingTime,
+    // 	  Title: data.data[i].Title
+    // 	})
+    // }
+  } catch (e) {
+    console.log(e);
+    alert("資料錯誤");
+  }
+};
+search();
+
+const responseText = ref("");
+const tempResponse = store.getters.tempResponse;
+const tempResponseVal = store.getters.tempResponseVal;
+const tempItem = store.getters.tempItem;
+const unrepliedsres = store.getters.unrepliedsres;
+// console.log(unrepliedsres)
+// console.log(tempItem)
+//回覆至暫存區&&顯示結案按鈕
+// function changeStatus() {
+//   store.dispatch("toggleTempRes",selectData.responseBox);
+//   alert('已回覆');
+// }
+//更新到結案區
+function updateRes() {
+  store.dispatch("toggleRes", unrepliedsid);
+  alert("已結案");
+  // console.log(unrepliedsid)
+}
+// console.log(unrepliedsid.length)
 //從暫存區消失
 function endCase(data) {
-  store.dispatch("toggleDel", data);
-  alert("已結案");
+  // console.log(data)
+  for (let i = 0; i < unrepliedsid.length; i++) {
+    if (this.unreplieds[i] === data) {
+      this.unreplieds.splice(i, 1);
+    }
+  }
 }
-//按送出後回覆按鈕的功能
-function checkHasRes(data) {
-  store.dispatch("toggleHasRes", data);
+//test
+function endCase1(data) {
+  store.dispatch("toggleTest", data);
 }
-//送出按鈕
-function send(selectData) {
-  store.dispatch("toggleHasRes", selectData);
-  alert("已回覆");
+//送出
+function endCase2(selectData) {
+  store.dispatch("toggleTest", selectData);
+  // console.log(selectData)
 }
 //動態切換顯示資料
 const selectData = ref(unreplieds.value[0]);
 function updateData(data) {
   selectData.value = data;
+  // console.log(data)
 }
 </script>
 
 <style lang="scss" scoped>
-.container-out {
-  width: 100%;
-}
 .content-box {
   margin: 1rem;
   background-color: #fff;
-  // width: 300px;
-  width: 100%;
+  width: 300px;
   height: 180px;
   padding: 1rem;
   box-shadow: gray;
 }
 .main-outter {
-  // width: 100%;
-  // width: auto;
+  width: 100%;
   height: 35rem;
 }
 .resbox {
@@ -169,7 +244,7 @@ function updateData(data) {
   }
 }
 .question-box {
-  width: 28rem;
+  width: 30rem;
   height: 27rem;
   .title {
     color: #558aba;
@@ -213,11 +288,5 @@ div.res-box-hover:hover {
 textarea {
   outline: none;
   resize: none;
-}
-.text-ellipsis {
-  width: 6rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 </style>
