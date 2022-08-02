@@ -47,23 +47,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import FilterSelect from "../baseComponents/filterSelect.vue";
-import store from  "../../store";
-import axios from "axios";
-// ============================================================
-const date = ref(""); 	// date
+import SystemManage from "/src/views/Manager/SystemManageView.vue";
+import FilterSelect from "../baseComponents/FilterSelect.vue";
+import { ref, computed, onMounted } from "vue";
+import { useStore, mapActions, mapState } from "vuex";
+const date = ref();
+// For demo purposes assign range from the current date
 onMounted(() => {
-  const startDate = new Date(2022, 6, 2);
-  const endDate = new Date(2022, 6, 31)
-  date.value = [startDate, endDate]	
-})
-watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
-	for(let i = 0; i <= date.value.length - 1; i++){
-		date.value[i] = newVal[i].toISOString().split('T')[0] 
-	}
+  const startDate = new Date();
+  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+  date.value = [startDate, endDate];
+  return Date;
+  
 });
-
 // filter-data
 	const selectArr = ref([
 		[
@@ -76,38 +72,18 @@ watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
 				item: "month"
 			}				 		
 		]
-	]);	
-// ======================================================================
-const questionList = ref([])
-const search = async()=>{
-	let href = 'http://54.186.56.114/diary/Message'
-	try{
-		questionList.value = []
-		let { data } = await axios.get(href, {headers: {'authorization': `Bearer ${store.state.token}`}})
-		console.log(data)
-		// for(let i = 0; i < data.data.length; i++){
-		// 	questionList.value.push({
-		// 	  Content: data.data[i].Content,
-		// 	  LeavingTime: data.data[i].LeavingTime,
-		// 	  ReplyContent: data.data[i].ReplyContent,
-		// 	  ReplyingTime: data.data[i].ReplyingTime,
-		// 	  Title: data.data[i].Title	
-		// 	})
-		// }
-	}
-	catch(e){
-		console.log(e)
-		alert("資料錯誤")
-	}
-
-
-}
-// ============================================================
-const selectData = ref({})
-const updateData = (data)=>{
-	selectData.value = data
-}
-
+	]);
+	const title = "查看問題回覆"
+  //store
+  const store = useStore()
+  const unreplieds = computed(()=>  store.state.unreplieds)
+  const unrepliedsid = store.getters.unrepliedsid
+  //查看按鈕
+  const selectData = ref(unreplieds.value[0]);
+  function updateData (data) {
+    selectData.value = data
+    console.log(selectData.value)
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -118,7 +94,7 @@ const updateData = (data)=>{
   margin: 1rem;
   background-color: #fff;
   // width: 300px;
-  width: 98%;
+  width: 97%;
   height: 180px;
   padding: 1rem;
   box-shadow: gray;
@@ -129,13 +105,13 @@ const updateData = (data)=>{
   height: auto;
 }
 .resbox {
-  width: 34rem;
+  width: auto;
   height: 6rem;
 }
 .resbox-outter {
   overflow-y: scroll;
   height: 28rem;
-  width: 40rem;
+  width: 100%;
   .date-and-title {
     color: #558aba;
   }
@@ -144,20 +120,22 @@ const updateData = (data)=>{
   }
 }
 .question-box {
-  width: 28rem;
+  width:70%;
   height: auto;
   .title {
     color: #558aba;
   }
   .q-title {
     border: solid 1px;
-    width: auto;
+    width:100%;
+    min-width: 350px;
     height: auto;
     margin: 0 auto;
   }
   .q-content {
     border: solid 1px;
-    width: auto;
+    width:100%;
+    min-width: 350px;
     height: 5rem;
     margin: 0 auto;
   }
