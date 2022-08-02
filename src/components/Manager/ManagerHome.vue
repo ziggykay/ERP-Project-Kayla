@@ -186,7 +186,7 @@
 	]);
 	const gradeBarchart = ref({
     title: {
-      text: '本日出勤狀況',
+      text: '出勤狀況',
 			textStyle: {
 			    color: '#558ABA'
 			}
@@ -241,7 +241,7 @@
 	})
 	const piechart = ref({
 	  title: {
-	    text: "本月出勤狀況比例",
+	    text: "出勤狀況比例",
 			textStyle: {
 			    color: '#558ABA'
 			}
