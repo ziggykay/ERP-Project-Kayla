@@ -27,11 +27,11 @@
       <div class="" v-if="todayClass != ''">
         <div class="class-card">
           <div class="class-title d-flex justify-content-between">
-            <p class="title">{{ todayClass[0].course }}</p>
+            課程名稱：{{ todayClass[0].course }}
           </div>
           <div class="class-content container-fluid d-flex">
             <div class="percent-section col-3">
-              <p class="percent-number">
+              <p class="percent-number mt-1">
                 {{
                   (Math.floor(todayClass[0].present) /
                     todayClass[0].totalhours) *
@@ -65,22 +65,25 @@
           </div>
         </div>
       </div>
-      <div class="error" v-else>沒有課程可以顯示</div>
+      <div class="error mx-3" v-else>沒有課程可以顯示</div>
     </div>
 
     <!-- 日誌 -->
     <div class="content-box diary-box col-1">
       <p class="title"><strong>日誌登打狀態</strong></p>
       <hr />
-      <div class="d-flex container my-2 justify-content-center mt-1">
-        <div
-          class="mx-2 align-self-center"
-          :class="[
-            diaryMsg == '今日尚未登打' ? 'diarySign-red' : 'diarySign-green',
-          ]"
-        ></div>
-        <div class="mx-2 align-self-center">
-          <p class="diaryMsg mt-3">{{ diaryMsg }}</p>
+      <div class="d-flex align-items-center justify-content-center mt-1">
+        <div class="text-center">
+          <div
+            class="mx-5"
+            :class="[
+              diaryMsg == '今日尚未登打' ? 'diarySign-red' : 'diarySign-green',
+            ]"
+          ></div>
+          <br />
+          <div class="mx-2">
+            <p class="diaryMsg">{{ diaryMsg }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -103,7 +106,7 @@
         <a :href="data.Url">{{ data.Resource }}</a>
       </div>
     </div>
-    <div v-else class="">暫無資料</div>
+    <div v-else class="mx-3">暫無資料</div>
   </div>
   <!-- 彈出視窗-系統反應區-->
   <button id="show" class="btn-primary icon" @click="systemReaction">
@@ -153,8 +156,10 @@ const punchData = ref([]);
 const getTodayPunch = async () => {
   let href = "http://54.186.56.114/punch";
   try {
-    let { data } = await axios.get(href, {params: {cur: "today"}, 
-    headers: { authorization: `Bearer ${token}`}}, );
+    let { data } = await axios.get(href, {
+      params: { cur: "today" },
+      headers: { authorization: `Bearer ${token}` },
+    });
     punchData.value = data.punch;
   } catch (e) {
     console.error(e);
@@ -171,7 +176,8 @@ const getTodayCourse = async () => {
         // cur:'today',
         startdate: "2022-05-12",
         stopdate: "2022-05-12",
-      },headers: { authorization: `Bearer ${token}`}
+      },
+      headers: { authorization: `Bearer ${token}` },
     });
     todayClass.value = data.data.course;
   } catch (e) {
@@ -182,7 +188,7 @@ getTodayCourse();
 // diary
 let diaryMsg = ref("暫無資料");
 const getTodayDiary = async () => {
-  let href = `http://54.186.56.114/diary/status`
+  let href = `http://54.186.56.114/diary/status`;
   try {
     let { data } = await axios.get(href, {
       headers: { authorization: `Bearer ${token}` },
@@ -197,12 +203,12 @@ getTodayDiary();
 // job
 const jobData = ref([]);
 const getJob = async () => {
-  let href = `http://54.186.56.114/diary/RecommandCareer`
+  let href = `http://54.186.56.114/diary/RecommandCareer`;
   try {
     let { data } = await axios.get(href, {
       headers: { authorization: `Bearer ${token}` },
     });
-    console.log(data)
+    console.log(data);
     jobData.value = data.data;
   } catch (e) {
     console.error(e);
@@ -216,7 +222,9 @@ const title = ref("");
 const content = ref("");
 
 const isDisabled = ref(false);
-const systemReaction = () => {isDisabled.value = !isDisabled.value;};
+const systemReaction = () => {
+  isDisabled.value = !isDisabled.value;
+};
 const sendQuestion = async () => {
   let href = `http://54.186.56.114/diary/Message`;
   let postData = {
@@ -252,6 +260,12 @@ const sendQuestion = async () => {
   .btn-height {
     height: 38px;
   }
+}
+.punch-box {
+  flex-direction: column;
+  width: auto;
+  min-height: 12rem;
+  // max-height: 100%;
 }
 // 彈出視窗-系統反應區
 .back-black {
@@ -308,7 +322,8 @@ const sendQuestion = async () => {
   flex-direction: column;
   width: auto;
   height: auto;
-  max-height: 100%;
+  min-height: 12rem;
+  // max-height: 100%;
   .class-card {
     width: auto;
     height: auto;
@@ -326,7 +341,7 @@ const sendQuestion = async () => {
         text-align: center;
         padding-top: 1rem;
         .percent-number {
-          font-size: 1.8rem;
+          font-size: 1.5rem;
           margin-bottom: 0%;
         }
         .percent-desc {
@@ -364,9 +379,17 @@ const sendQuestion = async () => {
   @extend .diarySign-red;
   background-color: rgb(12, 224, 40);
 }
+.diary-box {
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  min-height: 12rem;
+  // max-height: 100%;
+}
 .job-box {
   width: auto;
   height: auto;
+  min-height: 12rem;
   .job-wrapper {
     height: auto;
     .job-card {
