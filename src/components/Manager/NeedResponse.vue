@@ -7,7 +7,7 @@
       <div class="d-flex justify-content-between" v-if="unrepliedsid.length!=0">
         <div class="resbox-outter">
           <!-- 尚未按回覆 -->
-          <div class="content-box resbox res-box-hover ps-2" v-for="(data,index) of unreplieds" :key="index" >
+          <div class="content-box resbox res-box-hover ps-2" v-for="(data,index) of unreplieds" :key="index">
             <div class="d-flex justify-content-between">
               <div class="d-flex date-and-title w-50 justify-content-around ms-4">
                 <p class="">日期</p>

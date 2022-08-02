@@ -96,7 +96,7 @@ onMounted(() => {
   margin: 1rem;
   background-color: #fff;
   // width: 300px;
-  width: 98%;
+  width: 97%;
   height: 180px;
   padding: 1rem;
   box-shadow: gray;
@@ -107,13 +107,13 @@ onMounted(() => {
   height: auto;
 }
 .resbox {
-  width: 34rem;
+  width: auto;
   height: 6rem;
 }
 .resbox-outter {
   overflow-y: scroll;
   height: 28rem;
-  width: 40rem;
+  width: 100%;
   .date-and-title {
     color: #558aba;
   }
@@ -122,20 +122,22 @@ onMounted(() => {
   }
 }
 .question-box {
-  width: 28rem;
+  width:70%;
   height: auto;
   .title {
     color: #558aba;
   }
   .q-title {
     border: solid 1px;
-    width: auto;
+    width:100%;
+    min-width: 350px;
     height: auto;
     margin: 0 auto;
   }
   .q-content {
     border: solid 1px;
-    width: auto;
+    width:100%;
+    min-width: 350px;
     height: 5rem;
     margin: 0 auto;
   }
