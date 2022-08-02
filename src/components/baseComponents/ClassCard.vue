@@ -46,7 +46,7 @@
   const classResources = ref([])
 
   const getResources = () =>{
-    axios.post("http://54.186.56.114:8080/course", 
+    axios.post("http://54.186.56.114/course", 
       {
         // course:"php",
         course:classData.value.course,

@@ -170,8 +170,7 @@ const login = async () => {
   let href = "http://54.186.56.114/login";
   let postData = {
     group: "dv102",
-    // Class: 'manager',
-    // Class: group.value,
+    // group: 'manager',
     account: name.value,
     password: password.value,
   };

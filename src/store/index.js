@@ -82,9 +82,16 @@ export default createStore({
         addResponse(state, responseText) {
             state.response.push(responseText)
         },
+        // removeFromTemp(state, payload) {
+        //     let indexToDelete = state.tempResponse.indexOf(Number(payload));
+        //     state.tempResponse.splice(indexToDelete, 1)
+        // },
         removeFromTemp(state, payload) {
-            let indexToDelete = state.tempResponse.indexOf(Number(payload));
-            state.tempResponse.splice(indexToDelete, 1)
+            for (let i = 0; i < state.unreplieds.length; i++) {
+                if (state.unreplieds[i] === payload) {
+                    state.unreplieds.splice(i, 1)
+                }
+            }
         },
         CreatedProject(state, status) {
             state.diary.push(status);
