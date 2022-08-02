@@ -1,5 +1,5 @@
 <template>
-<!-- filter -->
+  <!-- filter -->
   <div class="content-box filter-box">
 		<p class="title"><strong>查看問題回覆</strong></p> 	  	
 		<hr/>
@@ -10,20 +10,27 @@
 	</div>	
   <div class="d-flex container-out">
     <div class="content-box main-outter">
-    <div class="d-flex justify-content-start p-3 "></div>
-      <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
+      <div class="d-flex justify-content-start p-3"></div>
+      <div
+        class="d-flex justify-content-evenly"
+        v-if="unrepliedsid.length != 0"
+      >
         <div class="resbox-outter">
           <!-- 尚未按回覆 -->
           <div class="content-box resbox res-box-hover ps-2">
             <div class="d-flex justify-content-between">
-              <div class="d-flex date-and-title w-50 justify-content-around ms-4">
+              <div
+                class="d-flex date-and-title w-50 justify-content-around ms-4"
+              >
                 <p class="">日期</p>
                 <p class="">問題</p>
               </div>
                 <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
                 @click="updateData()" >查看</button>
             </div>
-            <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
+            <div
+              class="d-flex justify-content-around w-50 date-and-title-content ms-5"
+            >
               <p class="text-ellipsis ms-5">XXX</p>
               <p class="text-ellipsis ms-5">XXX</p>
             </div>
@@ -42,8 +49,8 @@
         </div>
       </div>
       <div v-else><p class="text-center fs-5">尚無資料</p></div>
+    </div>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -87,7 +94,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.container-out{
+.container-out {
   width: 100%;
 }
 .content-box {
@@ -167,7 +174,7 @@ textarea {
   outline: none;
   resize: none;
 }
-.text-ellipsis{
+.text-ellipsis {
   width: 6rem;
   overflow: hidden;
   text-overflow: ellipsis;
