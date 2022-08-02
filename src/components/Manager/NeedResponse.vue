@@ -101,7 +101,7 @@ const emit = defineEmits(["changeShow"]);
 .main-outter {
   // width: 100%;
   // width: auto;
-  height: 35rem;
+  height: auto;
 }
 .resbox {
   width: auto;
