@@ -1,61 +1,65 @@
 <template>
-<FilterSelect :parent-selectArr="selectArr" :parent-title="title" @user-selectData="userData"></FilterSelect>
-<div class="d-flex justify-content-center">
+  <!-- filter -->
+  <div class="content-box">
+		<p class="title"><strong>已結案區</strong></p> 	  	
+		<hr/>	
+		<div class="d-flex mt-2 flex-wrap">
+		  <Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
+		  <button class="confirm-btn btn btn-height" @click="search">搜尋</button>
+		</div>
+	</div>
+  <!-- 已結案區	 -->
+<div class="d-flex container-out">
   <div class="content-box main-outter">
-      <div class="d-flex justify-content-start p-3 border-bottom pb-0"></div>
-        <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
-          <div class="resbox-outter">
-            <!-- 查看回覆 -->
-            <div class="content-box resbox res-box-hover ps-2" v-for="(data,index) of unreplieds" :key="index" >
-              <div class="d-flex justify-content-between">
-                <div class="d-flex date-and-title w-50 justify-content-start ms-3">
-                  <p class="me-5">日期</p>
-                  <p class="ms-5">問題</p>
-                </div>
-                  <div v-if="data.status == 0">
-                    <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-                    @click="{responseToTemp: [updateData(data),]}" >查看回覆</button>
-                  </div>
-              </div>
-              <div class="d-flex justify-content-start date-and-title-content ms-5">
-                <p class="me-5 text-ellipsis">{{data.LeavingTime}}</p>
-                <p class="ms-2 text-ellipsis">{{data.Title}}</p>
-              </div>
+    <div class="d-flex justify-content-start p-3 "></div>
+    <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
+      <div class="resbox-outter">
+        <!-- 尚未按回覆 -->
+        <div class="content-box resbox res-box-hover ps-2">
+          <div class="d-flex justify-content-between">
+            <div class="d-flex date-and-title w-50 justify-content-around ms-0">
+              <p class="">日期</p>
+              <p class="">問題</p>
             </div>
+            <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
+            @click="updateData()" >查看回覆</button>
           </div>
-          <div>
-          <!-- 查看回覆區 -->
-            <div class="content-box question-box">
-              <p class="title mb-3 ps-3 fw-bold w-25 text-center">問題</p>
-              <p class="q-title">{{selectData.Title}}</p>
-              <p class="title ps-3 fw-bold w-25 text-center mt-3">內容</p>
-              <div class="q-content">{{selectData.content}}</div>
-              <div>
-                <p class="title ps-3 mt-3 fw-bold w-25 text-center">回覆</p>
-                <div class="res-content">
-                <p ></p>
-              </div>
-              </div>
-            </div>
+          <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
+            <p class="text-ellipsis ms-1">XXX</p>
+            <p class="text-ellipsis ">XXX</p>
           </div>
         </div>
-      <div v-else><p class="text-center fs-5">尚無資料</p></div>
+      </div>
+      <!-- 回覆區 -->
+        <div class="content-box question-box">
+          <p class="title fw-bold text-start">問題</p>
+          <p class="q-title">XXX</p>
+          <p class="title fw-bold text-start mt-2">內容</p>
+        <div class="q-content">XXX</div>
+        <p class="title ps-3 mt-2 fw-bold text-start">回覆</p>
+        <div>
+          <div class="q-content d-block">XXX</div>
+        </div>
+      </div>
     </div>
+    <div v-else><p class="text-center fs-5">尚無資料</p></div>
   </div>
+</div>
 </template>
 
 <script setup>
-import FilterSelect from "../baseComponents/filterSelect.vue";
-import { ref, computed, onMounted } from "vue";
-import { useStore } from "vuex";
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
+import FilterSelect from "../baseComponents/FilterSelect.vue";
+import { ref, computed, onMounted } from "vue";
+import { useStore, mapActions, mapState } from "vuex";
 const date = ref();
-//篩選
+// For demo purposes assign range from the current date
 onMounted(() => {
   const startDate = new Date();
   const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
   date.value = [startDate, endDate];
   return Date;
+  
 });
 
 // filter-data
@@ -71,53 +75,46 @@ onMounted(() => {
 			}				 		
 		]
 	]);
-	const title = "查看問題回覆"
-const emit = defineEmits(["changeShow"]);
-//store
+	const title = "已結案區"
+  //store
   const store = useStore()
   const unreplieds = computed(()=>  store.state.unreplieds)
   const unrepliedsid = store.getters.unrepliedsid
-  const unrepliedsLength = store.getters.unrepliedsLength
-  console.log(unrepliedsLength)
-  //動態切換顯示資料
+
+  //查看按鈕
   const selectData = ref(unreplieds.value[0]);
   function updateData (data) {
-    selectData.value = data;
+    selectData.value = data
+    console.log(selectData.value)
   }
 </script>
 
 <style lang="scss" scoped>
-.filter-select{
-  width:100%
-}
-.selectInfo {
-  width: 70px;
-  height: 38px;
-  background-color: #e9f2ff;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
+.container-out{
+  width: 100%;
 }
 .content-box {
   margin: 1rem;
   background-color: #fff;
-  width: 97.5%;
+  // width: 300px;
+  width: 97%;
   height: 180px;
   padding: 1rem;
   box-shadow: gray;
 }
 .main-outter {
-  width: 100%;
-  height: 35rem;
+  // width: 100%;
+  // width: auto;
+  height: auto;
 }
 .resbox {
-  width: 34rem;
+  width: auto;
   height: 6rem;
 }
 .resbox-outter {
   overflow-y: scroll;
   height: 28rem;
-  width: 40rem;
+  width: 100%;
   .date-and-title {
     color: #558aba;
   }
@@ -126,27 +123,23 @@ const emit = defineEmits(["changeShow"]);
   }
 }
 .question-box {
-  width: 30rem;
-  height: 27rem;
+  width:70%;
+  height: auto;
   .title {
     color: #558aba;
   }
   .q-title {
     border: solid 1px;
-    width: 22vw;
-    height: 5vh;
+    width:100%;
+    min-width: 350px;
+    height: auto;
     margin: 0 auto;
   }
   .q-content {
     border: solid 1px;
-    width: 22vw;
-    height: 11vh;
-    margin: 0 auto;
-  }
-  .res-content {
-    border: solid 1px;
-    width: 22vw;
-    height: 11vh;
+    width:100%;
+    min-width: 350px;
+    height: 5rem;
     margin: 0 auto;
   }
 }
@@ -172,7 +165,7 @@ textarea {
   resize: none;
 }
 .text-ellipsis{
-  width: 5rem;
+  width: 6rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
