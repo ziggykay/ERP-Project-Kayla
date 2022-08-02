@@ -127,15 +127,22 @@ const selectProjectType = ref([
 ])		
 
 const axiosType = async() =>{
-	// clear  option valeu
+	// clear option valeu
 	selectType.value = []
 	selectNumber.value = []
 	type.value = ''
 	number.value = ''
-	let href = 'http://54.186.56.114/diary/Getdatalist'
+	let href = 'http://54.186.56.114/diary/Getdatalist'	
+	let postData = {}
+	let config = {
+    headers: {
+			'authorization': `Bearer ${token}`
+    }			
+	}
 
 	try{
-		let { data } = await axios.post(href)
+		let { data } = await axios.post(href, postData, config)
+		console.log(data)
 		let type = data.data.type
 
 
@@ -146,24 +153,29 @@ const axiosType = async() =>{
 			})
 		}
 	}
-	catch{
+	catch(e){
+		console.log(e)
 		alert("資料錯誤")
 	}
 }		
 axiosType()
-
 const axiosNumber = async() =>{
-	// clear  option valeu
+	// clear  option value
 	selectNumber.value = []
 	number.value = ''	
 	let href = 'http://54.186.56.114/diary/Getdatalist'
-
+	let postData = {}
+	let config = {
+    headers: {
+			'authorization': `Bearer ${token}`
+    }			
+	}			
 	if(type.value !== ""){
 		try{
 			let postData = {
 				type: type.value
 			}
-			let { data } = await axios.post(href, postData)
+			let { data } = await axios.post(href, postData,config)
 			
 			let number = data.data.number
 			for(let i = 0; i < number.length; i++){
@@ -182,13 +194,19 @@ const axiosNumber = async() =>{
 		alert("請選擇資料")
 	}
 }
+
 const axiosProject = async() =>{
 	let href = "http://54.186.56.114/diary/Getdatalist";
+	let config = {
+    headers: {
+			'authorization': `Bearer ${token}`
+    }			
+	}			
 	selectProjct.value = [];
 	project.value = ''
 	
 	try{
-		let { data } = await axios.get(href)
+		let { data } = await axios.get(href, config)
 		let filterProject = data.data.Project.filter((item)=>{
 			return item.Status == projectType.value
 		})
