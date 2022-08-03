@@ -67,91 +67,49 @@ import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import store from "../store";
-const router = useRouter();
-const route = useRoute();
-const selectType = ref([]);
-const selectNumber = ref([]);
-const type = ref("");
-const number = ref("");
-let errMsg = ref("");
-// const axiosType = async () => {
-//   selectType.value = []
-//   selectNumber.value = []
-//   type.value = ''
-//   number.value = ''
-//   const href = 'http://54.186.56.114/diary/Getdatalist'
-//   try{
-//     let {data} = await axios.post(href)
-//     let type = data.data.type
-//     for(let i = 0; i < type.length; i++){
-//       selectType.value.push({
-//         name: type[i],
-//         item: type[i]
-//       })
-//     }
-//   }catch(e){
-//     errMsg.value = '伺服器發生錯誤'
-//     console.error(e)
-//   }
-// }
-// axiosType()
-// const axiosNumber = async() =>{
-//   // clear  option value
-//   selectNumber.value = []
-//   number.value = ''
-//   let href = 'http://54.186.56.114/diary/Getdatalist'
-//   if(type.value !== ""){
-//     if(type.value === 'manager' || 'ent'){
-//       console.log(type.value)
-//       return
-//     } else if (type.value === 'fn' || 'se' || 'dv'){
-//         try{
-//         let postData = {
-//           type: type.value
-//         }
-//         let { data } = await axios.post(href, postData)
-//         let number = data.data.number
-//         for(let i = 0; i < number.length; i++){
-//           selectNumber.value.push({
-//             name: number[i],
-//             item: number[i]
-//           })
-//         }
-//       }catch(e){
-//         errMsg.value = '伺服器發生錯誤'
-//         console.error(e)
-//       }
-//     }
-//   }else{
-//     alert("請選擇資料")
-//   }
-// }
-let name = ref("MES公司");
-let password = ref("9012");
-let group = ref("");
+
+const router = useRouter()
+const route = useRoute()
+
+// user:
+// fn211
+// WWW 
+const selectType = ref([])
+const selectNumber = ref([])
+const type = ref('')
+const number = ref('')
+
+let errMsg = ref('')
+
+
+let name = ref('QWE公司')
+let password = ref('2345')
+let group = ref('')
+
 // user:
 // dv102
 // Albee
 // xyIWYIuZ4IqHU
+
 // manager:
 // KJH
 // 8743
-// company:
-// QWE公司
-// 2345
-//company:
-//MES公司
-//9012
+
+//ent
+//QWE公司
+//2345
+
+
 let nameErr = ref("");
 const login = async () => {
-  let href = "http://54.186.56.114/login";
-  let postData = {
-    // group: "dv102",
-    // group: "manager",
-    group: "ent",
-    account: name.value,
-    password: password.value,
-  };
+	let href = "http://54.186.56.114/login"
+	let postData = {
+		// group: 'dv102',
+		// group: 'manager',
+		group: 'ent',
+		account: name.value,
+		password: password.value
+	}
   // if(name.value == '' || password.value == '' || password.value == ''){
   //    nameErr.value = '請輸入完整資料'
   // }
@@ -184,7 +142,7 @@ const login = async () => {
         router.push("/manager/home");
         break;
       case "3":
-        router.push("/company/home");
+        router.push("/company/checkdiary");
         break;
       default:
         router.push("/");

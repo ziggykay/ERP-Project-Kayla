@@ -12,39 +12,41 @@
 <div class="d-flex container-out">
   <div class="content-box main-outter">
     <div class="d-flex justify-content-start p-3 "></div>
-    <div class="d-flex justify-content-evenly" v-if="unrepliedsid.length!=0">
+    <!-- v-if="unrepliedsid.length!=0" -->
+    <div class="d-flex justify-content-evenly">
       <div class="resbox-outter">
-        <!-- 尚未按回覆 -->
-        <div class="content-box resbox res-box-hover ps-2">
+        <div class="content-box resbox res-box-hover ps-2" v-for="(data,index) of finishData" :key="index" >
           <div class="d-flex justify-content-between">
-            <div class="d-flex date-and-title w-50 justify-content-around ms-0">
+            <div class="d-flex date-and-title w-50 justify-content-around ms-4">
               <p class="">日期</p>
               <p class="">姓名</p>
               <p class="">問題</p>
             </div>
             <button type="button" class="btn btn-primary confirm-btn check-res-hover mt-2 ms-3"
-            @click="updateData()" >查看</button>
+               @click="updateData(data)" >查看</button>
           </div>
           <div class="d-flex justify-content-around w-50 date-and-title-content ms-5">
-            <p class="text-ellipsis ms-1">XXX</p>
-            <p class="text-ellipsis ms-3">XXX</p>
-            <p class="text-ellipsis ">XXX</p>
+            <p class="text-ellipsis ms-1">{{data.LeavingTime}}</p>
+            <p class="text-ellipsis ms-3">{{data.Name}}</p>
+            <p class="text-ellipsis ">{{data.Title}}</p>
           </div>
         </div>
       </div>
-      <!-- 回覆區 -->
+      <!-- 查看區 -->
+      <template v-if="finishData.length > 0">
         <div class="content-box question-box">
           <p class="title fw-bold text-start">問題</p>
-          <p class="q-title">XXX</p>
+          <p class="q-title">{{selectData.Title}}</p>
           <p class="title fw-bold text-start mt-2">內容</p>
-        <div class="q-content">XXX</div>
-        <p class="title ps-3 mt-2 fw-bold text-start">回覆</p>
-        <div>
-          <div class="q-content d-block">XXX</div>
-        </div>
-      </div>
+            <div class="q-content">{{selectData.Content}}</div>
+            <p class="title ps-3 mt-2 fw-bold text-start">回覆</p>
+            <textarea class="q-content d-block" cols="50" rows="3" placeholder="請輸入回覆內容..."
+              v-model="selectData.ReplyContent">
+            </textarea>
+        </div>      	
+      </template>
     </div>
-    <div v-else><p class="text-center fs-5">尚無資料</p></div>
+    <!-- <div v-else><p class="text-center fs-5">尚無資料</p></div> -->
   </div>
 </div>
 </template>
@@ -52,41 +54,82 @@
 <script setup>
 import SystemManage from "/src/views/Manager/SystemManageView.vue";
 import FilterSelect from "../baseComponents/FilterSelect.vue";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore, mapActions, mapState } from "vuex";
-const date = ref();
-// For demo purposes assign range from the current date
-onMounted(() => {
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-  date.value = [startDate, endDate];
-  return Date;
-  
-});
-// filter-data
-	const selectArr = ref([
-		[
-			{
-				name: "今日",
-				item: "today"
-			},
-			{
-				name: "本月",
-				item: "month"
-			}				 		
-		]
-	]);
-	const title = "已結案區"
-  //store
-  const store = useStore()
-  const unreplieds = computed(()=>  store.state.unreplieds)
-  const unrepliedsid = store.getters.unrepliedsid
-  //查看按鈕
-  const selectData = ref(unreplieds.value[0]);
-  function updateData (data) {
-    selectData.value = data
-    console.log(selectData.value)
-  }
+import axios from 'axios'
+
+const store = useStore()
+const token = store.getters["auth/getToken"]
+
+	const date = ref(""); 	// date
+	onMounted(() => {
+    const startDate = new Date(2022, 5, 2);
+    const endDate = new Date(2022, 7, 32)
+    date.value = [startDate, endDate]	
+	})
+	watch(date, (newVal, oldVal) => { //  set date to yyyy-mm-dd
+		for(let i = 0; i <= date.value.length - 1; i++){
+			date.value[i] = newVal[i].toISOString().split('T')[0] 
+		}
+	});
+
+// =====================================================================
+// get finish data
+const finishData = ref([])
+const search = async()=>{
+	let href = 'http://54.186.56.114/diary/Endmessage'	
+	let config = {
+		params: {
+			date_from: date.value[0],
+			date_to: date.value[1]
+		},
+    headers: {
+			'authorization': `Bearer ${token}`
+    }			
+	}
+
+	try{
+		finishData.value = []
+		let { data } = await axios.get(href, config)
+		// console.log(data.data)
+		for(let i = 0; i < data.data.length; i++){
+			finishData.value.push(data.data[i])
+		}		
+
+	}
+	catch(e){
+		console.log(e)
+		alert("資料錯誤")
+	}		
+}
+// ==================================================================
+// get select finish data 
+const selectData = ref({})
+const updateData = (data)=>{
+	// console.log(data)
+	selectData.value = data
+	// console.log(selectData.value)
+} 
+
+
+
+
+
+
+
+
+
+  // //store
+  // const store = useStore()
+  // const unreplieds = computed(()=>  store.state.unreplieds)
+  // const unrepliedsid = store.getters.unrepliedsid
+
+  // //查看按鈕
+  // const selectData = ref(unreplieds.value[0]);
+  // function updateData (data) {
+  //   selectData.value = data
+  //   console.log(selectData.value)
+  // }
 </script>
 
 <style lang="scss" scoped>

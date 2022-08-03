@@ -17,7 +17,7 @@
           <div class="container-fluid p-2">
             <p class="text-primary InfoTitle"><strong>已編輯日誌</strong></p>
             <hr />
-            <div v-if="isCreated" class="d-flex completeDiary">
+            <div  	v-if="diary.length > 0" class="d-flex completeDiary">
               <div
                 v-for="item of diary"
                 v-bind:key="item.id"
@@ -27,10 +27,10 @@
                   {{ item.Project }}
                 </div>
                 <div class="align-self-end mt-3">
-                  <!--                   <span @click="editDiary(item)"
+                  <span @click="editDiary(item)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-pen-to-square mx-1"></i></a
-                  ></span> -->
+                  ></span>
                   <span @click="removeDiary(item)"
                     ><a class="edit-icon" href="#">
                       <i class="fa-solid fa-trash-can mx-1"></i></a
@@ -43,12 +43,8 @@
                 無已登打的日誌
               </div>
             </div>
-            <div v-if="isCreated" class="text-end mt-2">
-              <button
-                type="button"
-                class="btn btn-primary confirm-btn"
-                @click="toBackEnd"
-              >
+            <div v-if="diary.length > 0" class="text-end mt-2">
+              <button type="button" class="btn btn-primary confirm-btn" @click="toBackEnd">
                 確認送出
               </button>
             </div>
@@ -64,7 +60,7 @@
           <div class="work-time col-md-4">
             <label for="">工作時數</label>
             <br />
-            <select id="time" v-model="Workinghour">
+            <select id="time" v-model="Workinghours">
               <option value="">請選擇時數</option>
               <option value="0.5">0.5</option>
               <option value="1">1</option>
@@ -236,7 +232,7 @@ watch(diary.value, (newVal, oldVal) => {
 });
 // ==========================================================================================
 const empty = ref(true); //切換 新增專案按鈕狀態
-const Workinghour = ref(""); //日誌燈打v-model
+const Workinghours = ref(""); //日誌燈打v-model
 const Project = ref("");
 const Content = ref("");
 const Imgurl = ref("");
@@ -246,15 +242,17 @@ const editDiary = (item) => {
   // 編輯function
   // console.log(item);
   empty.value = false; // 編輯專案按鈕，更改新增專案按鈕狀態
-  Workinghour.value = item.Workinghour; //賦值
+  Workinghours.value = item.Workinghours; //賦值
   Project.value = item.Project;
   Content.value = item.Content;
+  Imgurl.value = item.Imgurl;
+  AllProject.value.Id = item.Id //select data id
 };
 
 const submitDiary = () => {
   // 提交到已編輯日誌區塊
   // console.log(diary.value);
-  if (Workinghour.value === "") {
+  if (Workinghours.value === "") {
     alert("請選擇時數!");
   } else if (Project.value === "") {
     alert("請選擇專案!");
@@ -267,7 +265,7 @@ const submitDiary = () => {
   else {
     AllProject.value = {
       id: uuidv4(),
-      Workinghour: Workinghour.value,
+      Workinghours: Workinghours.value,
       Project: Project.value,
       Content: Content.value,
       Imgurl: Imgurl.value,
@@ -277,12 +275,11 @@ const submitDiary = () => {
   }
 };
 
-const clearForm = () => {
-  //清空v-model值
-  Workinghour.value = "";
+const clearForm = () => { //清空v-model值
+  Workinghours.value = "";
   Project.value = "";
   Content.value = "";
-  Imgurl.value = "";
+  Imgurl.value = '';
 };
 
 const removeDiary = (item) => {
@@ -290,34 +287,41 @@ const removeDiary = (item) => {
   // clearForm();
 };
 
-const toBackEnd = async () => {
-  let href = "http://54.186.56.114/diary/DiaryLog";
-  let postData = {
-    Project: "sst",
-    Workinghours: "5",
-    Imgurl: "sss",
-    Content: "stest",
-  };
-  try {
-    let { data } = await axios.post(href, postData, {
-      headers: { authorization: `Bearer ${token}` },
-    });
-    console.log(data);
-  } catch (e) {
-    console.log(e);
-  }
+const toBackEnd = async() => {
+
+	let href = "http://54.186.56.114/diary/DiaryLog";
+	
+	let sendDiary = []
+	diary.value.forEach((item, index)=>{
+		let {id, ...sendItem} = item
+		sendDiary.push(sendItem)
+	})
+
+	// console.log(sendDiary)
+	let postData = {jsonData : sendDiary}
+
+	try{
+		let { data } = await axios.post(href, postData, {headers:{'authorization': `Bearer ${token}`}})	
+		// console.log(data)
+		alert("以上傳日誌")
+	}
+	catch(e){
+		console.log(e)
+		alert("上傳失敗")
+	}	
+}
+
+const editComplete = () => {
+	AllProject.value.Workinghours = Workinghours.value
+	AllProject.value.Project = Project.value
+	AllProject.value.Content = Content.value  
+	AllProject.value.Imgurl = Imgurl.value 	   
+	// console.log(AllProject.value)
+  store.dispatch("editDiary", AllProject.value); 
+
+  empty.value = true;
+  clearForm();
 };
-
-// const editComplete = () => {
-//   AllProject.value.Workinghour = Workinghour.value
-//   AllProject.value.Project = Project.value
-//   AllProject.value.Content = Content.value
-//    // console.log(AllProject.value);
-//   store.dispatch("editDiary", AllProject.value);
-
-//   empty.value = true;
-//   clearForm();
-// };
 </script>
 
 <style lang="scss" scoped>

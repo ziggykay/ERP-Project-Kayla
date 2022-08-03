@@ -94,12 +94,14 @@ export default createStore({
             state.diary.push(status);
         },
         editProject(state, status) {
-            for (let i = 0; i < state.diary.length; i++) {
-                if (state.diary[i].id === status.id) {
-                    // console.log(status)
-                    state.diary[i] = status
-                }
-            }
+        	for(let i = 0; i < state.diary.length; i++){
+        		if(state.diary[i].id == status.id){
+        			// console.log(status)
+        			state.diary[i] =  status
+        			// console.log(state.diary[i])
+        			return state.diary
+        		}
+        	}
         },
         removeProject(state, status) {
             for (let i = 0; i < state.diary.length; i++) {
