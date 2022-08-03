@@ -1,7 +1,8 @@
 <template>
   <input type="checkbox" id="menu" />
   <nav>
-    <label>Logo</label>
+    <!-- <label>Logo</label> -->
+    <img class="logo" src="../../../public/FORESII_logo-01.png" alt="Logo"/>
     <ul>
       <li><button class="btn confirm-btn" @click="logOut">登出</button></li>
     </ul>
@@ -63,6 +64,13 @@ nav ul li a:hover {
   color: white;
   background-color: #22496d;
 }
+.logo{
+  width: 120px;
+  margin-left: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
 .side-menu {
   /*position: fixed;*/
   background-color: #fff;

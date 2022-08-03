@@ -14,7 +14,7 @@
 	  		<option value="">請選擇班級</option>
 				<option v-for="(data, index) of selectNumber" :value="data.item">
 					{{ data.name }}
-				</option>	      	 	
+				</option>
 	  	</select>		  	 	  	
 	<!-- 	  	<select class="selectInfo me-2">
 				<option v-for="(data, index) of selectDate" :value="data.item">

@@ -1,6 +1,7 @@
 <template>
   <div class="container text-center inner">
-    <div class="py-3"><h2 class="text-primary">Logo</h2></div>
+    <!-- <div class="py-3"><h2 class="text-primary">Logo</h2></div> -->
+    <div class="py-3"><img style="width:200px" src="../../public/FORESII_logo-01.png" alt="Logo"></div>
     <div class="inputs">
       <div class="d-flex justify-content-center inputWidth">
         <div class="align-self-top mx-1 access">
@@ -8,25 +9,27 @@
             <label for="name" class="text-primary">選擇登入身份</label>
           </div>
           <div>
-            <select>
-              <option>選擇身份</option>
-              <option>學生</option>
-              <option>管理員</option>
-              <option>企業</option>
+            <select v-model="group">
+              <option v-for="data of groupOption" :key="data" :value="data.item">
+                {{data.name}}
+              </option>
             </select>
           </div>
         </div>
         <div class="align-self-top mx-1 access">
           <div class="text-start">
-            <label for="name" class="text-primary">選擇班級</label>
+            <label for="name" class="text-primary" disabled>
+              選擇班級
+            </label>
           </div>
           <div>
-            <select>
-              <option>選擇班級</option>
+            <!-- <select v-model="grade"> -->
+              <input type="text" class="isStudent" :disabled="isDisabled" v-model="group">
+              <!-- <option>選擇班級</option>
               <option>dv102</option>
               <option>fn102</option>
               <option>se211</option>
-            </select>
+            </select> -->
           </div>
         </div>
       </div>
@@ -37,7 +40,7 @@
               <label for="name">姓名</label>
             </div>
             <div>
-              <input v-model="name" type="name" />
+              <input v-model="name" type="name"/>
             </div>
           </span>
         </div>
@@ -63,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import store from "../store";
@@ -82,9 +85,31 @@ const number = ref('')
 let errMsg = ref('')
 
 
-let name = ref('QWE公司')
-let password = ref('2345')
+let name = ref('KJH')
+let password = ref('8743')
 let group = ref('')
+
+const groupOption = ref([
+  {
+    name: "請選擇身份",
+    item: ""
+  },					
+  {
+    name: "學生",
+    item: "student"
+  },
+  {
+    name: "管理",
+    item: "manager"
+  },
+  {
+    name: "企業",
+    item: "ent"
+  }
+])
+
+let isDisabled = ref(true)
+
 
 // user:
 // dv102
@@ -95,18 +120,27 @@ let group = ref('')
 // KJH
 // 8743
 
-//ent
-//QWE公司
-//2345
+// ent
+// QWE公司
+// 2345
 
 
 let nameErr = ref("");
+
+
+let confirmIdent = () => {
+  console.log(group.value)
+  group.value === 'student' ? isDisabled = false : isDisabled = true
+}
+confirmIdent()
+
 const login = async () => {
 	let href = "http://54.186.56.114/login"
 	let postData = {
 		// group: 'dv102',
 		// group: 'manager',
-		group: 'ent',
+		// group: 'ent',
+    group: group.value,
 		account: name.value,
 		password: password.value
 	}
