@@ -30,7 +30,7 @@
 	  	</select>	  		 	  	  	
 		</div> 		 	
 		<div class="d-flex mt-2 flex-wrap">
-	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range fixedStart/>
+	  	<Datepicker class="datepicker mb-2 me-2 w-auto" v-model="date" range/>
 	  	<button class="confirm-btn btn btn-height" @click="search">搜尋</button>
 		</div>
 	</div>
@@ -74,9 +74,10 @@ import axios from 'axios'
 import VChart from "vue-echarts";
 import Overall from "../baseComponents/Overall.vue";
 import { useRouter, useRoute } from 'vue-router'
-
+import store from "../../store"	
+const token = store.getters["auth/getToken"]
 	
-  const router = useRouter()
+const router = useRouter()
 // ==========================================================
 // select option data
 const date = ref(""); 	// date
@@ -125,83 +126,131 @@ const selectProjectType = ref([
 	},
 ])		
 
-const axiosType = async() =>{
-	// clear  option valeu
-	selectType.value = []
-	selectNumber.value = []
-	type.value = ''
-	number.value = ''
-	let href = 'http://54.186.56.114:8081/Getdatalist'
-
-	try{
-		let { data } = await axios.post(href)
-		let type = data.data.type
-
-
-		for(let i = 0; i < type.length; i++){
-			selectType.value.push({
-				name: type[i],
-				item: type[i]
-			})
+	const axiosType = async() =>{
+		// clear option valeu
+		selectType.value = []
+		selectNumber.value = []
+		type.value = ''
+		number.value = ''
+		let href = 'http://54.186.56.114/diary/Getdatalist'	
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
 		}
-	}
-	catch{
-		alert("資料錯誤")
-	}
-}		
-axiosType()
-
-const axiosNumber = async() =>{
-	// clear  option valeu
-	selectNumber.value = []
-	number.value = ''	
-	let href = 'http://54.186.56.114:8081/Getdatalist'
-
-	if(type.value !== ""){
 		try{
-			let postData = {
-				type: type.value
-			}
-			let { data } = await axios.post(href, postData)
-			
-			let number = data.data.number
-			for(let i = 0; i < number.length; i++){
-				selectNumber.value.push({
-					name: number[i],
-					item: number[i]
+			let { data } = await axios.post(href, postData, config)
+			let type = data.data.type
+			for(let i = 0; i < type.length; i++){
+				selectType.value.push({
+					name: type[i],
+					item: type[i]
 				})
 			}
 		}
 		catch(e){
 			console.log(e)
 			alert("資料錯誤")
-		}		
+		}
+	}		
+	axiosType()
+	const axiosNumber = async() =>{
+		// clear  option value
+		selectNumber.value = []
+		number.value = ''	
+		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let postData = {}
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
+		if(type.value !== ""){
+			try{
+				let postData = {
+					type: type.value
+				}
+				let { data } = await axios.post(href, postData,config)
+				
+				let number = data.data.number
+				for(let i = 0; i < number.length; i++){
+					selectNumber.value.push({
+						name: number[i],
+						item: number[i]
+					})
+				}
+			}
+			catch(e){
+				console.log(e)
+				alert("資料錯誤")
+			}		
+		}
+		else{
+			alert("請選擇資料")
+		}
 	}
-	else{
-		alert("請選擇資料")
+	const axiosName = async() =>{
+		// clear  option valeu
+		selectName.value = []
+		name.value = ''		
+		let href = 'http://54.186.56.114/diary/Getdatalist'
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
+		if(number.value !== ""){
+			try{
+				let postData = {
+					type: type.value,
+					number: number.value
+				}
+				let { data } = await axios.post(href, postData, config)
+				let name = data.data.name
+				for(let i = 0; i < name.length; i++){
+					selectName.value.push({
+						name: name[i].Name,
+						item: name[i].Name
+					})
+				}
+			}
+			catch{
+				alert("資料錯誤")
+			}		
+		}
+		else{
+			alert("請選擇資料")
+		}
 	}
-}
-const axiosProject = async() =>{
-	let href = "http://54.186.56.114:8081/Getdatalist";
-	selectProjct.value = [];
-	project.value = ''
-	
-	try{
-		let { data } = await axios.get(href)
-		let filterProject = data.data.Project.filter((item)=>{
-			return item.Status == projectType.value
-		})
-		filterProject.forEach(function(item, index){
-			selectProjct.value.push({
-				name: item.Project,
-				item: item.Project
-			})			
-		})
+
+	const axiosProject = async() =>{
+		let href = "http://54.186.56.114/diary/Getdatalist";
+		let config = {
+	    headers: {
+				'authorization': `Bearer ${token}`
+	    }			
+		}			
+		selectProjct.value = [];
+		project.value = ''
+		
+		try{
+			let { data } = await axios.get(href, config)
+			let filterProject = data.data.Project.filter((item)=>{
+				return item.Status == projectType.value
+			})
+			filterProject.forEach(function(item, index){
+				selectProjct.value.push({
+					name: item.Project,
+					item: item.Project
+				})			
+			})
+		}
+		catch(e){
+			console.log(e)
+		}
 	}
-	catch(e){
-		console.log(e)
-	}
-}
+
 // ============================================================
 // diary data
 const diaryData = ref([])
@@ -214,9 +263,11 @@ const search = async() =>{
 		project: project.value,
 		type: type.value
 	}
+
+
 	try{
 		diaryData.value = []
-		let { data } = await axios.post(href, postData)
+		let { data } = await axios.post(href, postData, {headers: {'authorization': `Bearer ${token}`}})
 		// console.log(data.data)
 		data.data.forEach(function(item, index){
 			diaryData.value.push(item)
@@ -224,6 +275,7 @@ const search = async() =>{
 	}
 	catch(e){
 		console.log(e)
+		alert("請輸入資料")
 	}
 }
 // =========================================================

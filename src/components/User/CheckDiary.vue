@@ -1,11 +1,22 @@
 <template>
+<template v-if="userInfo.Access == 2">
   <router-link to="/manager/checkdiaryselect" class="back">
 		<div>
 			<i class="fa-solid fa-arrow-left">
 			</i> 
 			回列表頁
 		</div>        	
-  </router-link>	
+  </router-link>		
+</template>
+<template v-if="userInfo.Access == 3">
+  <router-link to="/company/checkdiary" class="back">
+		<div>
+			<i class="fa-solid fa-arrow-left">
+			</i> 
+			回列表頁
+		</div>        	
+  </router-link>		
+</template>
   <div class="d-flex justify-content-center">
     <div class="content-box-outter">
       <div class="title border-bottom p-2 fw-bold">日誌詳情</div>
@@ -43,8 +54,8 @@
       <div class="title border-bottom p-2 fw-bold">企業回覆 :</div>
       <div class="d-flex justify-content-center">
         <div class="content-box-feeback m-3">
-          <p class="text-center">{{user.Ent_reply}}</p>
-          <!-- <textarea class="border-0 ps-1" cols="100" rows="8"></textarea> -->
+          <!-- <p class="text-center">{{user.Ent_reply}}</p> -->
+          <textarea class="border-0 ps-1" cols="100" rows="8" :readonly="status ? false : 'readonly'">{{ user.Ent_reply }}</textarea>
         </div>
       </div>
     </div>
@@ -53,6 +64,10 @@
 
 <script setup>
 import {ref, onMounted, computed, watch} from "vue"	
+import store from "../../store"
+
+const userInfo = store.getters["auth/getUserInfo"]
+// console.log(userInfo.Access)
 const props = defineProps({
   parentUser:{
     type: Object,
@@ -60,6 +75,15 @@ const props = defineProps({
 })
 const user = ref(props.parentUser)
 // console.log(user.value)
+// =================================================================
+const status = ref(false)
+const changeStatus = ()=>{
+	if(userInfo.Access == 3){
+		status.value = 'readonly'
+	}
+}
+changeStatus()
+// ================================================================
 
 </script>
 
